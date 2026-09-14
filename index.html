@@ -33,7 +33,6 @@
   <!-- ======================================================== -->
   <div id="view-patient-list" class="flex-1 flex flex-col min-h-screen">
     
-    <!-- Liste Üst Bar -->
     <header class="sticky top-0 z-30 bg-slate-800/95 backdrop-blur border-b border-slate-700 px-4 py-3 shadow">
       <div class="flex items-center justify-between max-w-lg mx-auto w-full">
         <div class="flex items-center gap-2">
@@ -47,16 +46,13 @@
         </div>
 
         <button onclick="openPatientModal(null)" class="bg-cyan-600 active:bg-cyan-700 text-white text-xs font-semibold px-3 py-2 rounded-lg shadow flex items-center gap-1.5 transition">
-          <i class="fa-solid fa-user-plus"></i> Yeni Hasta Ekle
+          <i class="fa-solid fa-user-plus"></i> Yeni Hasta
         </button>
       </div>
     </header>
 
-    <!-- Hasta Kartları Listesi -->
     <main class="flex-1 max-w-lg mx-auto w-full px-3.5 py-3 space-y-2.5 overflow-y-auto">
-      <div id="patients-cards-container" class="space-y-2.5">
-        <!-- JS ile hasta kartları buraya basılır -->
-      </div>
+      <div id="patients-cards-container" class="space-y-2.5"></div>
     </main>
   </div>
 
@@ -65,7 +61,6 @@
   <!-- ======================================================== -->
   <div id="view-patient-detail" class="flex-1 flex flex-col min-h-screen hidden">
     
-    <!-- Detay Üst Bar -->
     <header class="sticky top-0 z-30 bg-slate-800/95 backdrop-blur border-b border-slate-700 px-4 pt-3 pb-2.5 shadow">
       <div class="max-w-lg mx-auto w-full">
         <div class="flex items-center justify-between">
@@ -86,7 +81,6 @@
           </div>
         </div>
 
-        <!-- Hasta Özet Bilgi -->
         <div class="mt-2.5 pt-2 border-t border-slate-700/60 flex items-center justify-between">
           <div>
             <div class="flex items-center gap-2">
@@ -102,7 +96,6 @@
       </div>
     </header>
 
-    <!-- Sekme İçerikleri -->
     <main class="flex-1 overflow-y-auto px-3.5 py-3 pb-24 space-y-4 max-w-lg mx-auto w-full">
 
       <!-- 1. Sekme: Notlar -->
@@ -159,26 +152,213 @@
         <div id="vitals-list" class="space-y-2 text-xs"></div>
       </section>
 
+      <!-- 5. Sekme: Solunum Desteği -->
+      <section id="tab-vent" class="space-y-3 hidden">
+        <div class="flex justify-between items-center">
+          <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
+            <i class="fa-solid fa-lungs text-sky-400"></i> Solunum Desteği & Ventilatör
+          </h3>
+          <button onclick="openModal('modal-vent')" class="text-xs bg-sky-600 active:bg-sky-700 text-white font-medium px-2.5 py-1 rounded-md flex items-center gap-1">
+            <i class="fa-solid fa-plus"></i> Ayar Kaydet
+          </button>
+        </div>
+        <div id="latest-vent-card" class="bg-slate-800 border border-slate-700 rounded-xl p-3 text-xs space-y-2.5 shadow-sm"></div>
+        <h4 class="text-xs font-semibold text-slate-400 pt-2">Solunum Parametreleri Geçmişi</h4>
+        <div id="vent-list" class="space-y-2 text-xs"></div>
+      </section>
+
+      <!-- 6. Sekme: NÜTRİSYONEL DESTEK & BESLENME (YENİ MODÜL) -->
+      <section id="tab-nutrition" class="space-y-3 hidden">
+        <div class="flex justify-between items-center">
+          <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
+            <i class="fa-solid fa-utensils text-amber-400"></i> Nütrisyonel Destek & Beslenme
+          </h3>
+          <button onclick="openModal('modal-nutrition')" class="text-xs bg-amber-600 active:bg-amber-700 text-white font-medium px-2.5 py-1 rounded-md flex items-center gap-1">
+            <i class="fa-solid fa-plus"></i> Beslenme Ekle
+          </button>
+        </div>
+
+        <!-- Aktif Beslenme Durum Kartı -->
+        <div id="latest-nutr-card" class="bg-slate-800 border border-slate-700 rounded-xl p-3 text-xs space-y-2.5 shadow-sm"></div>
+
+        <h4 class="text-xs font-semibold text-slate-400 pt-2">Beslenme Takip Geçmişi</h4>
+        <div id="nutr-list" class="space-y-2 text-xs"></div>
+      </section>
+
+      <!-- 7. Sekme: Skorlar (GKS & SOFA) -->
+      <section id="tab-scores" class="space-y-4 hidden">
+        <!-- GKS -->
+        <div class="bg-slate-800 border border-slate-700 rounded-xl p-4 shadow-sm space-y-3">
+          <div class="flex justify-between items-center border-b border-slate-700 pb-2">
+            <div>
+              <h3 class="font-bold text-sm text-cyan-300 flex items-center gap-1.5">
+                <i class="fa-solid fa-brain"></i> Glasgow Koma Skalası (GKS)
+              </h3>
+              <p class="text-[10px] text-slate-400">Bilinç düzeyi takibi</p>
+            </div>
+            <div class="text-right">
+              <span class="text-lg font-mono font-bold text-cyan-400" id="disp-gcs-total">15</span>
+              <span class="text-[10px] text-slate-400 font-normal">/ 15</span>
+            </div>
+          </div>
+
+          <div class="space-y-2 text-xs">
+            <div>
+              <label class="text-slate-400 block mb-1">Göz Açma (E)</label>
+              <select id="gcs-eye" onchange="calcGCS()" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white">
+                <option value="4">4 - Spontan açık</option>
+                <option value="3">3 - Sesli uyaranla</option>
+                <option value="2">2 - Ağrılı uyaranla</option>
+                <option value="1">1 - Yanıt yok</option>
+              </select>
+            </div>
+            <div>
+              <label class="text-slate-400 block mb-1">Sözel Yanıt (V)</label>
+              <select id="gcs-verbal" onchange="calcGCS()" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white">
+                <option value="5">5 - Oryante, kooperatif</option>
+                <option value="4">4 - Konfüze</option>
+                <option value="3">3 - Uygunsuz kelimeler</option>
+                <option value="2">2 - Anlaşılmaz sesler</option>
+                <option value="1">1 - Yanıt yok</option>
+                <option value="T">T - Entübe / Trakeostomi (V=T)</option>
+              </select>
+            </div>
+            <div>
+              <label class="text-slate-400 block mb-1">Motor Yanıt (M)</label>
+              <select id="gcs-motor" onchange="calcGCS()" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white">
+                <option value="6">6 - Emirlere uyar</option>
+                <option value="5">5 - Ağrıyı lokalize eder</option>
+                <option value="4">4 - Fleksiyonla çeker</option>
+                <option value="3">3 - Dekortike fleksiyon</option>
+                <option value="2">2 - Deserebre ekstansiyon</option>
+                <option value="1">1 - Yanıt yok</option>
+              </select>
+            </div>
+          </div>
+          <button onclick="saveGCSToNotes()" class="w-full py-2 bg-cyan-600/80 active:bg-cyan-700 rounded-lg text-white font-medium text-xs shadow">
+            <i class="fa-solid fa-file-circle-check"></i> GKS Skorunu Notlara Kaydet
+          </button>
+        </div>
+
+        <!-- SOFA -->
+        <div class="bg-slate-800 border border-slate-700 rounded-xl p-4 shadow-sm space-y-3">
+          <div class="flex justify-between items-center border-b border-slate-700 pb-2">
+            <div>
+              <h3 class="font-bold text-sm text-rose-300 flex items-center gap-1.5">
+                <i class="fa-solid fa-heart-pulse"></i> SOFA Skoru
+              </h3>
+              <p class="text-[10px] text-slate-400">Organ Yetmezliği Değerlendirmesi</p>
+            </div>
+            <div class="text-right">
+              <span class="text-xl font-mono font-bold text-rose-400" id="disp-sofa-total">0</span>
+              <span class="text-[10px] text-slate-400 font-normal">/ 24</span>
+            </div>
+          </div>
+
+          <div id="sofa-risk-badge" class="bg-emerald-950/70 border border-emerald-800 text-emerald-300 rounded-lg p-2 text-center text-xs font-semibold">
+            Tahmini Mortalite: < %10 (Düşük Risk)
+          </div>
+
+          <div class="space-y-2 text-xs">
+            <div>
+              <label class="text-slate-400 block mb-0.5">1. Solunum (PaO2 / FiO2 mmHg)</label>
+              <select id="sofa-resp" onchange="calcSOFA()" class="w-full bg-slate-900 border border-slate-700 rounded p-1.5 text-white">
+                <option value="0">0 Puan: PaO2/FiO2 ≥ 400</option>
+                <option value="1">1 Puan: PaO2/FiO2 < 400</option>
+                <option value="2">2 Puan: PaO2/FiO2 < 300</option>
+                <option value="3">3 Puan: PaO2/FiO2 < 200 (Ventilatör ile)</option>
+                <option value="4">4 Puan: PaO2/FiO2 < 100 (Ventilatör ile)</option>
+              </select>
+            </div>
+            <div>
+              <label class="text-slate-400 block mb-0.5">2. Koagülasyon (Trombosit ×10³/µL)</label>
+              <select id="sofa-coag" onchange="calcSOFA()" class="w-full bg-slate-900 border border-slate-700 rounded p-1.5 text-white">
+                <option value="0">0 Puan: ≥ 150</option>
+                <option value="1">1 Puan: < 150</option>
+                <option value="2">2 Puan: < 100</option>
+                <option value="3">3 Puan: < 50</option>
+                <option value="4">4 Puan: < 20</option>
+              </select>
+            </div>
+            <div>
+              <label class="text-slate-400 block mb-0.5">3. Karaciğer (Bilirubin mg/dL)</label>
+              <select id="sofa-liver" onchange="calcSOFA()" class="w-full bg-slate-900 border border-slate-700 rounded p-1.5 text-white">
+                <option value="0">0 Puan: < 1.2 mg/dL</option>
+                <option value="1">1 Puan: 1.2 - 1.9 mg/dL</option>
+                <option value="2">2 Puan: 2.0 - 5.9 mg/dL</option>
+                <option value="3">3 Puan: 6.0 - 11.9 mg/dL</option>
+                <option value="4">4 Puan: ≥ 12.0 mg/dL</option>
+              </select>
+            </div>
+            <div>
+              <label class="text-slate-400 block mb-0.5">4. Dolaşım (Hipotansiyon / İnotrop)</label>
+              <select id="sofa-cv" onchange="calcSOFA()" class="w-full bg-slate-900 border border-slate-700 rounded p-1.5 text-white">
+                <option value="0">0 Puan: OAB ≥ 70 mmHg (İnotrop yok)</option>
+                <option value="1">1 Puan: OAB < 70 mmHg</option>
+                <option value="2">2 Puan: Dopamin ≤ 5 veya Dobutamin</option>
+                <option value="3">3 Puan: Noradrenalin ≤ 0.1 / Dopamin > 5</option>
+                <option value="4">4 Puan: Noradrenalin > 0.1 / Dopamin > 15</option>
+              </select>
+            </div>
+            <div>
+              <label class="text-slate-400 block mb-0.5">5. Nöroloji (GKS Skoru)</label>
+              <select id="sofa-cns" onchange="calcSOFA()" class="w-full bg-slate-900 border border-slate-700 rounded p-1.5 text-white">
+                <option value="0">0 Puan: GKS 15</option>
+                <option value="1">1 Puan: GKS 13 - 14</option>
+                <option value="2">2 Puan: GKS 10 - 12</option>
+                <option value="3">3 Puan: GKS 6 - 9</option>
+                <option value="4">4 Puan: GKS < 6</option>
+              </select>
+            </div>
+            <div>
+              <label class="text-slate-400 block mb-0.5">6. Böbrek (Kreatinin mg/dL / İdrar)</label>
+              <select id="sofa-renal" onchange="calcSOFA()" class="w-full bg-slate-900 border border-slate-700 rounded p-1.5 text-white">
+                <option value="0">0 Puan: Kreatinin < 1.2 mg/dL</option>
+                <option value="1">1 Puan: 1.2 - 1.9 mg/dL</option>
+                <option value="2">2 Puan: 2.0 - 3.4 mg/dL</option>
+                <option value="3">3 Puan: 3.5 - 4.9 veya İdrar < 500 mL/gün</option>
+                <option value="4">4 Puan: ≥ 5.0 veya İdrar < 200 mL/gün</option>
+              </select>
+            </div>
+          </div>
+          <button onclick="saveSOFAToNotes()" class="w-full py-2 bg-rose-700 active:bg-rose-800 rounded-lg text-white font-medium text-xs shadow">
+            <i class="fa-solid fa-file-circle-check"></i> SOFA Skorunu Notlara Kaydet
+          </button>
+        </div>
+      </section>
+
     </main>
 
-    <!-- Mobil Alt Gezinme Çubuğu -->
+    <!-- 7'Lİ MOBİL ALT GEZİNME ÇUBUĞU -->
     <nav class="fixed bottom-0 inset-x-0 bg-slate-800/95 backdrop-blur border-t border-slate-700 z-40 safe-bottom">
-      <div class="grid grid-cols-4 max-w-lg mx-auto text-[10px] text-slate-400 font-medium">
-        <button onclick="switchTab('notes')" id="btn-tab-notes" class="py-2.5 flex flex-col items-center gap-1 text-cyan-400">
-          <i class="fa-solid fa-clipboard-list text-base"></i>
-          <span>Notlar</span>
+      <div class="grid grid-cols-7 max-w-lg mx-auto text-[8px] text-slate-400 font-medium">
+        <button onclick="switchTab('notes')" id="btn-tab-notes" class="py-2 flex flex-col items-center gap-0.5 text-cyan-400">
+          <i class="fa-solid fa-clipboard-list text-xs"></i>
+          <span>Not</span>
         </button>
-        <button onclick="switchTab('meds')" id="btn-tab-meds" class="py-2.5 flex flex-col items-center gap-1 hover:text-slate-200">
-          <i class="fa-solid fa-pills text-base"></i>
-          <span>İlaçlar</span>
+        <button onclick="switchTab('meds')" id="btn-tab-meds" class="py-2 flex flex-col items-center gap-0.5 hover:text-slate-200">
+          <i class="fa-solid fa-pills text-xs"></i>
+          <span>İlaç</span>
         </button>
-        <button onclick="switchTab('labs')" id="btn-tab-labs" class="py-2.5 flex flex-col items-center gap-1 hover:text-slate-200">
-          <i class="fa-solid fa-vial-virus text-base"></i>
-          <span>Tetkikler</span>
+        <button onclick="switchTab('labs')" id="btn-tab-labs" class="py-2 flex flex-col items-center gap-0.5 hover:text-slate-200">
+          <i class="fa-solid fa-vial-virus text-xs"></i>
+          <span>Tetkik</span>
         </button>
-        <button onclick="switchTab('vitals')" id="btn-tab-vitals" class="py-2.5 flex flex-col items-center gap-1 hover:text-slate-200">
-          <i class="fa-solid fa-heart-pulse text-base"></i>
-          <span>Vitaller</span>
+        <button onclick="switchTab('vitals')" id="btn-tab-vitals" class="py-2 flex flex-col items-center gap-0.5 hover:text-slate-200">
+          <i class="fa-solid fa-heart-pulse text-xs"></i>
+          <span>Vital</span>
+        </button>
+        <button onclick="switchTab('vent')" id="btn-tab-vent" class="py-2 flex flex-col items-center gap-0.5 hover:text-slate-200">
+          <i class="fa-solid fa-lungs text-xs"></i>
+          <span>Solunum</span>
+        </button>
+        <button onclick="switchTab('nutrition')" id="btn-tab-nutrition" class="py-2 flex flex-col items-center gap-0.5 hover:text-slate-200">
+          <i class="fa-solid fa-utensils text-xs"></i>
+          <span>Nütrisyon</span>
+        </button>
+        <button onclick="switchTab('scores')" id="btn-tab-scores" class="py-2 flex flex-col items-center gap-0.5 hover:text-slate-200">
+          <i class="fa-solid fa-calculator text-xs"></i>
+          <span>Skor</span>
         </button>
       </div>
     </nav>
@@ -189,6 +369,165 @@
   <!-- MODALLER                                                 -->
   <!-- ======================================================== -->
 
+  <!-- NÜTRİSYON / BESLENME MODALI -->
+  <div id="modal-nutrition" class="fixed inset-0 bg-black/70 z-50 flex items-end sm:items-center justify-center hidden p-0 sm:p-4">
+    <div class="bg-slate-800 border-t sm:border border-slate-700 rounded-t-2xl sm:rounded-xl max-w-md w-full p-4 space-y-3 text-xs max-h-[90vh] overflow-y-auto">
+      <div class="flex justify-between items-center pb-2 border-b border-slate-700">
+        <span class="font-bold text-white text-sm flex items-center gap-1.5">
+          <i class="fa-solid fa-utensils text-amber-400"></i> Nütrisyonel Destek Kaydı
+        </span>
+        <button onclick="closeModal('modal-nutrition')" class="text-slate-400 text-lg">&times;</button>
+      </div>
+
+      <div class="grid grid-cols-2 gap-2">
+        <div>
+          <label class="text-slate-400 block mb-1">Destek Türü / Yolu *</label>
+          <select id="inp-nutr-route" class="w-full bg-slate-900 border border-slate-700 rounded p-1.5 text-white">
+            <option value="Enteral (NGS)">Enteral (NGS)</option>
+            <option value="Enteral (NJ / PEG)">Enteral (NJ / PEG)</option>
+            <option value="Total Parenteral (Santral TPN)">Total Parenteral (Santral TPN)</option>
+            <option value="Periferik Parenteral (PPN)">Periferik Parenteral (PPN)</option>
+            <option value="Enteral + Parenteral">Kombine (Enteral + TPN)</option>
+            <option value="Oral + ONS (Suplement)">Oral + ONS (Mama Desteği)</option>
+            <option value="Oral Normal Diyet">Oral Normal Diyet</option>
+            <option value="Aç / NPO">Aç / NPO (Oral-Enteral Stop)</option>
+          </select>
+        </div>
+        <div>
+          <label class="text-slate-400 block mb-1">Mama / Solüsyon Adı</label>
+          <input type="text" id="inp-nutr-product" placeholder="Örn: Nutrison Energy, SmofKabiven" class="w-full bg-slate-900 border border-slate-700 rounded p-1.5 text-white">
+        </div>
+      </div>
+
+      <div class="grid grid-cols-3 gap-2">
+        <div>
+          <label class="text-slate-400 block mb-1">İnfüzyon Hızı</label>
+          <input type="number" id="inp-nutr-rate" placeholder="60 mL/saat" class="w-full bg-slate-900 border border-slate-700 rounded p-1.5 text-white">
+        </div>
+        <div>
+          <label class="text-slate-400 block mb-1">Hedef Kalori</label>
+          <input type="number" id="inp-nutr-kcal" placeholder="1800 kcal" class="w-full bg-slate-900 border border-slate-700 rounded p-1.5 text-white">
+        </div>
+        <div>
+          <label class="text-slate-400 block mb-1">Hedef Protein</label>
+          <input type="number" id="inp-nutr-protein" placeholder="85 gr" class="w-full bg-slate-900 border border-slate-700 rounded p-1.5 text-white">
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-2">
+        <div>
+          <label class="text-slate-400 block mb-1">Gastrik Rezidü (GRV mL)</label>
+          <input type="number" id="inp-nutr-grv" placeholder="30" class="w-full bg-slate-900 border border-slate-700 rounded p-1.5 text-white">
+        </div>
+        <div>
+          <label class="text-slate-400 block mb-1">Ek Su Yıkama / Bolus</label>
+          <input type="text" id="inp-nutr-water" placeholder="4x100 mL serbest su" class="w-full bg-slate-900 border border-slate-700 rounded p-1.5 text-white">
+        </div>
+      </div>
+
+      <div>
+        <label class="text-slate-400 block mb-1">Tolerans & Klinik Durum</label>
+        <select id="inp-nutr-tol" class="w-full bg-slate-900 border border-slate-700 rounded p-1.5 text-white">
+          <option value="İyi Tolere Ediyor">İyi Tolere Ediyor (Sorun yok)</option>
+          <option value="Rezidü Yüksek (>250 mL)">Rezidü Yüksek (>250 mL)</option>
+          <option value="Batın Distandü / Gaz">Batın Distandü / Gaz</option>
+          <option value="Diyare Mevcut">Diyare Mevcut</option>
+          <option value="Bulantı / Kusma">Bulantı / Kusma</option>
+          <option value="İntolerans Nedeniyle Stoplandı">İntolerans Nedeniyle Stoplandı</option>
+        </select>
+      </div>
+
+      <div>
+        <label class="text-slate-400 block mb-1">Açıklama / Protokol Notu</label>
+        <input type="text" id="inp-nutr-note" placeholder="Prokinetik başlandı, infüzyon hızı 20 mL/s artırıldı..." class="w-full bg-slate-900 border border-slate-700 rounded p-1.5 text-white">
+      </div>
+
+      <button onclick="saveNutrition()" class="w-full py-2.5 bg-amber-600 active:bg-amber-700 rounded-lg text-white font-bold text-sm shadow">Nütrisyon Kaydını Tamamla</button>
+    </div>
+  </div>
+
+  <!-- SOLUNUM AYARLARI MODALI -->
+  <div id="modal-vent" class="fixed inset-0 bg-black/70 z-50 flex items-end sm:items-center justify-center hidden p-0 sm:p-4">
+    <div class="bg-slate-800 border-t sm:border border-slate-700 rounded-t-2xl sm:rounded-xl max-w-md w-full p-4 space-y-3 text-xs max-h-[90vh] overflow-y-auto">
+      <div class="flex justify-between items-center pb-2 border-b border-slate-700">
+        <span class="font-bold text-white text-sm flex items-center gap-1.5">
+          <i class="fa-solid fa-lungs text-sky-400"></i> Solunum Parametreleri Kaydı
+        </span>
+        <button onclick="closeModal('modal-vent')" class="text-slate-400 text-lg">&times;</button>
+      </div>
+      <div class="grid grid-cols-2 gap-2">
+        <div>
+          <label class="text-slate-400 block mb-1">Destek Türü *</label>
+          <select id="inp-vent-type" class="w-full bg-slate-900 border border-slate-700 rounded p-1.5 text-white">
+            <option value="İnvaziv MV (ETT)">İnvaziv MV (ETT)</option>
+            <option value="İnvaziv MV (Trakeostomi)">İnvaziv MV (Trakeostomi)</option>
+            <option value="NIMV (Maske BiPAP)">NIMV (BiPAP Maske)</option>
+            <option value="NIMV (Maske CPAP)">NIMV (CPAP Maske)</option>
+            <option value="Yüksek Akış O2 (HFNC)">HFNC (Yüksek Akış Nazal)</option>
+            <option value="Rezervuarlı O2 Maskesi">Rezervuarlı Maske</option>
+            <option value="Nazal Kanül O2">Nazal Kanül O2</option>
+            <option value="T-Tüp / Spontan">T-Tüp / Spontan</option>
+            <option value="Oda Havası (Spontan)">Oda Havası</option>
+          </select>
+        </div>
+        <div>
+          <label class="text-slate-400 block mb-1">Ventilatör Modu</label>
+          <select id="inp-vent-mode" class="w-full bg-slate-900 border border-slate-700 rounded p-1.5 text-white">
+            <option value="SIMV">SIMV</option>
+            <option value="VCV (Volüm Kontrol)">VCV (Volüm Kontrol)</option>
+            <option value="PCV (Basınç Kontrol)">PCV (Basınç Kontrol)</option>
+            <option value="PSV / CPAP">PSV / CPAP</option>
+            <option value="PRVC">PRVC</option>
+            <option value="Yok / Spontan">Yok / Spontan</option>
+          </select>
+        </div>
+      </div>
+      <div class="grid grid-cols-3 gap-2">
+        <div>
+          <label class="text-slate-400 block mb-1">FiO2 (%)</label>
+          <input type="number" id="inp-vent-fio2" placeholder="40" class="w-full bg-slate-900 border border-slate-700 rounded p-1.5 text-white">
+        </div>
+        <div>
+          <label class="text-slate-400 block mb-1">PEEP (cmH2O)</label>
+          <input type="number" id="inp-vent-peep" placeholder="6" class="w-full bg-slate-900 border border-slate-700 rounded p-1.5 text-white">
+        </div>
+        <div>
+          <label class="text-slate-400 block mb-1">Tidal Volüm (Vt)</label>
+          <input type="number" id="inp-vent-vt" placeholder="450" class="w-full bg-slate-900 border border-slate-700 rounded p-1.5 text-white">
+        </div>
+      </div>
+      <div class="grid grid-cols-3 gap-2">
+        <div>
+          <label class="text-slate-400 block mb-1">Solunum Sayısı (f)</label>
+          <input type="number" id="inp-vent-rr" placeholder="16" class="w-full bg-slate-900 border border-slate-700 rounded p-1.5 text-white">
+        </div>
+        <div>
+          <label class="text-slate-400 block mb-1">Pik Basınç (Ppeak)</label>
+          <input type="number" id="inp-vent-ppeak" placeholder="22" class="w-full bg-slate-900 border border-slate-700 rounded p-1.5 text-white">
+        </div>
+        <div>
+          <label class="text-slate-400 block mb-1">Kaf Basıncı</label>
+          <input type="number" id="inp-vent-cuff" placeholder="25" class="w-full bg-slate-900 border border-slate-700 rounded p-1.5 text-white">
+        </div>
+      </div>
+      <div class="grid grid-cols-2 gap-2">
+        <div>
+          <label class="text-slate-400 block mb-1">ETT No & Dudak Çizgisi</label>
+          <input type="text" id="inp-vent-ett" placeholder="8.0 ETT / 22 cm dudak" class="w-full bg-slate-900 border border-slate-700 rounded p-1.5 text-white">
+        </div>
+        <div>
+          <label class="text-slate-400 block mb-1">Akış / O2 (L/dk)</label>
+          <input type="text" id="inp-vent-flow" placeholder="HFNC 50 L/dk" class="w-full bg-slate-900 border border-slate-700 rounded p-1.5 text-white">
+        </div>
+      </div>
+      <div>
+        <label class="text-slate-400 block mb-1">Sekresyon / Not</label>
+        <input type="text" id="inp-vent-note" placeholder="Minimal sekresyon, SBT denendi..." class="w-full bg-slate-900 border border-slate-700 rounded p-1.5 text-white">
+      </div>
+      <button onclick="saveVent()" class="w-full py-2.5 bg-sky-600 active:bg-sky-700 rounded-lg text-white font-bold">Kaydet</button>
+    </div>
+  </div>
+
   <!-- HASTA EKLE / DÜZENLE MODALI -->
   <div id="modal-patient" class="fixed inset-0 bg-black/70 z-50 flex items-end sm:items-center justify-center hidden p-0 sm:p-4">
     <div class="bg-slate-800 border-t sm:border border-slate-700 rounded-t-2xl sm:rounded-xl max-w-md w-full p-4 space-y-3 text-xs max-h-[90vh] overflow-y-auto">
@@ -196,26 +535,23 @@
         <span class="font-bold text-white text-sm" id="modal-patient-title">Yeni Hasta Ekle</span>
         <button onclick="closeModal('modal-patient')" class="text-slate-400 text-lg">&times;</button>
       </div>
-
       <div>
         <label class="text-slate-400 block mb-1">Hasta Adı Soyadı *</label>
-        <input type="text" id="inp-p-name" placeholder="Örn: Ahmet Yılmaz" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white">
+        <input type="text" id="inp-p-name" placeholder="Ahmet Yılmaz" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white">
       </div>
-
       <div class="grid grid-cols-2 gap-2">
         <div>
           <label class="text-slate-400 block mb-1">Yatak No *</label>
-          <input type="text" id="inp-p-bed" placeholder="Örn: Yatak 04" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white">
+          <input type="text" id="inp-p-bed" placeholder="Yatak 04" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white">
         </div>
         <div>
           <label class="text-slate-400 block mb-1">YBÜ Günü</label>
-          <input type="text" id="inp-p-day" placeholder="Örn: 3. Gün" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white">
+          <input type="text" id="inp-p-day" placeholder="3. Gün" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white">
         </div>
       </div>
-
       <div class="grid grid-cols-2 gap-2">
         <div>
-          <label class="text-slate-400 block mb-1">Protokol / Dosya No</label>
+          <label class="text-slate-400 block mb-1">Protokol No</label>
           <input type="text" id="inp-p-proto" placeholder="2026-94812" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white">
         </div>
         <div>
@@ -223,18 +559,15 @@
           <input type="text" id="inp-p-age" placeholder="64 / Erkek" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white">
         </div>
       </div>
-
       <div>
-        <label class="text-slate-400 block mb-1">Klinik Tanı & Kabul Nedeni *</label>
-        <input type="text" id="inp-p-diag" placeholder="Septik Şok, ARDS, Post-Op vb." class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white">
+        <label class="text-slate-400 block mb-1">Klinik Tanı *</label>
+        <input type="text" id="inp-p-diag" placeholder="Septik Şok, ARDS" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white">
       </div>
-
       <div>
         <label class="text-slate-400 block mb-1">Alerji / Özel Durum</label>
-        <input type="text" id="inp-p-allergy" placeholder="Penisilin alerjisi, İzolasyon vb." class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white">
+        <input type="text" id="inp-p-allergy" placeholder="Penisilin Alerjisi" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white">
       </div>
-
-      <button onclick="savePatient()" class="w-full py-2.5 bg-cyan-600 active:bg-cyan-700 rounded-lg text-white font-bold text-sm shadow">Hastayı Kaydet</button>
+      <button onclick="savePatient()" class="w-full py-2.5 bg-cyan-600 active:bg-cyan-700 rounded-lg text-white font-bold">Hastayı Kaydet</button>
     </div>
   </div>
 
@@ -249,20 +582,21 @@
         <label class="text-slate-400 block mb-1">Kategori</label>
         <select id="note-cat" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white">
           <option value="Vizit">Vizit / Hekim Planı</option>
+          <option value="Nütrisyon">Nütrisyon / Beslenme</option>
+          <option value="Solunum">Solunum / Ventilasyon</option>
+          <option value="Skor/GKS">Skorlama / GKS - SOFA</option>
           <option value="Hemşirelik">Hemşirelik Gözlemi</option>
-          <option value="Acil/Olay">Acil Durum / Kötüleşme</option>
-          <option value="Konsültasyon">Konsültasyon Notu</option>
         </select>
       </div>
       <div>
         <label class="text-slate-400 block mb-1">Not İçeriği</label>
-        <textarea id="note-content" rows="4" placeholder="Hastanın durumu, hekim direktifleri, planlar..." class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white placeholder-slate-500"></textarea>
+        <textarea id="note-content" rows="4" placeholder="Hastanın durumu, beslenme seyri, hekim direktifleri..." class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white placeholder-slate-500"></textarea>
       </div>
       <button onclick="saveNote()" class="w-full py-2.5 bg-cyan-600 active:bg-cyan-700 rounded-lg text-white font-bold">Kaydet</button>
     </div>
   </div>
 
-  <!-- İLAÇ EKLEME MODALI -->
+  <!-- İLAÇ MODALI -->
   <div id="modal-med" class="fixed inset-0 bg-black/70 z-50 flex items-end sm:items-center justify-center hidden p-0 sm:p-4">
     <div class="bg-slate-800 border-t sm:border border-slate-700 rounded-t-2xl sm:rounded-xl max-w-md w-full p-4 space-y-3 text-xs">
       <div class="flex justify-between items-center pb-2 border-b border-slate-700">
@@ -271,27 +605,27 @@
       </div>
       <div>
         <label class="text-slate-400 block mb-1">İlaç Adı</label>
-        <input type="text" id="med-name" placeholder="Örn: Meropenem, Noradrenalin" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white">
+        <input type="text" id="med-name" placeholder="Meropenem, Noradrenalin" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white">
       </div>
       <div class="grid grid-cols-2 gap-2">
         <div>
           <label class="text-slate-400 block mb-1">Doz & Yol</label>
-          <input type="text" id="med-dose" placeholder="3x1 gr IV / 0.1 mcg/kg/dk" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white">
+          <input type="text" id="med-dose" placeholder="3x1 gr IV" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white">
         </div>
         <div>
-          <label class="text-slate-400 block mb-1">Uygulama Saatleri</label>
+          <label class="text-slate-400 block mb-1">Saatler</label>
           <input type="text" id="med-hours" placeholder="08:00 - 16:00 - 24:00" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white">
         </div>
       </div>
       <div>
-        <label class="text-slate-400 block mb-1">Açıklama / Protokol</label>
-        <input type="text" id="med-notes" placeholder="Santral yoldan, uzatılmış infüzyon vb." class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white">
+        <label class="text-slate-400 block mb-1">Açıklama</label>
+        <input type="text" id="med-notes" placeholder="Santral infüzyon vb." class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white">
       </div>
       <button onclick="saveMed()" class="w-full py-2.5 bg-purple-600 active:bg-purple-700 rounded-lg text-white font-bold">Kaydet</button>
     </div>
   </div>
 
-  <!-- TETKİK EKLEME MODALI -->
+  <!-- TETKİK MODALI -->
   <div id="modal-lab" class="fixed inset-0 bg-black/70 z-50 flex items-end sm:items-center justify-center hidden p-0 sm:p-4">
     <div class="bg-slate-800 border-t sm:border border-slate-700 rounded-t-2xl sm:rounded-xl max-w-md w-full p-4 space-y-3 text-xs">
       <div class="flex justify-between items-center pb-2 border-b border-slate-700">
@@ -304,9 +638,9 @@
           <select id="lab-type" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white">
             <option value="Arteryel Kan Gazı">Kan Gazı (AKG)</option>
             <option value="Biyokimya">Biyokimya / Renal</option>
-            <option value="Hemogram">Hemogram / Pıhtılaşma</option>
+            <option value="Hemogram">Hemogram / Koagülasyon</option>
             <option value="Enfeksiyon/Kültür">Kültür / CRP / Prokalsitonin</option>
-            <option value="Görüntüleme">Radyoloji / Eko</option>
+            <option value="Radyoloji">Radyoloji / Eko</option>
           </select>
         </div>
         <div>
@@ -316,7 +650,7 @@
       </div>
       <div>
         <label class="text-slate-400 block mb-1">Değerler</label>
-        <textarea id="lab-results" rows="3" placeholder="Örn: pH: 7.35, pO2: 84, pCO2: 40, Laktat: 1.6, Kreatinin: 1.4" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white placeholder-slate-500"></textarea>
+        <textarea id="lab-results" rows="3" placeholder="pH: 7.35, pO2: 84, pCO2: 40, Laktat: 1.6" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white placeholder-slate-500"></textarea>
       </div>
       <button onclick="saveLab()" class="w-full py-2.5 bg-rose-600 active:bg-rose-700 rounded-lg text-white font-bold">Kaydet</button>
     </div>
@@ -331,7 +665,7 @@
       </div>
       <div class="grid grid-cols-2 gap-2">
         <div>
-          <label class="text-slate-400 block mb-1">Tansiyon (Sist/Diyast)</label>
+          <label class="text-slate-400 block mb-1">Tansiyon (S/D)</label>
           <input type="text" id="vit-bp" placeholder="120/70" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white">
         </div>
         <div>
@@ -360,12 +694,11 @@
   </div>
 
   <!-- ======================================================== -->
-  <!-- JAVASCRIPT ÇOKLU HASTA MOTORU                            -->
+  <!-- JAVASCRIPT MOTORU                                        -->
   <!-- ======================================================== -->
   <script>
     const STORAGE_KEY = 'icu_multi_patient_db';
 
-    // Başlangıç Mock Veritabanı
     const DEFAULT_PATIENTS = [
       {
         id: "p_1",
@@ -377,38 +710,49 @@
         diag: "Septik Şok, ARDS",
         allergy: "Penisilin Alerjisi",
         notes: [
-          { id: 101, time: "10:30", cat: "Vizit", content: "Noradrenalin titre edilecek. SBT denenecek." },
-          { id: 102, time: "08:15", cat: "Hemşirelik", content: "ETT aspirasyonu yapıldı, sekresyon minimal." }
+          { id: 101, time: "10:30", cat: "Vizit", content: "Noradrenalin titre edilecek. FiO2 %40'a çekilerek SBT denenecek." }
         ],
         meds: [
-          { id: 201, name: "Noradrenalin", dose: "0.08 mcg/kg/dk", hours: "Sürekli", notes: "OAB > 65 hedef", given: true },
-          { id: 202, name: "Meropenem", dose: "3 x 1 gr IV", hours: "08:00 - 16:00 - 24:00", notes: "Uzatılmış infüzyon", given: true }
+          { id: 201, name: "Noradrenalin", dose: "0.08 mcg/kg/dk", hours: "Sürekli", notes: "OAB > 65", given: true },
+          { id: 202, name: "Meropenem", dose: "3 x 1 gr IV", hours: "08:00 - 16:00 - 24:00", notes: "Uzatılmış", given: true }
         ],
         labs: [
-          { id: 301, time: "07:00", type: "Arteryel Kan Gazı", results: "pH: 7.34, pO2: 82, pCO2: 41, Laktat: 1.8" }
+          { id: 301, time: "07:00", type: "Arteryel Kan Gazı", results: "pH: 7.34, pO2: 82, pCO2: 41, Laktat: 1.8, PaO2/FiO2: 182" }
         ],
         vitals: [
           { id: 401, time: "11:00", bp: "115/65", hr: 86, spo2: 96, temp: 37.1, bg: 138, urine: 65 }
-        ]
-      },
-      {
-        id: "p_2",
-        name: "Fatma Demir",
-        bed: "Yatak 02",
-        day: "1. Gün",
-        proto: "2026-94850",
-        age: "52 / K",
-        diag: "Post-Op Whipple Operasyonu",
-        allergy: "Yok",
-        notes: [
-          { id: 103, time: "09:00", cat: "Vizit", content: "Hemodinamik stabil, batın drenleri saatlik izlenecek." }
         ],
-        meds: [
-          { id: 203, name: "Parasetamol", dose: "1 gr IV", hours: "08:00 - 16:00", notes: "Ağrı kontrolü", given: true }
+        vents: [
+          {
+            id: 501,
+            time: "10:00",
+            type: "İnvaziv MV (ETT)",
+            mode: "SIMV",
+            fio2: 45,
+            peep: 8,
+            vt: 450,
+            rr: 16,
+            ppeak: 24,
+            cuff: 25,
+            ett: "8.0 ETT / 22 cm dudak",
+            flow: "-",
+            note: "Uyumlu, kaf basıncı kontrol edildi."
+          }
         ],
-        labs: [],
-        vitals: [
-          { id: 402, time: "10:00", bp: "125/75", hr: 78, spo2: 98, temp: 36.6, bg: 120, urine: 90 }
+        nutritions: [
+          {
+            id: 601,
+            time: "09:00",
+            route: "Enteral (NGS)",
+            product: "Nutrison Energy Multi Fibre",
+            rate: 65,
+            targetKcal: 1800,
+            targetProtein: 85,
+            grv: 30,
+            water: "4x100 mL serbest su",
+            tolerance: "İyi Tolere Ediyor",
+            note: "Batın rahat, rezidü minimal."
+          }
         ]
       }
     ];
@@ -430,7 +774,6 @@
       return `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
     }
 
-    // EKRANLAR ARASI GEÇİŞ
     function showPatientList() {
       document.getElementById('view-patient-list').classList.remove('hidden');
       document.getElementById('view-patient-detail').classList.add('hidden');
@@ -448,9 +791,10 @@
       document.getElementById('view-patient-detail').classList.remove('hidden');
       switchTab('notes');
       renderPatientDetail();
+      calcGCS();
+      calcSOFA();
     }
 
-    // 1. EKRAN RENDER: HASTA LİSTESİ
     function renderPatientList() {
       const container = document.getElementById('patients-cards-container');
       const countLabel = document.getElementById('stat-patient-count');
@@ -461,16 +805,16 @@
           <div class="text-center py-12 text-slate-500">
             <i class="fa-solid fa-bed text-4xl mb-3"></i>
             <p class="text-sm">Henüz kayıtlı hasta bulunmuyor.</p>
-            <p class="text-xs mt-1 text-slate-600">Yukarıdaki "Yeni Hasta Ekle" butonuna basarak ilk hastayı ekleyebilirsiniz.</p>
-          </div>
-        `;
+          </div>`;
         return;
       }
 
       container.innerHTML = '';
       patients.forEach(p => {
         const lastV = (p.vitals && p.vitals.length > 0) ? p.vitals[0] : null;
-        
+        const lastVent = (p.vents && p.vents.length > 0) ? p.vents[0] : null;
+        const lastNutr = (p.nutritions && p.nutritions.length > 0) ? p.nutritions[0] : null;
+
         container.innerHTML += `
           <div onclick="openPatientDetail('${p.id}')" class="bg-slate-800 border border-slate-700 hover:border-cyan-500 rounded-xl p-3.5 shadow-md active:scale-[0.99] transition cursor-pointer">
             <div class="flex items-center justify-between">
@@ -480,27 +824,32 @@
               </div>
               <span class="text-[10px] bg-slate-700 text-slate-300 px-2 py-0.5 rounded-full">${p.day || '1. Gün'}</span>
             </div>
-
+            
             <p class="text-xs text-slate-400 mt-1.5 line-clamp-1">${p.diag}</p>
 
+            <!-- Solunum ve Nütrisyon Küçük Rozetleri -->
+            <div class="mt-2 flex flex-wrap gap-1 text-[10px] font-mono">
+              ${lastVent ? `
+                <span class="text-sky-300 bg-sky-950/70 px-2 py-0.5 rounded border border-sky-800/60">
+                  <i class="fa-solid fa-lungs text-[9px]"></i> ${lastVent.type.split(' ')[0]} (%${lastVent.fio2 || '-'} / P:${lastVent.peep || '-'})
+                </span>` : ''}
+              ${lastNutr ? `
+                <span class="text-amber-300 bg-amber-950/70 px-2 py-0.5 rounded border border-amber-800/60">
+                  <i class="fa-solid fa-utensils text-[9px]"></i> ${lastNutr.route.split(' ')[0]}: ${lastNutr.rate || 0} mL/s
+                </span>` : ''}
+            </div>
+
             ${lastV ? `
-              <div class="grid grid-cols-4 gap-1.5 mt-2.5 pt-2 border-t border-slate-700/60 font-mono text-center text-[10px]">
+              <div class="grid grid-cols-4 gap-1.5 mt-2 pt-2 border-t border-slate-700/60 font-mono text-center text-[10px]">
                 <div class="bg-slate-900/60 p-1 rounded"><span class="text-slate-500">TA:</span> <span class="text-cyan-300 font-bold">${lastV.bp || '-'}</span></div>
                 <div class="bg-slate-900/60 p-1 rounded"><span class="text-slate-500">KTA:</span> <span class="text-emerald-400 font-bold">${lastV.hr || '-'}</span></div>
                 <div class="bg-slate-900/60 p-1 rounded"><span class="text-slate-500">SpO2:</span> <span class="text-sky-400 font-bold">%${lastV.spo2 || '-'}</span></div>
                 <div class="bg-slate-900/60 p-1 rounded"><span class="text-slate-500">İdrar:</span> <span class="text-blue-400 font-bold">${lastV.urine || 0}</span></div>
-              </div>
-            ` : `
-              <div class="mt-2 pt-2 border-t border-slate-700/60 text-[10px] text-slate-500 italic">
-                Vital ölçümü kaydedilmemiş.
-              </div>
-            `}
-          </div>
-        `;
+              </div>` : ''}
+          </div>`;
       });
     }
 
-    // 2. EKRAN RENDER: SEÇİLİ HASTA DETAY
     function renderPatientDetail() {
       const p = getCurrentPatient();
       if (!p) return;
@@ -515,6 +864,9 @@
       nList.innerHTML = (!p.notes || p.notes.length === 0) ? '<p class="text-xs text-slate-500 italic">Kayıtlı not yok.</p>' : '';
       (p.notes || []).forEach((n, i) => {
         const catCls = n.cat === 'Acil/Olay' ? 'bg-rose-900/60 text-rose-300 border-rose-700' :
+                       n.cat === 'Nütrisyon' ? 'bg-amber-900/60 text-amber-300 border-amber-700' :
+                       n.cat === 'Solunum' ? 'bg-sky-900/60 text-sky-300 border-sky-700' :
+                       n.cat === 'Skor/GKS' ? 'bg-purple-900/60 text-purple-300 border-purple-700' :
                        n.cat === 'Vizit' ? 'bg-cyan-900/60 text-cyan-300 border-cyan-700' : 'bg-slate-700 text-slate-300 border-slate-600';
         nList.innerHTML += `
           <div class="bg-slate-800 border border-slate-700 rounded-xl p-3 shadow-sm">
@@ -579,7 +931,7 @@
         lvCard.innerHTML = `
           <div class="flex justify-between items-center border-b border-slate-700 pb-1.5">
             <span class="font-semibold text-slate-300">Son Ölçüm (${v.time})</span>
-            <span class="text-[10px] text-emerald-400 bg-emerald-950/60 px-1.5 py-0.5 rounded border border-emerald-800">Stabil</span>
+            <span class="text-[10px] text-emerald-400 bg-emerald-950/60 px-1.5 py-0.5 rounded border border-emerald-800">Aktif</span>
           </div>
           <div class="grid grid-cols-3 gap-2 pt-1 font-mono text-center">
             <div class="bg-slate-900/60 p-1.5 rounded"><div class="text-[10px] text-slate-500">TA</div><div class="font-bold text-cyan-400">${v.bp || '-'}</div></div>
@@ -605,17 +957,283 @@
             <button onclick="deleteVital(${i + 1})" class="text-slate-500 hover:text-rose-400"><i class="fa-regular fa-trash-can text-xs"></i></button>
           </div>`;
       });
+
+      // 5. Solunum Parametreleri
+      const ventCard = document.getElementById('latest-vent-card');
+      const vents = p.vents || [];
+      if (vents.length > 0) {
+        const curV = vents[0];
+        ventCard.innerHTML = `
+          <div class="flex justify-between items-center border-b border-slate-700 pb-1.5">
+            <div>
+              <span class="font-bold text-sm text-sky-300">${curV.type}</span>
+              <span class="text-[10px] text-slate-400 ml-1 font-mono">Mod: ${curV.mode}</span>
+            </div>
+            <span class="text-[10px] text-sky-400 bg-sky-950/80 px-2 py-0.5 rounded border border-sky-800 font-mono">${curV.time}</span>
+          </div>
+          <div class="grid grid-cols-3 gap-2 font-mono text-center">
+            <div class="bg-slate-900/60 p-1.5 rounded border border-slate-750">
+              <div class="text-[10px] text-slate-400">FiO2</div>
+              <div class="text-sm font-bold text-sky-400">%${curV.fio2 || '-'}</div>
+            </div>
+            <div class="bg-slate-900/60 p-1.5 rounded border border-slate-750">
+              <div class="text-[10px] text-slate-400">PEEP</div>
+              <div class="text-sm font-bold text-emerald-400">${curV.peep || '-'} <span class="text-[9px] font-normal">cmH2O</span></div>
+            </div>
+            <div class="bg-slate-900/60 p-1.5 rounded border border-slate-750">
+              <div class="text-[10px] text-slate-400">Tidal Volüm</div>
+              <div class="text-sm font-bold text-cyan-300">${curV.vt || '-'} <span class="text-[9px] font-normal">mL</span></div>
+            </div>
+            <div class="bg-slate-900/60 p-1.5 rounded border border-slate-750">
+              <div class="text-[10px] text-slate-400">Frekans (f)</div>
+              <div class="text-sm font-bold text-purple-300">${curV.rr || '-'} <span class="text-[9px] font-normal">/dk</span></div>
+            </div>
+            <div class="bg-slate-900/60 p-1.5 rounded border border-slate-750">
+              <div class="text-[10px] text-slate-400">P.peak</div>
+              <div class="text-sm font-bold text-amber-400">${curV.ppeak || '-'} <span class="text-[9px] font-normal">cmH2O</span></div>
+            </div>
+            <div class="bg-slate-900/60 p-1.5 rounded border border-slate-750">
+              <div class="text-[10px] text-slate-400">Kaf Basıncı</div>
+              <div class="text-sm font-bold text-rose-300">${curV.cuff || '-'} <span class="text-[9px] font-normal">cmH2O</span></div>
+            </div>
+          </div>
+          <div class="pt-1.5 border-t border-slate-700/60 text-[11px] text-slate-300 space-y-1">
+            ${curV.ett ? `<div><span class="text-slate-400">Hat / ETT:</span> <span class="font-medium">${curV.ett}</span></div>` : ''}
+            ${curV.note ? `<div class="italic text-slate-400">"${curV.note}"</div>` : ''}
+          </div>
+        `;
+      } else {
+        ventCard.innerHTML = `<div class="text-center py-4 text-slate-500"><i class="fa-solid fa-lungs text-2xl mb-1 text-slate-600"></i><p>Solunum parametresi kaydedilmemiş.</p></div>`;
+      }
+
+      const ventList = document.getElementById('vent-list');
+      ventList.innerHTML = '';
+      vents.slice(1).forEach((v, i) => {
+        ventList.innerHTML += `
+          <div class="bg-slate-800/60 border border-slate-700/60 rounded-lg p-2 text-slate-300 text-[11px] flex justify-between items-center">
+            <div>
+              <div class="font-bold text-sky-300">${v.type} (${v.mode}) <span class="text-slate-500 font-mono text-[10px] ml-1">${v.time}</span></div>
+              <div class="font-mono text-[10px] text-slate-400">FiO2: %${v.fio2 || '-'} • PEEP: ${v.peep || '-'} • Vt: ${v.vt || '-'} • f: ${v.rr || '-'}</div>
+            </div>
+            <button onclick="deleteVent(${i + 1})" class="text-slate-500 hover:text-rose-400 p-1"><i class="fa-regular fa-trash-can text-xs"></i></button>
+          </div>`;
+      });
+
+      // 6. NÜTRİSYONEL DESTEK (YENİ MODÜL RENDER)
+      const nutrCard = document.getElementById('latest-nutr-card');
+      const nutrs = p.nutritions || [];
+      if (nutrs.length > 0) {
+        const curN = nutrs[0];
+        const tolColor = curN.tolerance.includes('İyi') ? 'text-emerald-400 bg-emerald-950/60 border-emerald-800' : 'text-rose-400 bg-rose-950/60 border-rose-800';
+
+        nutrCard.innerHTML = `
+          <div class="flex justify-between items-center border-b border-slate-700 pb-1.5">
+            <div>
+              <span class="font-bold text-sm text-amber-300">${curN.route}</span>
+              <div class="text-xs text-slate-300 font-medium">${curN.product || 'Ürün belirtilmedi'}</div>
+            </div>
+            <span class="text-[10px] text-amber-400 bg-amber-950/80 px-2 py-0.5 rounded border border-amber-800 font-mono">${curN.time}</span>
+          </div>
+
+          <div class="grid grid-cols-3 gap-2 font-mono text-center">
+            <div class="bg-slate-900/60 p-1.5 rounded border border-slate-750">
+              <div class="text-[10px] text-slate-400">İnfüzyon Hızı</div>
+              <div class="text-base font-bold text-amber-400">${curN.rate || 0} <span class="text-[9px] font-normal text-slate-400">mL/s</span></div>
+            </div>
+            <div class="bg-slate-900/60 p-1.5 rounded border border-slate-750">
+              <div class="text-[10px] text-slate-400">Hedef Kalori</div>
+              <div class="text-base font-bold text-cyan-300">${curN.targetKcal || '-'} <span class="text-[9px] font-normal text-slate-400">kcal</span></div>
+            </div>
+            <div class="bg-slate-900/60 p-1.5 rounded border border-slate-750">
+              <div class="text-[10px] text-slate-400">Hedef Protein</div>
+              <div class="text-base font-bold text-purple-300">${curN.targetProtein || '-'} <span class="text-[9px] font-normal text-slate-400">g</span></div>
+            </div>
+          </div>
+
+          <div class="pt-1.5 border-t border-slate-700/60 text-[11px] text-slate-300 space-y-1.5">
+            <div class="flex items-center justify-between">
+              <span class="text-slate-400">Gastrik Rezidü (GRV):</span>
+              <span class="font-mono font-bold ${curN.grv > 200 ? 'text-rose-400' : 'text-emerald-400'}">${curN.grv ? curN.grv + ' mL' : 'Ölçülmedi / 0'}</span>
+            </div>
+            ${curN.water ? `
+            <div class="flex items-center justify-between">
+              <span class="text-slate-400">Serbest Su / Flush:</span>
+              <span class="font-medium text-sky-300">${curN.water}</span>
+            </div>` : ''}
+            <div class="flex items-center justify-between pt-1">
+              <span class="text-slate-400">Tolerans Durumu:</span>
+              <span class="text-[10px] px-2 py-0.5 rounded border font-semibold ${tolColor}">${curN.tolerance}</span>
+            </div>
+            ${curN.note ? `<div class="bg-slate-900/40 p-1.5 rounded italic text-slate-400 text-[11px] mt-1">"${curN.note}"</div>` : ''}
+          </div>
+        `;
+      } else {
+        nutrCard.innerHTML = `<div class="text-center py-4 text-slate-500"><i class="fa-solid fa-utensils text-2xl mb-1 text-slate-600"></i><p>Nütrisyonel destek kaydı bulunmuyor.</p></div>`;
+      }
+
+      const nutrList = document.getElementById('nutr-list');
+      nutrList.innerHTML = '';
+      nutrs.slice(1).forEach((n, i) => {
+        nutrList.innerHTML += `
+          <div class="bg-slate-800/60 border border-slate-700/60 rounded-lg p-2 text-slate-300 text-[11px] flex justify-between items-center">
+            <div>
+              <div class="font-bold text-amber-300">${n.route} - ${n.product || 'Ürün'} <span class="text-slate-500 font-mono text-[10px] ml-1">${n.time}</span></div>
+              <div class="font-mono text-[10px] text-slate-400">Hız: ${n.rate || 0} mL/s • GRV: ${n.grv || 0} mL • Durum: ${n.tolerance}</div>
+            </div>
+            <button onclick="deleteNutrition(${i + 1})" class="text-slate-500 hover:text-rose-400 p-1"><i class="fa-regular fa-trash-can text-xs"></i></button>
+          </div>`;
+      });
     }
 
-    // MODAL YÖNETİMİ
+    // NÜTRİSYON KAYDET / SİL
+    function saveNutrition() {
+      const p = getCurrentPatient();
+      if (!p) return;
+      if (!p.nutritions) p.nutritions = [];
+
+      const newNutr = {
+        id: Date.now(),
+        time: getTimeStr(),
+        route: document.getElementById('inp-nutr-route').value,
+        product: document.getElementById('inp-nutr-product').value.trim(),
+        rate: parseFloat(document.getElementById('inp-nutr-rate').value) || 0,
+        targetKcal: parseFloat(document.getElementById('inp-nutr-kcal').value) || null,
+        targetProtein: parseFloat(document.getElementById('inp-nutr-protein').value) || null,
+        grv: parseFloat(document.getElementById('inp-nutr-grv').value) || 0,
+        water: document.getElementById('inp-nutr-water').value.trim(),
+        tolerance: document.getElementById('inp-nutr-tol').value,
+        note: document.getElementById('inp-nutr-note').value.trim()
+      };
+
+      p.nutritions.unshift(newNutr);
+      saveToStorage();
+      closeModal('modal-nutrition');
+      renderPatientDetail();
+    }
+
+    function deleteNutrition(idx) {
+      const p = getCurrentPatient();
+      if (!p || !confirm('Bu nütrisyon kaydını silmek istediğinize emin misiniz?')) return;
+      p.nutritions.splice(idx, 1);
+      saveToStorage();
+      renderPatientDetail();
+    }
+
+    // SOLUNUM KAYDET / SİL
+    function saveVent() {
+      const p = getCurrentPatient();
+      if (!p) return;
+      if (!p.vents) p.vents = [];
+
+      const newVent = {
+        id: Date.now(),
+        time: getTimeStr(),
+        type: document.getElementById('inp-vent-type').value,
+        mode: document.getElementById('inp-vent-mode').value,
+        fio2: parseFloat(document.getElementById('inp-vent-fio2').value) || null,
+        peep: parseFloat(document.getElementById('inp-vent-peep').value) || null,
+        vt: parseFloat(document.getElementById('inp-vent-vt').value) || null,
+        rr: parseFloat(document.getElementById('inp-vent-rr').value) || null,
+        ppeak: parseFloat(document.getElementById('inp-vent-ppeak').value) || null,
+        cuff: parseFloat(document.getElementById('inp-vent-cuff').value) || null,
+        ett: document.getElementById('inp-vent-ett').value.trim(),
+        flow: document.getElementById('inp-vent-flow').value.trim(),
+        note: document.getElementById('inp-vent-note').value.trim()
+      };
+
+      p.vents.unshift(newVent);
+      saveToStorage();
+      closeModal('modal-vent');
+      renderPatientDetail();
+    }
+
+    function deleteVent(idx) {
+      const p = getCurrentPatient();
+      if (!p || !confirm('Bu solunum kaydını silmek istediğinize emin misiniz?')) return;
+      p.vents.splice(idx, 1);
+      saveToStorage();
+      renderPatientDetail();
+    }
+
+    // SKORLAMA (GKS & SOFA)
+    function calcGCS() {
+      const e = parseInt(document.getElementById('gcs-eye').value) || 0;
+      const vVal = document.getElementById('gcs-verbal').value;
+      const m = parseInt(document.getElementById('gcs-motor').value) || 0;
+      let totalStr = vVal === 'T' ? `${e + m}T` : `${e + parseInt(vVal) + m}`;
+      document.getElementById('disp-gcs-total').innerText = totalStr;
+      return { e, v: vVal, m, total: totalStr };
+    }
+
+    function saveGCSToNotes() {
+      const p = getCurrentPatient();
+      if (!p) return;
+      const res = calcGCS();
+      const content = `🧠 GKS: ${res.total}/15 (Göz: ${res.e}, Sözel: ${res.v}, Motor: ${res.m})`;
+      if (!p.notes) p.notes = [];
+      p.notes.unshift({ id: Date.now(), time: getTimeStr(), cat: 'Skor/GKS', content: content });
+      saveToStorage();
+      alert(`✅ GKS Skoru (${res.total}) kaydedildi.`);
+      renderPatientDetail();
+    }
+
+    function calcSOFA() {
+      const r = parseInt(document.getElementById('sofa-resp').value) || 0;
+      const c = parseInt(document.getElementById('sofa-coag').value) || 0;
+      const l = parseInt(document.getElementById('sofa-liver').value) || 0;
+      const cv = parseInt(document.getElementById('sofa-cv').value) || 0;
+      const cns = parseInt(document.getElementById('sofa-cns').value) || 0;
+      const ren = parseInt(document.getElementById('sofa-renal').value) || 0;
+      const total = r + c + l + cv + cns + ren;
+      document.getElementById('disp-sofa-total').innerText = total;
+
+      const badge = document.getElementById('sofa-risk-badge');
+      if (total <= 6) {
+        badge.className = "bg-emerald-950/70 border border-emerald-800 text-emerald-300 rounded-lg p-2 text-center text-xs font-semibold";
+        badge.innerHTML = `Toplam: ${total} Puan | Tahmini Mortalite: < %10 (Düşük Risk)`;
+      } else if (total <= 9) {
+        badge.className = "bg-amber-950/70 border border-amber-800 text-amber-300 rounded-lg p-2 text-center text-xs font-semibold";
+        badge.innerHTML = `Toplam: ${total} Puan | Tahmini Mortalite: %15 - %20 (Orta Risk)`;
+      } else if (total <= 12) {
+        badge.className = "bg-orange-950/70 border border-orange-800 text-orange-300 rounded-lg p-2 text-center text-xs font-semibold";
+        badge.innerHTML = `Toplam: ${total} Puan | Tahmini Mortalite: %40 - %50 (Ciddi Risk)`;
+      } else {
+        badge.className = "bg-rose-950/70 border border-rose-800 text-rose-300 rounded-lg p-2 text-center text-xs font-semibold";
+        badge.innerHTML = `Toplam: ${total} Puan | Tahmini Mortalite: > %80 (Yüksek Mortalite Riski)`;
+      }
+      return { r, c, l, cv, cns, ren, total };
+    }
+
+    function saveSOFAToNotes() {
+      const p = getCurrentPatient();
+      if (!p) return;
+      const s = calcSOFA();
+      const content = `📊 SOFA Skoru: ${s.total}/24\n• Solunum: +${s.r}, Koagülasyon: +${s.c}\n• KC: +${s.l}, Dolaşım: +${s.cv}\n• SSS(GKS): +${s.cns}, Böbrek: +${s.ren}`;
+      if (!p.notes) p.notes = [];
+      p.notes.unshift({ id: Date.now(), time: getTimeStr(), cat: 'Skor/GKS', content: content });
+      saveToStorage();
+      alert(`✅ SOFA Skoru (${s.total}/24) kaydedildi.`);
+      renderPatientDetail();
+    }
+
+    // SEKME & MODAL YÖNETİMİ
+    function switchTab(tab) {
+      ['notes', 'meds', 'labs', 'vitals', 'vent', 'nutrition', 'scores'].forEach(t => {
+        document.getElementById(`tab-${t}`).classList.add('hidden');
+        document.getElementById(`btn-tab-${t}`).classList.remove('text-cyan-400');
+        document.getElementById(`btn-tab-${t}`).classList.add('text-slate-400');
+      });
+      document.getElementById(`tab-${tab}`).classList.remove('hidden');
+      document.getElementById(`btn-tab-${tab}`).classList.add('text-cyan-400');
+      document.getElementById(`btn-tab-${tab}`).classList.remove('text-slate-400');
+    }
+
     function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
     function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
 
-    // HASTA EKLEME / DÜZENLEME MODALI
     function openPatientModal(patientId) {
       editingPatientId = patientId;
       const modalTitle = document.getElementById('modal-patient-title');
-
       if (patientId) {
         modalTitle.innerText = "Hasta Bilgilerini Düzenle";
         const p = patients.find(item => item.id === patientId);
@@ -638,7 +1256,6 @@
         document.getElementById('inp-p-diag').value = '';
         document.getElementById('inp-p-allergy').value = '';
       }
-
       openModal('modal-patient');
     }
 
@@ -653,7 +1270,6 @@
       }
 
       if (editingPatientId) {
-        // Mevcut Hastayı Güncelle
         const p = patients.find(item => item.id === editingPatientId);
         if (p) {
           p.name = name;
@@ -665,7 +1281,6 @@
           p.allergy = document.getElementById('inp-p-allergy').value.trim();
         }
       } else {
-        // Yeni Hasta Oluştur
         const newPatient = {
           id: 'p_' + Date.now(),
           name: name,
@@ -678,32 +1293,29 @@
           notes: [],
           meds: [],
           labs: [],
-          vitals: []
+          vitals: [],
+          vents: [],
+          nutritions: []
         };
         patients.unshift(newPatient);
       }
 
       saveToStorage();
       closeModal('modal-patient');
-
-      if (currentPatientId) {
-        renderPatientDetail();
-      } else {
-        renderPatientList();
-      }
+      if (currentPatientId) renderPatientDetail();
+      else renderPatientList();
     }
 
     function deleteCurrentPatient() {
       const p = getCurrentPatient();
       if (!p) return;
-      if (confirm(`"${p.name}" adlı hastayı yoğun bakım listesinden silmek/taburcu etmek istediğinize emin misiniz?`)) {
+      if (confirm(`"${p.name}" adlı hastayı taburcu etmek/silmek istediğinize emin misiniz?`)) {
         patients = patients.filter(item => item.id !== currentPatientId);
         saveToStorage();
         showPatientList();
       }
     }
 
-    // ALT KAYIT İŞLEMLERİ (NOT, İLAÇ, LAB, VİTAL)
     function saveNote() {
       const p = getCurrentPatient();
       const content = document.getElementById('note-content').value.trim();
@@ -806,35 +1418,34 @@
       renderPatientDetail();
     }
 
-    function switchTab(tab) {
-      ['notes', 'meds', 'labs', 'vitals'].forEach(t => {
-        document.getElementById(`tab-${t}`).classList.add('hidden');
-        document.getElementById(`btn-tab-${t}`).classList.remove('text-cyan-400');
-        document.getElementById(`btn-tab-${t}`).classList.add('text-slate-400');
-      });
-      document.getElementById(`tab-${tab}`).classList.remove('hidden');
-      document.getElementById(`btn-tab-${tab}`).classList.add('text-cyan-400');
-      document.getElementById(`btn-tab-${tab}`).classList.remove('text-slate-400');
-    }
-
     function copyHandoffSummary() {
       const p = getCurrentPatient();
       if (!p) return;
       const lv = (p.vitals && p.vitals[0]) || {};
+      const vent = (p.vents && p.vents[0]) || null;
+      const nutr = (p.nutritions && p.nutritions[0]) || null;
 
       let txt = `🏥 *YBÜ HASTA DEVİR BİLGİSİ*\n*Hasta:* ${p.name} (${p.bed})\n*Tanı:* ${p.diag} - ${p.day}\n`;
       if (p.allergy) txt += `*Alerji:* ${p.allergy}\n`;
+
+      if (vent) {
+        txt += `\n🫁 *Solunum Desteği (${vent.time}):*\n• ${vent.type} [${vent.mode}] | FiO2: %${vent.fio2 || '-'} | PEEP: ${vent.peep || '-'} cmH2O\n• Vt: ${vent.vt || '-'} mL | f: ${vent.rr || '-'} /dk | Kaf: ${vent.cuff || '-'} cmH2O\n`;
+      }
+
+      if (nutr) {
+        txt += `\n🥣 *Nütrisyon (${nutr.time}):*\n• ${nutr.route}: ${nutr.product || 'Standart'} (${nutr.rate || 0} mL/s)\n• Hedef: ${nutr.targetKcal || '-'} kcal / ${nutr.targetProtein || '-'} g protein | GRV: ${nutr.grv || 0} mL\n• Tolerans: ${nutr.tolerance}\n`;
+      }
+
       txt += `\n📊 *Son Vitaller (${lv.time || '-'}):*\n• TA: ${lv.bp || '-'} | KTA: ${lv.hr || '-'} | SpO2: %${lv.spo2 || '-'}\n• Ateş: ${lv.temp || '-'}°C | KŞ: ${lv.bg || '-'} | İdrar: ${lv.urine || '-'} mL\n\n`;
       txt += `💊 *Tedaviler:*\n` + (p.meds && p.meds.length ? p.meds.map(m => `• ${m.name} (${m.dose}) [${m.hours}] - ${m.given ? '✅ Verildi' : '⏳ Bekliyor'}`).join('\n') : '• Aktif ilaç yok') + `\n\n`;
       txt += `🔬 *Son Tetkikler:*\n` + (p.labs && p.labs.length ? p.labs.slice(0, 2).map(l => `• [${l.time}] ${l.type}: ${l.results}`).join('\n') : '• Tetkik girilmedi') + `\n\n`;
-      txt += `📋 *Son Notlar:*\n` + (p.notes && p.notes.length ? p.notes.slice(0, 2).map(n => `• [${n.time} - ${n.cat}]: ${n.content}`).join('\n') : '• Not girilmedi');
+      txt += `📋 *Son Notlar & Skorlar:*\n` + (p.notes && p.notes.length ? p.notes.slice(0, 3).map(n => `• [${n.time} - ${n.cat}]: ${n.content}`).join('\n') : '• Not girilmedi');
 
       navigator.clipboard.writeText(txt).then(() => {
-        alert(`✅ ${p.name} için nöbet özeti panoya kopyalandı!`);
+        alert(`✅ ${p.name} için nöbet, solunum ve nütrisyon özeti panoya kopyalandı!`);
       }).catch(() => alert("Kopyalama izni verilmedi."));
     }
 
-    // Başlangıç: Hasta Listesini Yükle
     showPatientList();
   </script>
 </body>
