@@ -49,9 +49,8 @@
               <i class="fa-solid fa-hospital-user text-base"></i>
             </div>
             <div>
-              <h1 class="text-sm font-bold text-white tracking-wide flex items-center gap-1.5">
+              <h1 class="text-sm font-bold text-white tracking-wide">
                 Yoğun Bakım Ünitesi
-                <span class="text-[9px] bg-cyan-950 text-cyan-300 px-1.5 py-0.2 rounded border border-cyan-800 font-mono">VISION AI</span>
               </h1>
               <p class="text-[11px] text-slate-400" id="stat-patient-count">0 Aktif Hasta</p>
             </div>
@@ -122,7 +121,7 @@
             <p class="text-[11px] text-slate-400 mt-0.5" id="disp-patient-diag">Tanı / Durum</p>
           </div>
           <div class="text-right">
-            <span class="text-[10px] bg-amber-950/80 text-amber-300 px-2 py-0.5 rounded border border-amber-800 font-medium" id="disp-patient-day">1. Gün</span>
+            <span class="text-[10px] bg-amber-950/80 text-amber-300 px-2 py-0.5 rounded border border-amber-800 font-medium font-mono" id="disp-patient-day">1. Gün</span>
             <div class="text-[10px] text-slate-400 font-mono mt-0.5" id="disp-patient-weight">-- kg</div>
           </div>
         </div>
@@ -138,7 +137,7 @@
           <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
             <i class="fa-solid fa-clipboard-list text-cyan-400"></i> Klinik Notlar & Vizit
           </h3>
-          <button onclick="openModal('modal-note')" class="text-xs bg-cyan-600 active:bg-cyan-700 text-white font-medium px-2.5 py-1 rounded-md flex items-center gap-1">
+          <button onclick="openNoteModal(null)" class="text-xs bg-cyan-600 active:bg-cyan-700 text-white font-medium px-2.5 py-1 rounded-md flex items-center gap-1">
             <i class="fa-solid fa-plus"></i> Not Ekle
           </button>
         </div>
@@ -151,7 +150,7 @@
           <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
             <i class="fa-solid fa-pills text-purple-400"></i> İlaçlar & İnfüzyonlar
           </h3>
-          <button onclick="openModal('modal-med')" class="text-xs bg-purple-600 active:bg-purple-700 text-white font-medium px-2.5 py-1 rounded-md flex items-center gap-1">
+          <button onclick="openMedModal(null)" class="text-xs bg-purple-600 active:bg-purple-700 text-white font-medium px-2.5 py-1 rounded-md flex items-center gap-1">
             <i class="fa-solid fa-plus"></i> İlaç Ekle
           </button>
         </div>
@@ -164,7 +163,7 @@
           <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
             <i class="fa-solid fa-vial-virus text-rose-400"></i> Tetkik & Kan Gazı
           </h3>
-          <button onclick="openModal('modal-lab')" class="text-xs bg-rose-600 active:bg-rose-700 text-white font-medium px-2.5 py-1 rounded-md flex items-center gap-1">
+          <button onclick="openLabModal(null)" class="text-xs bg-rose-600 active:bg-rose-700 text-white font-medium px-2.5 py-1 rounded-md flex items-center gap-1">
             <i class="fa-solid fa-plus"></i> Tetkik Ekle
           </button>
         </div>
@@ -177,7 +176,7 @@
           <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
             <i class="fa-solid fa-heart-pulse text-emerald-400"></i> Vital & Sıvı Takibi
           </h3>
-          <button onclick="openModal('modal-vital')" class="text-xs bg-emerald-600 active:bg-emerald-700 text-white font-medium px-2.5 py-1 rounded-md flex items-center gap-1">
+          <button onclick="openVitalModal(null)" class="text-xs bg-emerald-600 active:bg-emerald-700 text-white font-medium px-2.5 py-1 rounded-md flex items-center gap-1">
             <i class="fa-solid fa-plus"></i> Vital Kaydet
           </button>
         </div>
@@ -197,7 +196,7 @@
           <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
             <i class="fa-solid fa-lungs text-sky-400"></i> Solunum & Ventilasyon
           </h3>
-          <button onclick="openModal('modal-vent')" class="text-xs bg-sky-600 active:bg-sky-700 text-white font-medium px-2.5 py-1 rounded-md flex items-center gap-1">
+          <button onclick="openVentModal(null)" class="text-xs bg-sky-600 active:bg-sky-700 text-white font-medium px-2.5 py-1 rounded-md flex items-center gap-1">
             <i class="fa-solid fa-plus"></i> Ayar Kaydet
           </button>
         </div>
@@ -211,7 +210,7 @@
           <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
             <i class="fa-solid fa-utensils text-amber-400"></i> Nütrisyonel Destek
           </h3>
-          <button onclick="openModal('modal-nutrition')" class="text-xs bg-amber-600 active:bg-amber-700 text-white font-medium px-2.5 py-1 rounded-md flex items-center gap-1">
+          <button onclick="openNutritionModal(null)" class="text-xs bg-amber-600 active:bg-amber-700 text-white font-medium px-2.5 py-1 rounded-md flex items-center gap-1">
             <i class="fa-solid fa-plus"></i> Beslenme Ekle
           </button>
         </div>
@@ -220,7 +219,6 @@
       </section>
     </main>
 
-    <!-- Alt Gezinme Çubuğu -->
     <nav class="fixed bottom-0 inset-x-0 bg-slate-800/95 backdrop-blur border-t border-slate-700 z-40 safe-bottom">
       <div class="flex items-center space-x-1 px-2 py-1.5 overflow-x-auto custom-scroll max-w-lg mx-auto text-[9px] font-medium whitespace-nowrap">
         <button onclick="switchTab('notes')" id="btn-tab-notes" class="px-3 py-1.5 rounded-lg flex flex-col items-center gap-0.5 text-cyan-400 bg-slate-700/50">
@@ -246,7 +244,7 @@
   </div>
 
   <!-- ======================================================== -->
-  <!-- KAMERA & AI FORM TARAMA MODALI (GÜNCELLENDİ)             -->
+  <!-- MODAL: KAMERA & AI GÖRSEL SEÇİMİ                        -->
   <!-- ======================================================== -->
   <div id="modal-scan" class="fixed inset-0 bg-black/75 z-50 flex items-end sm:items-center justify-center hidden p-0 sm:p-4">
     <div class="bg-slate-800 border-t sm:border border-slate-700 rounded-t-3xl sm:rounded-2xl max-w-md w-full p-5 space-y-3.5 text-xs max-h-[82vh] overflow-y-auto">
@@ -258,12 +256,10 @@
       </div>
 
       <p class="text-slate-300 text-[11px] leading-relaxed">
-        Fotoğrafı doğrudan kameradan çekebilir veya galerinizdeki mevcut fotoğraflardan yükleyebilirsiniz.
+        Fotoğrafı kameradan çekin veya galerinizden seçin. Otomatik olarak sıkıştırılıp Gemini AI ile analiz edilecektir.
       </p>
 
-      <!-- İKİ AYRI NET SEÇİM BUTONU -->
       <div class="grid grid-cols-2 gap-2.5">
-        <!-- 1. Kamera Butonu -->
         <label class="flex flex-col items-center justify-center gap-1.5 bg-slate-900/90 border border-indigo-500/50 hover:border-indigo-400 active:bg-slate-700 p-4 rounded-xl cursor-pointer text-center transition">
           <i class="fa-solid fa-camera text-2xl text-indigo-400"></i>
           <span class="font-bold text-white text-[11px]">Kamera ile Çek</span>
@@ -271,7 +267,6 @@
           <input type="file" accept="image/*" capture="environment" onchange="handleFileSelected(event)" class="hidden">
         </label>
 
-        <!-- 2. Galeri / Dosya Butonu -->
         <label class="flex flex-col items-center justify-center gap-1.5 bg-slate-900/90 border border-slate-600 hover:border-slate-400 active:bg-slate-700 p-4 rounded-xl cursor-pointer text-center transition">
           <i class="fa-solid fa-images text-2xl text-cyan-400"></i>
           <span class="font-bold text-white text-[11px]">Galeriden Seç</span>
@@ -280,18 +275,15 @@
         </label>
       </div>
 
-      <!-- Önizleme ve İlerleme Durumu -->
       <div id="scan-preview-box" class="hidden space-y-2">
         <img id="scan-preview-img" class="w-full max-h-40 object-cover rounded-lg border border-slate-700">
         <div id="scan-status" class="text-center font-semibold text-xs py-1"></div>
       </div>
 
-      <!-- Çözümleme Butonu -->
       <button onclick="startImageAnalysis()" id="btn-start-scan" class="w-full py-2.5 bg-indigo-600 active:bg-indigo-700 rounded-lg text-white font-bold flex items-center justify-center gap-2 shadow">
-        <i class="fa-solid fa-wand-magic-sparkles"></i> Formu Çözümle ve Kaydet
+        <i class="fa-solid fa-wand-magic-sparkles"></i> Formu Çözümle ve İncelemeye Gönder
       </button>
 
-      <!-- Gemini API Anahtarı Bölümü -->
       <div class="pt-2 border-t border-slate-700 text-[10px] space-y-1.5">
         <div class="flex justify-between items-center text-slate-300 font-semibold">
           <span>🔑 Gemini API Anahtarı:</span>
@@ -305,7 +297,243 @@
     </div>
   </div>
 
-  <!-- YEDEKLEME VE AYARLAR MODALI -->
+  <!-- ======================================================== -->
+  <!-- MODAL: TARANAN FORM ÖN İNCELEME & DOĞRULAMA              -->
+  <!-- ======================================================== -->
+  <div id="modal-scan-review" class="fixed inset-0 bg-black/80 z-50 flex items-end sm:items-center justify-center hidden p-0 sm:p-4">
+    <div class="bg-slate-800 border-t sm:border border-slate-700 rounded-t-3xl sm:rounded-2xl max-w-lg w-full p-5 space-y-4 text-xs max-h-[88vh] overflow-y-auto">
+      
+      <div class="flex justify-between items-center pb-2.5 border-b border-slate-700">
+        <div>
+          <span class="font-bold text-white text-sm flex items-center gap-1.5">
+            <i class="fa-solid fa-clipboard-check text-emerald-400"></i> Taranan Bilgileri Doğrula & Düzelt
+          </span>
+          <p class="text-[10px] text-slate-400">Yapay zekanın okuduğu verileri kaydedilmeden önce kontrol edin.</p>
+        </div>
+        <button onclick="closeModal('modal-scan-review')" class="text-slate-400 text-xl font-bold">&times;</button>
+      </div>
+
+      <div class="bg-slate-900/80 p-3 rounded-xl border border-slate-700 space-y-2.5">
+        <span class="text-[11px] font-bold text-cyan-300 flex items-center gap-1"><i class="fa-solid fa-id-card"></i> Hasta Kimlik ve Yatış Bilgileri</span>
+        <div class="grid grid-cols-2 gap-2">
+          <div><label class="text-[10px] text-slate-400 block mb-0.5">Hasta Adı Soyadı</label><input type="text" id="rev-name" class="w-full bg-slate-800 border border-slate-600 rounded p-1.5 text-white font-semibold"></div>
+          <div><label class="text-[10px] text-slate-400 block mb-0.5">Yatak No</label><input type="text" id="rev-bed" class="w-full bg-slate-800 border border-slate-600 rounded p-1.5 text-cyan-300 font-mono font-bold"></div>
+        </div>
+        <div class="grid grid-cols-3 gap-2">
+          <div>
+            <label class="text-[10px] text-slate-400 block mb-0.5">Yatış Tarihi (Otomatik)</label>
+            <input type="date" id="rev-admission-date" class="w-full bg-slate-800 border border-slate-600 rounded p-1.5 text-white font-mono">
+          </div>
+          <div><label class="text-[10px] text-slate-400 block mb-0.5">Kilo (kg)</label><input type="number" id="rev-weight" class="w-full bg-slate-800 border border-slate-600 rounded p-1.5 text-white font-mono"></div>
+          <div><label class="text-[10px] text-slate-400 block mb-0.5">Alerji</label><input type="text" id="rev-allergy" class="w-full bg-slate-800 border border-slate-600 rounded p-1.5 text-rose-300"></div>
+        </div>
+        <div><label class="text-[10px] text-slate-400 block mb-0.5">Klinik Tanı</label><input type="text" id="rev-diag" class="w-full bg-slate-800 border border-slate-600 rounded p-1.5 text-slate-200"></div>
+      </div>
+
+      <div class="bg-slate-900/80 p-3 rounded-xl border border-slate-700 space-y-2">
+        <span class="text-[11px] font-bold text-emerald-300 flex items-center gap-1"><i class="fa-solid fa-heart-pulse"></i> Okunan Son Vitaller</span>
+        <div class="grid grid-cols-4 gap-1.5 font-mono text-center">
+          <div><label class="text-[10px] text-slate-400 block mb-0.5 font-sans">Tansiyon</label><input type="text" id="rev-bp" placeholder="110/65" class="w-full bg-slate-800 border border-slate-600 rounded p-1 text-cyan-300 font-bold text-center"></div>
+          <div><label class="text-[10px] text-slate-400 block mb-0.5 font-sans">Nabız (/dk)</label><input type="number" id="rev-hr" placeholder="88" class="w-full bg-slate-800 border border-slate-600 rounded p-1 text-emerald-400 font-bold text-center"></div>
+          <div><label class="text-[10px] text-slate-400 block mb-0.5 font-sans">SpO2 (%)</label><input type="number" id="rev-spo2" placeholder="95" class="w-full bg-slate-800 border border-slate-600 rounded p-1 text-sky-400 font-bold text-center"></div>
+          <div><label class="text-[10px] text-slate-400 block mb-0.5 font-sans">İdrar (mL)</label><input type="number" id="rev-urine" placeholder="80" class="w-full bg-slate-800 border border-slate-600 rounded p-1 text-blue-400 font-bold text-center"></div>
+        </div>
+      </div>
+
+      <div class="bg-slate-900/80 p-3 rounded-xl border border-slate-700 space-y-2">
+        <span class="text-[11px] font-bold text-sky-300 flex items-center gap-1"><i class="fa-solid fa-lungs"></i> Mekanik Ventilasyon & Solunum</span>
+        <div class="grid grid-cols-2 gap-2">
+          <div><label class="text-[10px] text-slate-400 block mb-0.5">Destek Türü</label><input type="text" id="rev-vent-type" class="w-full bg-slate-800 border border-slate-600 rounded p-1.5 text-white"></div>
+          <div><label class="text-[10px] text-slate-400 block mb-0.5">Mod</label><input type="text" id="rev-vent-mode" class="w-full bg-slate-800 border border-slate-600 rounded p-1.5 text-white font-mono"></div>
+        </div>
+        <div class="grid grid-cols-3 gap-2 font-mono text-center">
+          <div><label class="text-[10px] text-slate-400 block mb-0.5 font-sans">FiO2 (%)</label><input type="number" id="rev-vent-fio2" placeholder="40" class="w-full bg-slate-800 border border-slate-600 rounded p-1 text-white text-center"></div>
+          <div><label class="text-[10px] text-slate-400 block mb-0.5 font-sans">PEEP</label><input type="number" id="rev-vent-peep" placeholder="6" class="w-full bg-slate-800 border border-slate-600 rounded p-1 text-white text-center"></div>
+          <div><label class="text-[10px] text-slate-400 block mb-0.5 font-sans">Vt (mL)</label><input type="number" id="rev-vent-vt" placeholder="450" class="w-full bg-slate-800 border border-slate-600 rounded p-1 text-white text-center"></div>
+        </div>
+      </div>
+
+      <div class="bg-slate-900/80 p-3 rounded-xl border border-slate-700 space-y-1.5">
+        <span class="text-[11px] font-bold text-purple-300 flex items-center gap-1"><i class="fa-solid fa-pills"></i> Aktif İlaçlar (Her satıra bir ilaç)</span>
+        <textarea id="rev-meds" rows="3" class="w-full bg-slate-800 border border-slate-600 rounded p-2 text-white font-mono text-xs"></textarea>
+      </div>
+
+      <div class="bg-slate-900/80 p-3 rounded-xl border border-slate-700 space-y-1.5">
+        <span class="text-[11px] font-bold text-amber-300 flex items-center gap-1"><i class="fa-solid fa-comment-medical"></i> Hekim Gözlem / Durum Özeti</span>
+        <textarea id="rev-note" rows="2" class="w-full bg-slate-800 border border-slate-600 rounded p-2 text-white text-xs"></textarea>
+      </div>
+
+      <div class="flex gap-2 pt-1 border-t border-slate-700">
+        <button onclick="closeModal('modal-scan-review')" class="w-1/3 py-2.5 bg-slate-700 hover:bg-slate-600 text-slate-300 font-semibold rounded-xl text-center">Vazgeç</button>
+        <button onclick="confirmAndSaveScannedData()" class="w-2/3 py-2.5 bg-emerald-600 active:bg-emerald-700 text-white font-bold rounded-xl flex items-center justify-center gap-1.5 shadow">
+          <i class="fa-solid fa-check"></i> Onayla ve Hastaya Kaydet
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ======================================================== -->
+  <!-- MODAL: HASTA EKLE / DÜZENLE                             -->
+  <!-- ======================================================== -->
+  <div id="modal-patient" class="fixed inset-0 bg-black/70 z-50 flex items-end sm:items-center justify-center hidden p-0 sm:p-4">
+    <div class="bg-slate-800 border-t sm:border border-slate-700 rounded-t-2xl sm:rounded-xl max-w-md w-full p-4 space-y-3 text-xs max-h-[90vh] overflow-y-auto">
+      <div class="flex justify-between items-center pb-2 border-b border-slate-700">
+        <span class="font-bold text-white text-sm" id="modal-patient-title">Hasta Bilgisi</span>
+        <button onclick="closeModal('modal-patient')" class="text-slate-400 text-lg">&times;</button>
+      </div>
+      <div><label class="text-slate-400 block mb-1">Hasta Adı Soyadı *</label><input type="text" id="inp-p-name" placeholder="Örn: Ahmet Yılmaz" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white"></div>
+      <div class="grid grid-cols-2 gap-2">
+        <div><label class="text-slate-400 block mb-1">Yatak No *</label><input type="text" id="inp-p-bed" placeholder="Örn: Yatak 04" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white"></div>
+        <div>
+          <label class="text-slate-400 block mb-1">Yatış Tarihi *</label>
+          <input type="date" id="inp-p-admission-date" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white font-mono">
+        </div>
+      </div>
+      <div class="grid grid-cols-2 gap-2">
+        <div><label class="text-slate-400 block mb-1">Kilo (kg)</label><input type="number" id="inp-p-weight" placeholder="70" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white"></div>
+        <div><label class="text-slate-400 block mb-1">Yaş</label><input type="number" id="inp-p-age" placeholder="65" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white"></div>
+      </div>
+      <div><label class="text-slate-400 block mb-1">Tanı *</label><input type="text" id="inp-p-diag" placeholder="Septik Şok, ARDS vb." class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white"></div>
+      <div><label class="text-slate-400 block mb-1">Alerji</label><input type="text" id="inp-p-allergy" placeholder="Yok veya Penisilin Alerjisi" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white"></div>
+      <button onclick="savePatient()" class="w-full py-2.5 bg-cyan-600 rounded text-white font-bold">Kaydet</button>
+    </div>
+  </div>
+
+  <!-- MODAL: NOT EKLE / DÜZENLE -->
+  <div id="modal-note" class="fixed inset-0 bg-black/70 z-50 flex items-end sm:items-center justify-center hidden p-0 sm:p-4">
+    <div class="bg-slate-800 border-t sm:border border-slate-700 rounded-t-2xl sm:rounded-xl max-w-md w-full p-4 space-y-3 text-xs">
+      <div class="flex justify-between items-center pb-2 border-b border-slate-700">
+        <span class="font-bold text-white text-sm" id="modal-note-title">Not Ekle</span>
+        <button onclick="closeModal('modal-note')" class="text-slate-400 text-lg">&times;</button>
+      </div>
+      <div>
+        <label class="text-slate-400 block mb-1">Kategori</label>
+        <select id="note-cat" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white">
+          <option value="Vizit">Vizit</option>
+          <option value="Form Analizi">Form Analizi (AI)</option>
+          <option value="Hemşirelik">Hemşirelik</option>
+          <option value="Konsültasyon">Konsültasyon</option>
+          <option value="Olay / Kötüleşme">Olay / Kötüleşme</option>
+        </select>
+      </div>
+      <div>
+        <label class="text-slate-400 block mb-1">İçerik</label>
+        <textarea id="note-content" rows="4" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white"></textarea>
+      </div>
+      <button onclick="saveNote()" id="btn-save-note" class="w-full py-2.5 bg-cyan-600 rounded text-white font-bold">Kaydet</button>
+    </div>
+  </div>
+
+  <!-- MODAL: İLAÇ EKLE / DÜZENLE -->
+  <div id="modal-med" class="fixed inset-0 bg-black/70 z-50 flex items-end sm:items-center justify-center hidden p-0 sm:p-4">
+    <div class="bg-slate-800 border-t sm:border border-slate-700 rounded-t-2xl sm:rounded-xl max-w-md w-full p-4 space-y-3 text-xs">
+      <div class="flex justify-between items-center pb-2 border-b border-slate-700">
+        <span class="font-bold text-white text-sm" id="modal-med-title">İlaç Ekle</span>
+        <button onclick="closeModal('modal-med')" class="text-slate-400 text-lg">&times;</button>
+      </div>
+      <div>
+        <label class="text-slate-400 block mb-1">İlaç Adı *</label>
+        <input type="text" id="med-name" placeholder="Meropenem, Clexane..." class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white">
+      </div>
+      <div class="grid grid-cols-2 gap-2">
+        <div>
+          <label class="text-slate-400 block mb-1">Doz</label>
+          <input type="text" id="med-dose" placeholder="3x1 gr IV" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white">
+        </div>
+        <div>
+          <label class="text-slate-400 block mb-1">Saatler</label>
+          <input type="text" id="med-hours" placeholder="08:00 - 16:00" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white">
+        </div>
+      </div>
+      <button onclick="saveMed()" id="btn-save-med" class="w-full py-2.5 bg-purple-600 rounded text-white font-bold">Kaydet</button>
+    </div>
+  </div>
+
+  <!-- MODAL: TETKİK EKLE / DÜZENLE -->
+  <div id="modal-lab" class="fixed inset-0 bg-black/70 z-50 flex items-end sm:items-center justify-center hidden p-0 sm:p-4">
+    <div class="bg-slate-800 border-t sm:border border-slate-700 rounded-t-2xl sm:rounded-xl max-w-md w-full p-4 space-y-3 text-xs">
+      <div class="flex justify-between items-center pb-2 border-b border-slate-700">
+        <span class="font-bold text-white text-sm" id="modal-lab-title">Tetkik Ekle</span>
+        <button onclick="closeModal('modal-lab')" class="text-slate-400 text-lg">&times;</button>
+      </div>
+      <div>
+        <label class="text-slate-400 block mb-1">Tür / Grup *</label>
+        <input type="text" id="lab-type" placeholder="AKG, Biyokimya, Hemogram..." class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white">
+      </div>
+      <div>
+        <label class="text-slate-400 block mb-1">Sonuçlar & Parametreler *</label>
+        <textarea id="lab-results" rows="3" placeholder="pH: 7.34, pO2: 82, Kreatinin: 1.4..." class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white"></textarea>
+      </div>
+      <button onclick="saveLab()" id="btn-save-lab" class="w-full py-2.5 bg-rose-600 rounded text-white font-bold">Kaydet</button>
+    </div>
+  </div>
+
+  <!-- MODAL: VİTAL EKLE / DÜZENLE -->
+  <div id="modal-vital" class="fixed inset-0 bg-black/70 z-50 flex items-end sm:items-center justify-center hidden p-0 sm:p-4">
+    <div class="bg-slate-800 border-t sm:border border-slate-700 rounded-t-2xl sm:rounded-xl max-w-md w-full p-4 space-y-3 text-xs">
+      <div class="flex justify-between items-center pb-2 border-b border-slate-700">
+        <span class="font-bold text-white text-sm" id="modal-vital-title">Vital Kaydı</span>
+        <button onclick="closeModal('modal-vital')" class="text-slate-400 text-lg">&times;</button>
+      </div>
+      <div class="grid grid-cols-2 gap-2">
+        <div><label class="text-slate-400 block mb-1">TA (Sist/Diyast)</label><input type="text" id="vit-bp" placeholder="120/70" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white"></div>
+        <div><label class="text-slate-400 block mb-1">KTA / Nabız (/dk)</label><input type="number" id="vit-hr" placeholder="84" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white"></div>
+      </div>
+      <div class="grid grid-cols-2 gap-2">
+        <div><label class="text-slate-400 block mb-1">SpO2 (%)</label><input type="number" id="vit-spo2" placeholder="96" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white"></div>
+        <div><label class="text-slate-400 block mb-1">İdrar (mL)</label><input type="number" id="vit-urine" placeholder="80" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white"></div>
+      </div>
+      <button onclick="saveVital()" id="btn-save-vital" class="w-full py-2.5 bg-emerald-600 rounded text-white font-bold">Kaydet</button>
+    </div>
+  </div>
+
+  <!-- MODAL: SOLUNUM EKLE / DÜZENLE -->
+  <div id="modal-vent" class="fixed inset-0 bg-black/70 z-50 flex items-end sm:items-center justify-center hidden p-0 sm:p-4">
+    <div class="bg-slate-800 border-t sm:border border-slate-700 rounded-t-2xl sm:rounded-xl max-w-md w-full p-4 space-y-3 text-xs">
+      <div class="flex justify-between items-center pb-2 border-b border-slate-700">
+        <span class="font-bold text-white text-sm" id="modal-vent-title">Solunum Ayarı</span>
+        <button onclick="closeModal('modal-vent')" class="text-slate-400 text-lg">&times;</button>
+      </div>
+      <div class="grid grid-cols-2 gap-2">
+        <div><label class="text-slate-400 block mb-1">Destek Türü</label><input type="text" id="inp-vent-type" placeholder="İnvaziv MV (ETT)" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white"></div>
+        <div><label class="text-slate-400 block mb-1">Mod</label><input type="text" id="inp-vent-mode" placeholder="SIMV, PCV" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white"></div>
+      </div>
+      <div class="grid grid-cols-3 gap-2">
+        <div><label class="text-slate-400 block mb-1">FiO2 (%)</label><input type="number" id="inp-vent-fio2" placeholder="40" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white"></div>
+        <div><label class="text-slate-400 block mb-1">PEEP</label><input type="number" id="inp-vent-peep" placeholder="6" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white"></div>
+        <div><label class="text-slate-400 block mb-1">Vt (mL)</label><input type="number" id="inp-vent-vt" placeholder="450" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white"></div>
+      </div>
+      <button onclick="saveVent()" id="btn-save-vent" class="w-full py-2.5 bg-sky-600 rounded text-white font-bold">Kaydet</button>
+    </div>
+  </div>
+
+  <!-- MODAL: NÜTRİSYON EKLE / DÜZENLE -->
+  <div id="modal-nutrition" class="fixed inset-0 bg-black/70 z-50 flex items-end sm:items-center justify-center hidden p-0 sm:p-4">
+    <div class="bg-slate-800 border-t sm:border border-slate-700 rounded-t-2xl sm:rounded-xl max-w-md w-full p-4 space-y-3 text-xs">
+      <div class="flex justify-between items-center pb-2 border-b border-slate-700">
+        <span class="font-bold text-white text-sm" id="modal-nutrition-title">Nütrisyon Kaydı</span>
+        <button onclick="closeModal('modal-nutrition')" class="text-slate-400 text-lg">&times;</button>
+      </div>
+      <div>
+        <label class="text-slate-400 block mb-1">Yol / Destek Türü</label>
+        <select id="inp-nutr-route" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white">
+          <option value="Enteral (NGS)">Enteral (NGS)</option>
+          <option value="Enteral (PEG)">Enteral (PEG)</option>
+          <option value="Santral TPN">Santral TPN</option>
+          <option value="Oral Diyet">Oral Diyet</option>
+          <option value="Aç / NPO">Aç / NPO</option>
+        </select>
+      </div>
+      <div class="grid grid-cols-2 gap-2">
+        <div><label class="text-slate-400 block mb-1">Hız (mL/s)</label><input type="number" id="inp-nutr-rate" placeholder="60" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white"></div>
+        <div><label class="text-slate-400 block mb-1">Rezidü (GRV mL)</label><input type="number" id="inp-nutr-grv" placeholder="20" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white"></div>
+      </div>
+      <button onclick="saveNutrition()" id="btn-save-nutrition" class="w-full py-2.5 bg-amber-600 rounded text-white font-bold">Kaydet</button>
+    </div>
+  </div>
+
+  <!-- MODAL: YEDEKLEME -->
   <div id="modal-backup" class="fixed inset-0 bg-black/70 z-50 flex items-end sm:items-center justify-center hidden p-0 sm:p-4">
     <div class="bg-slate-800 border-t sm:border border-slate-700 rounded-t-2xl sm:rounded-xl max-w-md w-full p-4 space-y-3.5 text-xs">
       <div class="flex justify-between items-center pb-2 border-b border-slate-700">
@@ -321,99 +549,67 @@
     </div>
   </div>
 
-  <!-- HASTA / NOT / İLAÇ / TETKİK MODALLERİ -->
-  <div id="modal-patient" class="fixed inset-0 bg-black/70 z-50 flex items-end sm:items-center justify-center hidden p-0 sm:p-4">
-    <div class="bg-slate-800 border-t sm:border border-slate-700 rounded-t-2xl sm:rounded-xl max-w-md w-full p-4 space-y-3 text-xs max-h-[90vh] overflow-y-auto">
-      <div class="flex justify-between items-center pb-2 border-b border-slate-700">
-        <span class="font-bold text-white text-sm" id="modal-patient-title">Hasta Bilgisi</span>
-        <button onclick="closeModal('modal-patient')" class="text-slate-400 text-lg">&times;</button>
-      </div>
-      <div><label class="text-slate-400 block mb-1">Hasta Adı Soyadı *</label><input type="text" id="inp-p-name" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white"></div>
-      <div class="grid grid-cols-2 gap-2">
-        <div><label class="text-slate-400 block mb-1">Yatak No *</label><input type="text" id="inp-p-bed" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white"></div>
-        <div><label class="text-slate-400 block mb-1">YBÜ Günü</label><input type="text" id="inp-p-day" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white"></div>
-      </div>
-      <div class="grid grid-cols-2 gap-2">
-        <div><label class="text-slate-400 block mb-1">Kilo (kg)</label><input type="number" id="inp-p-weight" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white"></div>
-        <div><label class="text-slate-400 block mb-1">Yaş</label><input type="number" id="inp-p-age" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white"></div>
-      </div>
-      <div><label class="text-slate-400 block mb-1">Tanı *</label><input type="text" id="inp-p-diag" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white"></div>
-      <div><label class="text-slate-400 block mb-1">Alerji</label><input type="text" id="inp-p-allergy" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white"></div>
-      <button onclick="savePatient()" class="w-full py-2.5 bg-cyan-600 rounded text-white font-bold">Kaydet</button>
-    </div>
-  </div>
-
-  <div id="modal-note" class="fixed inset-0 bg-black/70 z-50 flex items-end sm:items-center justify-center hidden p-0 sm:p-4">
-    <div class="bg-slate-800 border-t sm:border border-slate-700 rounded-t-2xl sm:rounded-xl max-w-md w-full p-4 space-y-3 text-xs">
-      <div class="flex justify-between items-center pb-2 border-b border-slate-700"><span class="font-bold text-white text-sm">Not Ekle</span><button onclick="closeModal('modal-note')" class="text-slate-400 text-lg">&times;</button></div>
-      <div><label class="text-slate-400 block mb-1">Kategori</label><select id="note-cat" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white"><option value="Vizit">Vizit</option><option value="Form Analizi">Form Analizi (AI)</option><option value="Hemşirelik">Hemşirelik</option></select></div>
-      <div><label class="text-slate-400 block mb-1">İçerik</label><textarea id="note-content" rows="4" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white"></textarea></div>
-      <button onclick="saveNote()" class="w-full py-2.5 bg-cyan-600 rounded text-white font-bold">Kaydet</button>
-    </div>
-  </div>
-
-  <div id="modal-med" class="fixed inset-0 bg-black/70 z-50 flex items-end sm:items-center justify-center hidden p-0 sm:p-4">
-    <div class="bg-slate-800 border-t sm:border border-slate-700 rounded-t-2xl sm:rounded-xl max-w-md w-full p-4 space-y-3 text-xs">
-      <div class="flex justify-between items-center pb-2 border-b border-slate-700"><span class="font-bold text-white text-sm">İlaç Ekle</span><button onclick="closeModal('modal-med')" class="text-slate-400 text-lg">&times;</button></div>
-      <div><label class="text-slate-400 block mb-1">İlaç Adı</label><input type="text" id="med-name" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white"></div>
-      <div class="grid grid-cols-2 gap-2"><div><label class="text-slate-400 block mb-1">Doz</label><input type="text" id="med-dose" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white"></div><div><label class="text-slate-400 block mb-1">Saatler</label><input type="text" id="med-hours" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white"></div></div>
-      <button onclick="saveMed()" class="w-full py-2.5 bg-purple-600 rounded text-white font-bold">Kaydet</button>
-    </div>
-  </div>
-
-  <div id="modal-lab" class="fixed inset-0 bg-black/70 z-50 flex items-end sm:items-center justify-center hidden p-0 sm:p-4">
-    <div class="bg-slate-800 border-t sm:border border-slate-700 rounded-t-2xl sm:rounded-xl max-w-md w-full p-4 space-y-3 text-xs">
-      <div class="flex justify-between items-center pb-2 border-b border-slate-700"><span class="font-bold text-white text-sm">Tetkik Ekle</span><button onclick="closeModal('modal-lab')" class="text-slate-400 text-lg">&times;</button></div>
-      <div><label class="text-slate-400 block mb-1">Tür</label><input type="text" id="lab-type" placeholder="AKG, Biyokimya..." class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white"></div>
-      <div><label class="text-slate-400 block mb-1">Sonuçlar</label><textarea id="lab-results" rows="3" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white"></textarea></div>
-      <button onclick="saveLab()" class="w-full py-2.5 bg-rose-600 rounded text-white font-bold">Kaydet</button>
-    </div>
-  </div>
-
-  <div id="modal-vital" class="fixed inset-0 bg-black/70 z-50 flex items-end sm:items-center justify-center hidden p-0 sm:p-4">
-    <div class="bg-slate-800 border-t sm:border border-slate-700 rounded-t-2xl sm:rounded-xl max-w-md w-full p-4 space-y-3 text-xs">
-      <div class="flex justify-between items-center pb-2 border-b border-slate-700"><span class="font-bold text-white text-sm">Vital Kaydı</span><button onclick="closeModal('modal-vital')" class="text-slate-400 text-lg">&times;</button></div>
-      <div class="grid grid-cols-2 gap-2"><div><label class="text-slate-400 block mb-1">TA</label><input type="text" id="vit-bp" placeholder="120/70" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white"></div><div><label class="text-slate-400 block mb-1">KTA</label><input type="number" id="vit-hr" placeholder="84" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white"></div></div>
-      <div class="grid grid-cols-2 gap-2"><div><label class="text-slate-400 block mb-1">SpO2</label><input type="number" id="vit-spo2" placeholder="96" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white"></div><div><label class="text-slate-400 block mb-1">İdrar (mL)</label><input type="number" id="vit-urine" placeholder="80" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white"></div></div>
-      <button onclick="saveVital()" class="w-full py-2.5 bg-emerald-600 rounded text-white font-bold">Kaydet</button>
-    </div>
-  </div>
-
-  <div id="modal-vent" class="fixed inset-0 bg-black/70 z-50 flex items-end sm:items-center justify-center hidden p-0 sm:p-4">
-    <div class="bg-slate-800 border-t sm:border border-slate-700 rounded-t-2xl sm:rounded-xl max-w-md w-full p-4 space-y-3 text-xs">
-      <div class="flex justify-between items-center pb-2 border-b border-slate-700"><span class="font-bold text-white text-sm">Solunum Ayarı</span><button onclick="closeModal('modal-vent')" class="text-slate-400 text-lg">&times;</button></div>
-      <div class="grid grid-cols-2 gap-2"><div><label class="text-slate-400 block mb-1">Mod</label><input type="text" id="inp-vent-mode" placeholder="SIMV, PCV" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white"></div><div><label class="text-slate-400 block mb-1">FiO2 (%)</label><input type="number" id="inp-vent-fio2" placeholder="40" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white"></div></div>
-      <div class="grid grid-cols-2 gap-2"><div><label class="text-slate-400 block mb-1">PEEP</label><input type="number" id="inp-vent-peep" placeholder="6" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white"></div><div><label class="text-slate-400 block mb-1">Vt (mL)</label><input type="number" id="inp-vent-vt" placeholder="450" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white"></div></div>
-      <button onclick="saveVent()" class="w-full py-2.5 bg-sky-600 rounded text-white font-bold">Kaydet</button>
-    </div>
-  </div>
-
-  <div id="modal-nutrition" class="fixed inset-0 bg-black/70 z-50 flex items-end sm:items-center justify-center hidden p-0 sm:p-4">
-    <div class="bg-slate-800 border-t sm:border border-slate-700 rounded-t-2xl sm:rounded-xl max-w-md w-full p-4 space-y-3 text-xs">
-      <div class="flex justify-between items-center pb-2 border-b border-slate-700"><span class="font-bold text-white text-sm">Nütrisyon Kaydı</span><button onclick="closeModal('modal-nutrition')" class="text-slate-400 text-lg">&times;</button></div>
-      <div><label class="text-slate-400 block mb-1">Yol</label><select id="inp-nutr-route" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white"><option value="Enteral (NGS)">Enteral (NGS)</option><option value="Santral TPN">Santral TPN</option><option value="Oral Diyet">Oral Diyet</option><option value="NPO">Aç / NPO</option></select></div>
-      <div class="grid grid-cols-2 gap-2"><div><label class="text-slate-400 block mb-1">Hız (mL/s)</label><input type="number" id="inp-nutr-rate" placeholder="60" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white"></div><div><label class="text-slate-400 block mb-1">Rezidü (GRV)</label><input type="number" id="inp-nutr-grv" placeholder="20" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white"></div></div>
-      <button onclick="saveNutrition()" class="w-full py-2.5 bg-amber-600 rounded text-white font-bold">Kaydet</button>
-    </div>
-  </div>
-
-  <!-- JAVASCRIPT ÇEKİRDEK & VISION MOTORU -->
+  <!-- JAVASCRIPT ÇEKİRDEK & OTOMATİK TARİH/GÜN MOTORU -->
   <script>
-    const STORAGE_KEY = 'icu_vision_db_v5';
+    const STORAGE_KEY = 'icu_vision_db_v8';
     let patients = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
     let currentPatientId = null;
     let scanningPatientId = null;
     let compressedBase64Image = null;
     let vitalsChartInstance = null;
 
+    let editingNoteIdx = null;
+    let editingMedIdx = null;
+    let editingLabIdx = null;
+    let editingVitalIdx = null;
+    let editingVentIdx = null;
+    let editingNutrIdx = null;
+
     function saveToStorage() { localStorage.setItem(STORAGE_KEY, JSON.stringify(patients)); }
     function getCurrentPatient() { return patients.find(p => p.id === currentPatientId); }
     function getTimeStr() { const n = new Date(); return `${String(n.getHours()).padStart(2,'0')}:${String(n.getMinutes()).padStart(2,'0')}`; }
 
+    function getTodayDateStr() {
+      const d = new Date();
+      const year = d.getFullYear();
+      const month = String(d.getMonth() + 1).padStart(2, '0');
+      const day = String(d.getDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    }
+
+    function getICUDayString(admissionDateStr, fallbackDayStr) {
+      if (admissionDateStr && admissionDateStr.includes('-')) {
+        const parts = admissionDateStr.split('-');
+        if (parts.length === 3) {
+          const adm = new Date(parseInt(parts[0], 10), parseInt(parts[1], 10) - 1, parseInt(parts[2], 10));
+          const now = new Date();
+          const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+          const diffMs = today - adm;
+          const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+          const dayNum = diffDays >= 0 ? diffDays + 1 : 1;
+          return `${dayNum}. Gün`;
+        }
+      }
+      return fallbackDayStr || "1. Gün";
+    }
+
+    function estimateAdmissionDateFromDay(dayStr) {
+      let dayNum = 1;
+      if (dayStr) {
+        const match = String(dayStr).match(/\d+/);
+        if (match) dayNum = parseInt(match[0], 10);
+      }
+      const now = new Date();
+      const target = new Date(now.getFullYear(), now.getMonth(), now.getDate() - (dayNum - 1));
+      const y = target.getFullYear();
+      const m = String(target.getMonth() + 1).padStart(2, '0');
+      const d = String(target.getDate()).padStart(2, '0');
+      return `${y}-${m}-${d}`;
+    }
+
     function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
     function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
 
-    // API Anahtarı Durumu Kontrolü
     function checkApiKeyStatus() {
       const key = localStorage.getItem('gemini_api_key');
       const st = document.getElementById('api-key-status');
@@ -439,7 +635,6 @@
       }
     }
 
-    // Modal Açılışı
     function openScanModal(patientId) {
       scanningPatientId = patientId;
       compressedBase64Image = null;
@@ -449,7 +644,6 @@
       openModal('modal-scan');
     }
 
-    // Dosya / Fotoğraf Seçildiğinde Otomatik Sıkıştırma (Canvas)
     function handleFileSelected(event) {
       const file = event.target.files[0];
       if (!file) return;
@@ -486,7 +680,6 @@
           const ctx = canvas.getContext('2d');
           ctx.drawImage(img, 0, 0, width, height);
 
-          // Kaliteyi %82'de tutarak dosya boyutunu ~350 KB'a indiriyoruz
           const dataUrl = canvas.toDataURL('image/jpeg', 0.82);
           compressedBase64Image = dataUrl.split(',')[1];
 
@@ -494,18 +687,11 @@
           statusDiv.className = "text-center font-semibold text-xs text-emerald-400 py-1";
           statusDiv.innerText = `Görsel hazırlandı (${Math.round(compressedBase64Image.length * 0.75 / 1024)} KB) ✓`;
         };
-        img.onerror = function() {
-          compressedBase64Image = e.target.result.split(',')[1];
-          document.getElementById('scan-preview-img').src = e.target.result;
-          statusDiv.className = "text-center font-semibold text-xs text-emerald-400 py-1";
-          statusDiv.innerText = "Görsel yüklendi ✓";
-        };
         img.src = e.target.result;
       };
       reader.readAsDataURL(file);
     }
 
-    // Projeye Uygun Aktif Modeli Dinamik Olarak Tespit Eden Fonksiyon
     async function getSupportedModelList(apiKey) {
       try {
         const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${apiKey}`);
@@ -516,7 +702,6 @@
               .filter(m => m.supportedGenerationMethods && m.supportedGenerationMethods.includes("generateContent"))
               .map(m => m.name);
 
-            // Tercih sırasına göre flash modellerini öne al
             const preferred = [
               valid.find(m => m.includes("2.5-flash")),
               valid.find(m => m.includes("2.0-flash")),
@@ -532,7 +717,6 @@
       } catch (e) {
         console.warn("Dinamik model sorgusu atlandı:", e);
       }
-      // Yedek modeller
       return [
         "models/gemini-2.0-flash",
         "models/gemini-2.5-flash",
@@ -543,7 +727,6 @@
       ];
     }
 
-    // GEMINI VISION API ÇÖZÜMLEME MOTORU
     async function startImageAnalysis() {
       if (!compressedBase64Image) {
         alert('Lütfen önce bir form fotoğrafı çekin veya galeriden seçin.');
@@ -552,7 +735,7 @@
 
       const apiKey = (document.getElementById('gemini-api-key').value || localStorage.getItem('gemini_api_key') || '').trim();
       if (!apiKey || apiKey.length < 10) {
-        alert('Lütfen alttaki kutucuğa geçerli bir Gemini API anahtarı yapıştırıp "Kaydet"e basın.');
+        alert('Lütfen geçerli bir Gemini API anahtarı girip "Kaydet"e basın.');
         return;
       }
 
@@ -564,7 +747,7 @@
 
       const promptText = `Sen anestezi ve yoğun bakım uzmanı bir hekimsin. Eklenen görsel Manisa Celal Bayar Üniversitesi YB.FR.04 Anestezi Yoğun Bakım Hasta İzlem Formudur.
 Görseldeki el yazılarını, vital bulguları, ventilatör ayarlarını, ilaçları ve gözlem notlarını dikkatlice oku.
-Sadece ve sadece aşağıdaki JSON formatında saf bir JSON çıktısı üret, markdown veya fazladan açıklama yazma:
+Sadece ve sadece aşağıdaki JSON formatında saf bir JSON çıktısı üret, markdown veya açıklama yazma:
 {
   "name": "Hastanın adı soyadı veya baş harfleri",
   "bed": "Yatak no (örn: Yatak 04)",
@@ -579,7 +762,6 @@ Sadece ve sadece aşağıdaki JSON formatında saf bir JSON çıktısı üret, m
 }`;
 
       try {
-        // Projeye ait geçerli modelleri al
         const candidateModels = await getSupportedModelList(apiKey);
         let parsed = null;
         let lastError = null;
@@ -587,7 +769,7 @@ Sadece ve sadece aşağıdaki JSON formatında saf bir JSON çıktısı üret, m
         for (const modelPath of candidateModels) {
           try {
             const shortName = modelPath.replace("models/", "");
-            statusDiv.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Model analiz ediyor (${shortName})...`;
+            statusDiv.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Model çözümlüyor (${shortName})...`;
 
             const apiUrl = `https://generativelanguage.googleapis.com/v1beta/${modelPath}:generateContent?key=${apiKey}`;
             const response = await fetch(apiUrl, {
@@ -609,16 +791,12 @@ Sadece ve sadece aşağıdaki JSON formatında saf bir JSON çıktısı üret, m
               const rawText = data.candidates[0].content.parts[0].text;
               const cleanedJSON = rawText.replace(/```json/gi, '').replace(/```/gi, '').trim();
               parsed = JSON.parse(cleanedJSON);
-              break; // Başarılı, döngüden çık
+              break;
             } else {
               if (data.error) {
                 lastError = data.error.message;
-                // Eğer 404 (model not found) ise bir sonraki modele geç
-                if (response.status === 404 || data.error.code === 404) {
-                  continue;
-                } else {
-                  throw new Error(data.error.message);
-                }
+                if (response.status === 404 || data.error.code === 404) continue;
+                else throw new Error(data.error.message);
               }
             }
           } catch (err) {
@@ -627,15 +805,15 @@ Sadece ve sadece aşağıdaki JSON formatında saf bir JSON çıktısı üret, m
           }
         }
 
-        if (!parsed) {
-          throw new Error(lastError || "Uygun Gemini modeline ulaşılamadı.");
-        }
-
-        applyParsedData(parsed);
+        if (!parsed) throw new Error(lastError || "Uygun Gemini modeline ulaşılamadı.");
 
         statusDiv.className = "text-center font-bold text-xs text-emerald-400 py-1";
-        statusDiv.innerText = "✅ Form başarıyla dijitalleştirildi ve kaydedildi!";
-        setTimeout(() => { closeModal('modal-scan'); }, 1400);
+        statusDiv.innerText = "✅ Form okundu! Lütfen bilgileri kontrol edin...";
+        
+        setTimeout(() => {
+          closeModal('modal-scan');
+          openScanReviewModal(parsed);
+        }, 600);
 
       } catch (err) {
         statusDiv.className = "text-center font-semibold text-xs text-rose-400 py-1";
@@ -646,7 +824,69 @@ Sadece ve sadece aşağıdaki JSON formatında saf bir JSON çıktısı üret, m
       }
     }
 
-    function applyParsedData(parsed) {
+    function openScanReviewModal(parsed) {
+      document.getElementById('rev-name').value = parsed.name || '';
+      document.getElementById('rev-bed').value = parsed.bed || '';
+      document.getElementById('rev-admission-date').value = estimateAdmissionDateFromDay(parsed.day);
+      document.getElementById('rev-diag').value = parsed.diag || '';
+      document.getElementById('rev-weight').value = parsed.weight || 70;
+      document.getElementById('rev-allergy').value = parsed.allergy || 'Yok';
+
+      document.getElementById('rev-bp').value = parsed.latestVitals?.bp || '';
+      document.getElementById('rev-hr').value = parsed.latestVitals?.hr || '';
+      document.getElementById('rev-spo2').value = parsed.latestVitals?.spo2 || '';
+      document.getElementById('rev-urine').value = parsed.latestVitals?.urine || '';
+
+      document.getElementById('rev-vent-type').value = parsed.vent?.type || 'İnvaziv MV (ETT)';
+      document.getElementById('rev-vent-mode').value = parsed.vent?.mode || 'SIMV';
+      document.getElementById('rev-vent-fio2').value = parsed.vent?.fio2 || '';
+      document.getElementById('rev-vent-peep').value = parsed.vent?.peep || '';
+      document.getElementById('rev-vent-vt').value = parsed.vent?.vt || '';
+
+      if (Array.isArray(parsed.meds)) {
+        document.getElementById('rev-meds').value = parsed.meds.join('\n');
+      } else {
+        document.getElementById('rev-meds').value = parsed.meds || '';
+      }
+
+      document.getElementById('rev-note').value = parsed.doctorNote || '';
+
+      openModal('modal-scan-review');
+    }
+
+    function confirmAndSaveScannedData() {
+      const admissionDate = document.getElementById('rev-admission-date').value || getTodayDateStr();
+      const validated = {
+        name: document.getElementById('rev-name').value.trim() || "Yeni Hasta",
+        bed: document.getElementById('rev-bed').value.trim() || "Yatak --",
+        admissionDate: admissionDate,
+        day: getICUDayString(admissionDate),
+        diag: document.getElementById('rev-diag').value.trim() || "Yoğun Bakım Takibi",
+        weight: parseFloat(document.getElementById('rev-weight').value) || 70,
+        allergy: document.getElementById('rev-allergy').value.trim() || "Yok",
+        latestVitals: {
+          bp: document.getElementById('rev-bp').value.trim() || "120/70",
+          hr: parseFloat(document.getElementById('rev-hr').value) || null,
+          spo2: parseFloat(document.getElementById('rev-spo2').value) || null,
+          urine: parseFloat(document.getElementById('rev-urine').value) || 0
+        },
+        vent: {
+          type: document.getElementById('rev-vent-type').value.trim() || "İnvaziv MV (ETT)",
+          mode: document.getElementById('rev-vent-mode').value.trim() || "SIMV",
+          fio2: parseFloat(document.getElementById('rev-vent-fio2').value) || null,
+          peep: parseFloat(document.getElementById('rev-vent-peep').value) || null,
+          vt: parseFloat(document.getElementById('rev-vent-vt').value) || null
+        },
+        meds: document.getElementById('rev-meds').value.split('\n').map(s => s.trim()).filter(Boolean),
+        doctorNote: document.getElementById('rev-note').value.trim()
+      };
+
+      applyParsedData(validated);
+      closeModal('modal-scan-review');
+      alert('✅ Düzeltilen form bilgileri hastaya başarıyla kaydedildi!');
+    }
+
+    function applyParsedData(data) {
       let targetPatient = null;
       if (scanningPatientId) {
         targetPatient = patients.find(p => p.id === scanningPatientId);
@@ -655,44 +895,49 @@ Sadece ve sadece aşağıdaki JSON formatında saf bir JSON çıktısı üret, m
       if (!targetPatient) {
         targetPatient = {
           id: 'p_' + Date.now(),
-          name: parsed.name || "Yeni Hasta",
-          bed: parsed.bed || "Yatak --",
-          day: parsed.day || "1. Gün",
-          diag: parsed.diag || "Yoğun Bakım Takibi",
-          weight: parsed.weight || 70,
-          allergy: parsed.allergy || "Yok",
+          name: data.name,
+          bed: data.bed,
+          admissionDate: data.admissionDate || getTodayDateStr(),
+          day: data.day,
+          diag: data.diag,
+          weight: data.weight,
+          allergy: data.allergy,
           notes: [], meds: [], labs: [], vitals: [], vents: [], nutritions: []
         };
         patients.unshift(targetPatient);
       } else {
-        if (parsed.name && parsed.name !== "Yeni Hasta") targetPatient.name = parsed.name;
-        if (parsed.bed && parsed.bed !== "Yatak --") targetPatient.bed = parsed.bed;
-        if (parsed.diag) targetPatient.diag = parsed.diag;
+        if (data.name) targetPatient.name = data.name;
+        if (data.bed) targetPatient.bed = data.bed;
+        if (data.admissionDate) targetPatient.admissionDate = data.admissionDate;
+        targetPatient.day = getICUDayString(targetPatient.admissionDate);
+        if (data.diag) targetPatient.diag = data.diag;
+        if (data.weight) targetPatient.weight = data.weight;
+        if (data.allergy) targetPatient.allergy = data.allergy;
       }
 
-      if (parsed.latestVitals) {
+      if (data.latestVitals && (data.latestVitals.bp || data.latestVitals.hr)) {
         targetPatient.vitals.unshift({
           id: Date.now(), time: getTimeStr(),
-          bp: parsed.latestVitals.bp || "120/70",
-          hr: parsed.latestVitals.hr || 80,
-          spo2: parsed.latestVitals.spo2 || 96,
-          urine: parsed.latestVitals.urine || 0
+          bp: data.latestVitals.bp,
+          hr: data.latestVitals.hr,
+          spo2: data.latestVitals.spo2,
+          urine: data.latestVitals.urine
         });
       }
 
-      if (parsed.vent) {
+      if (data.vent && data.vent.mode) {
         targetPatient.vents.unshift({
           id: Date.now(), time: getTimeStr(),
-          type: parsed.vent.type || "İnvaziv MV",
-          mode: parsed.vent.mode || "SIMV",
-          fio2: parsed.vent.fio2 || 40,
-          peep: parsed.vent.peep || 6,
-          vt: parsed.vent.vt || 450
+          type: data.vent.type,
+          mode: data.vent.mode,
+          fio2: data.vent.fio2,
+          peep: data.vent.peep,
+          vt: data.vent.vt
         });
       }
 
-      if (parsed.meds && Array.isArray(parsed.meds)) {
-        parsed.meds.forEach(m => {
+      if (data.meds && Array.isArray(data.meds)) {
+        data.meds.forEach(m => {
           targetPatient.meds.push({
             id: Date.now() + Math.random(),
             name: m, dose: "Aktif Tedavi", hours: "Formdan Okundu", given: true
@@ -700,10 +945,10 @@ Sadece ve sadece aşağıdaki JSON formatında saf bir JSON çıktısı üret, m
         });
       }
 
-      if (parsed.doctorNote) {
+      if (data.doctorNote) {
         targetPatient.notes.unshift({
           id: Date.now(), time: getTimeStr(),
-          cat: "Form Analizi", content: parsed.doctorNote
+          cat: "Form Analizi", content: data.doctorNote
         });
       }
 
@@ -712,7 +957,316 @@ Sadece ve sadece aşağıdaki JSON formatında saf bir JSON çıktısı üret, m
       else renderPatientList();
     }
 
-    // Standart Fonksiyonlar
+    // ========================================================
+    // MODÜL DÜZENLEME (EDIT) FONKSİYONLARI
+    // ========================================================
+    function openNoteModal(idx = null) {
+      editingNoteIdx = idx;
+      const p = getCurrentPatient();
+      const title = document.getElementById('modal-note-title');
+      const btn = document.getElementById('btn-save-note');
+
+      if (idx !== null && p && p.notes[idx]) {
+        title.innerText = "Notu Düzenle";
+        btn.innerText = "Güncelle";
+        document.getElementById('note-cat').value = p.notes[idx].cat || 'Vizit';
+        document.getElementById('note-content').value = p.notes[idx].content || '';
+      } else {
+        title.innerText = "Klinik Not Ekle";
+        btn.innerText = "Kaydet";
+        document.getElementById('note-cat').value = 'Vizit';
+        document.getElementById('note-content').value = '';
+      }
+      openModal('modal-note');
+    }
+
+    function saveNote() {
+      const p = getCurrentPatient();
+      const c = document.getElementById('note-content').value.trim();
+      if (!p || !c) return;
+      const cat = document.getElementById('note-cat').value;
+
+      if (editingNoteIdx !== null && p.notes[editingNoteIdx]) {
+        p.notes[editingNoteIdx].cat = cat;
+        p.notes[editingNoteIdx].content = c;
+      } else {
+        p.notes.unshift({ id: Date.now(), time: getTimeStr(), cat, content: c });
+      }
+
+      saveToStorage();
+      closeModal('modal-note');
+      renderPatientDetail();
+    }
+
+    function deleteNote(idx) {
+      const p = getCurrentPatient();
+      if (!p || !confirm('Bu notu silmek istiyor musunuz?')) return;
+      p.notes.splice(idx, 1);
+      saveToStorage();
+      renderPatientDetail();
+    }
+
+    function openMedModal(idx = null) {
+      editingMedIdx = idx;
+      const p = getCurrentPatient();
+      const title = document.getElementById('modal-med-title');
+      const btn = document.getElementById('btn-save-med');
+
+      if (idx !== null && p && p.meds[idx]) {
+        title.innerText = "İlacı Düzenle";
+        btn.innerText = "Güncelle";
+        document.getElementById('med-name').value = p.meds[idx].name || '';
+        document.getElementById('med-dose').value = p.meds[idx].dose || '';
+        document.getElementById('med-hours').value = p.meds[idx].hours || '';
+      } else {
+        title.innerText = "İlaç Ekle";
+        btn.innerText = "Kaydet";
+        document.getElementById('med-name').value = '';
+        document.getElementById('med-dose').value = '';
+        document.getElementById('med-hours').value = '';
+      }
+      openModal('modal-med');
+    }
+
+    function saveMed() {
+      const p = getCurrentPatient();
+      const name = document.getElementById('med-name').value.trim();
+      if (!p || !name) { alert('İlaç adı boş bırakılamaz.'); return; }
+      const dose = document.getElementById('med-dose').value.trim() || 'Standart';
+      const hours = document.getElementById('med-hours').value.trim() || 'Günde 1';
+
+      if (editingMedIdx !== null && p.meds[editingMedIdx]) {
+        p.meds[editingMedIdx].name = name;
+        p.meds[editingMedIdx].dose = dose;
+        p.meds[editingMedIdx].hours = hours;
+      } else {
+        p.meds.push({ id: Date.now(), name, dose, hours, given: true });
+      }
+
+      saveToStorage();
+      closeModal('modal-med');
+      renderPatientDetail();
+    }
+
+    function deleteMed(idx) {
+      const p = getCurrentPatient();
+      if (!p || !confirm('Bu ilacı silmek istiyor musunuz?')) return;
+      p.meds.splice(idx, 1);
+      saveToStorage();
+      renderPatientDetail();
+    }
+
+    function openLabModal(idx = null) {
+      editingLabIdx = idx;
+      const p = getCurrentPatient();
+      const title = document.getElementById('modal-lab-title');
+      const btn = document.getElementById('btn-save-lab');
+
+      if (idx !== null && p && p.labs[idx]) {
+        title.innerText = "Tetkiki Düzenle";
+        btn.innerText = "Güncelle";
+        document.getElementById('lab-type').value = p.labs[idx].type || '';
+        document.getElementById('lab-results').value = p.labs[idx].results || '';
+      } else {
+        title.innerText = "Tetkik Ekle";
+        btn.innerText = "Kaydet";
+        document.getElementById('lab-type').value = '';
+        document.getElementById('lab-results').value = '';
+      }
+      openModal('modal-lab');
+    }
+
+    function saveLab() {
+      const p = getCurrentPatient();
+      const type = document.getElementById('lab-type').value.trim();
+      const results = document.getElementById('lab-results').value.trim();
+      if (!p || !results) { alert('Sonuçlar boş bırakılamaz.'); return; }
+
+      if (editingLabIdx !== null && p.labs[editingLabIdx]) {
+        p.labs[editingLabIdx].type = type || 'Tetkik';
+        p.labs[editingLabIdx].results = results;
+      } else {
+        p.labs.unshift({ id: Date.now(), time: getTimeStr(), type: type || 'Tetkik', results });
+      }
+
+      saveToStorage();
+      closeModal('modal-lab');
+      renderPatientDetail();
+    }
+
+    function deleteLab(idx) {
+      const p = getCurrentPatient();
+      if (!p || !confirm('Bu sonucu silmek istiyor musunuz?')) return;
+      p.labs.splice(idx, 1);
+      saveToStorage();
+      renderPatientDetail();
+    }
+
+    function openVitalModal(idx = null) {
+      editingVitalIdx = idx;
+      const p = getCurrentPatient();
+      const title = document.getElementById('modal-vital-title');
+      const btn = document.getElementById('btn-save-vital');
+
+      if (idx !== null && p && p.vitals[idx]) {
+        title.innerText = "Vital Ölçümünü Düzenle";
+        btn.innerText = "Güncelle";
+        document.getElementById('vit-bp').value = p.vitals[idx].bp || '';
+        document.getElementById('vit-hr').value = p.vitals[idx].hr || '';
+        document.getElementById('vit-spo2').value = p.vitals[idx].spo2 || '';
+        document.getElementById('vit-urine').value = p.vitals[idx].urine || '';
+      } else {
+        title.innerText = "Vital Kaydı Ekle";
+        btn.innerText = "Kaydet";
+        document.getElementById('vit-bp').value = '';
+        document.getElementById('vit-hr').value = '';
+        document.getElementById('vit-spo2').value = '';
+        document.getElementById('vit-urine').value = '';
+      }
+      openModal('modal-vital');
+    }
+
+    function saveVital() {
+      const p = getCurrentPatient();
+      if (!p) return;
+      const bp = document.getElementById('vit-bp').value.trim();
+      const hr = parseFloat(document.getElementById('vit-hr').value) || null;
+      const spo2 = parseFloat(document.getElementById('vit-spo2').value) || null;
+      const urine = parseFloat(document.getElementById('vit-urine').value) || 0;
+
+      if (editingVitalIdx !== null && p.vitals[editingVitalIdx]) {
+        p.vitals[editingVitalIdx].bp = bp;
+        p.vitals[editingVitalIdx].hr = hr;
+        p.vitals[editingVitalIdx].spo2 = spo2;
+        p.vitals[editingVitalIdx].urine = urine;
+      } else {
+        p.vitals.unshift({ id: Date.now(), time: getTimeStr(), bp, hr, spo2, urine });
+      }
+
+      saveToStorage();
+      closeModal('modal-vital');
+      renderPatientDetail();
+    }
+
+    function deleteVital(idx) {
+      const p = getCurrentPatient();
+      if (!p || !confirm('Bu vital kaydını silmek istiyor musunuz?')) return;
+      p.vitals.splice(idx, 1);
+      saveToStorage();
+      renderPatientDetail();
+    }
+
+    function openVentModal(idx = null) {
+      editingVentIdx = idx;
+      const p = getCurrentPatient();
+      const title = document.getElementById('modal-vent-title');
+      const btn = document.getElementById('btn-save-vent');
+
+      if (idx !== null && p && p.vents[idx]) {
+        title.innerText = "Solunum Ayarını Düzenle";
+        btn.innerText = "Güncelle";
+        document.getElementById('inp-vent-type').value = p.vents[idx].type || 'İnvaziv MV (ETT)';
+        document.getElementById('inp-vent-mode').value = p.vents[idx].mode || '';
+        document.getElementById('inp-vent-fio2').value = p.vents[idx].fio2 || '';
+        document.getElementById('inp-vent-peep').value = p.vents[idx].peep || '';
+        document.getElementById('inp-vent-vt').value = p.vents[idx].vt || '';
+      } else {
+        title.innerText = "Solunum Ayarı Kaydet";
+        btn.innerText = "Kaydet";
+        document.getElementById('inp-vent-type').value = 'İnvaziv MV (ETT)';
+        document.getElementById('inp-vent-mode').value = 'SIMV';
+        document.getElementById('inp-vent-fio2').value = '40';
+        document.getElementById('inp-vent-peep').value = '6';
+        document.getElementById('inp-vent-vt').value = '450';
+      }
+      openModal('modal-vent');
+    }
+
+    function saveVent() {
+      const p = getCurrentPatient();
+      if (!p) return;
+      const type = document.getElementById('inp-vent-type').value.trim() || 'İnvaziv MV';
+      const mode = document.getElementById('inp-vent-mode').value.trim() || 'SIMV';
+      const fio2 = parseFloat(document.getElementById('inp-vent-fio2').value) || null;
+      const peep = parseFloat(document.getElementById('inp-vent-peep').value) || null;
+      const vt = parseFloat(document.getElementById('inp-vent-vt').value) || null;
+
+      if (editingVentIdx !== null && p.vents[editingVentIdx]) {
+        p.vents[editingVentIdx].type = type;
+        p.vents[editingVentIdx].mode = mode;
+        p.vents[editingVentIdx].fio2 = fio2;
+        p.vents[editingVentIdx].peep = peep;
+        p.vents[editingVentIdx].vt = vt;
+      } else {
+        p.vents.unshift({ id: Date.now(), time: getTimeStr(), type, mode, fio2, peep, vt });
+      }
+
+      saveToStorage();
+      closeModal('modal-vent');
+      renderPatientDetail();
+    }
+
+    function deleteVent(idx) {
+      const p = getCurrentPatient();
+      if (!p || !confirm('Bu solunum kaydını silmek istiyor musunuz?')) return;
+      p.vents.splice(idx, 1);
+      saveToStorage();
+      renderPatientDetail();
+    }
+
+    function openNutritionModal(idx = null) {
+      editingNutrIdx = idx;
+      const p = getCurrentPatient();
+      const title = document.getElementById('modal-nutrition-title');
+      const btn = document.getElementById('btn-save-nutrition');
+
+      if (idx !== null && p && p.nutritions[idx]) {
+        title.innerText = "Nütrisyon Kaydını Düzenle";
+        btn.innerText = "Güncelle";
+        document.getElementById('inp-nutr-route').value = p.nutritions[idx].route || 'Enteral (NGS)';
+        document.getElementById('inp-nutr-rate').value = p.nutritions[idx].rate || '';
+        document.getElementById('inp-nutr-grv').value = p.nutritions[idx].grv || '';
+      } else {
+        title.innerText = "Nütrisyon Kaydı Ekle";
+        btn.innerText = "Kaydet";
+        document.getElementById('inp-nutr-route').value = 'Enteral (NGS)';
+        document.getElementById('inp-nutr-rate').value = '';
+        document.getElementById('inp-nutr-grv').value = '';
+      }
+      openModal('modal-nutrition');
+    }
+
+    function saveNutrition() {
+      const p = getCurrentPatient();
+      if (!p) return;
+      const route = document.getElementById('inp-nutr-route').value;
+      const rate = parseFloat(document.getElementById('inp-nutr-rate').value) || 0;
+      const grv = parseFloat(document.getElementById('inp-nutr-grv').value) || 0;
+
+      if (editingNutrIdx !== null && p.nutritions[editingNutrIdx]) {
+        p.nutritions[editingNutrIdx].route = route;
+        p.nutritions[editingNutrIdx].rate = rate;
+        p.nutritions[editingNutrIdx].grv = grv;
+      } else {
+        p.nutritions.unshift({ id: Date.now(), time: getTimeStr(), route, rate, grv });
+      }
+
+      saveToStorage();
+      closeModal('modal-nutrition');
+      renderPatientDetail();
+    }
+
+    function deleteNutrition(idx) {
+      const p = getCurrentPatient();
+      if (!p || !confirm('Bu nütrisyon kaydını silmek istiyor musunuz?')) return;
+      p.nutritions.splice(idx, 1);
+      saveToStorage();
+      renderPatientDetail();
+    }
+
+    // ========================================================
+    // ARAYÜZ VE HASTA YÖNETİMİ
+    // ========================================================
     function showPatientList() {
       document.getElementById('view-patient-list').classList.remove('hidden');
       document.getElementById('view-patient-detail').classList.add('hidden');
@@ -739,19 +1293,21 @@ Sadece ve sadece aşağıdaki JSON formatında saf bir JSON çıktısı üret, m
       document.getElementById('stat-patient-count').innerText = `${filtered.length} Aktif Hasta`;
 
       if (filtered.length === 0) {
-        container.innerHTML = '<div class="text-center py-12 text-slate-500"><i class="fa-solid fa-camera text-4xl mb-2 text-slate-600"></i><p>Kayıtlı hasta yok. Yukarıdaki "Form Tara" butonuyla form fotoğrafı çekerek başlayabilirsiniz.</p></div>';
+        container.innerHTML = '<div class="text-center py-12 text-slate-500"><i class="fa-solid fa-camera text-4xl mb-2 text-slate-600"></i><p>Kayıtlı hasta yok. Yukarıdaki "Form Tara" butonuyla başlayabilirsiniz.</p></div>';
         return;
       }
 
       container.innerHTML = '';
       filtered.forEach(p => {
         const lv = (p.vitals && p.vitals[0]) || {};
+        const dynamicDay = getICUDayString(p.admissionDate, p.day);
+
         container.innerHTML += `
           <div onclick="openPatientDetail('${p.id}')" class="bg-slate-800 border border-slate-700 hover:border-cyan-500 rounded-xl p-3.5 shadow cursor-pointer">
             <div class="flex justify-between items-center">
               <span class="text-xs bg-cyan-950 text-cyan-300 font-mono font-bold px-2 py-0.5 rounded border border-cyan-800">${p.bed}</span>
               <h3 class="font-bold text-white text-sm">${p.name}</h3>
-              <span class="text-[10px] text-slate-400">${p.day || '1. Gün'}</span>
+              <span class="text-[10px] text-slate-400 font-mono">${dynamicDay}</span>
             </div>
             <p class="text-xs text-slate-400 mt-1 line-clamp-1">${p.diag}</p>
             ${lv.bp ? `<div class="mt-2 text-[10px] font-mono text-slate-300 flex justify-between bg-slate-900/60 p-1.5 rounded"><span>TA: ${lv.bp}</span><span>KTA: ${lv.hr}</span><span>SpO2: \%${lv.spo2}</span></div>` : ''}
@@ -763,47 +1319,131 @@ Sadece ve sadece aşağıdaki JSON formatında saf bir JSON çıktısı üret, m
       const p = getCurrentPatient();
       if (!p) return;
 
+      const dynamicDay = getICUDayString(p.admissionDate, p.day);
+
       document.getElementById('disp-patient-name').innerText = p.name;
       document.getElementById('disp-patient-bed').innerText = p.bed;
       document.getElementById('disp-patient-diag').innerText = p.diag;
-      document.getElementById('disp-patient-day').innerText = p.day || '1. Gün';
+      document.getElementById('disp-patient-day').innerText = dynamicDay;
       document.getElementById('disp-patient-weight').innerText = `${p.weight || '--'} kg`;
 
+      // 1. Notlar
       const nList = document.getElementById('notes-list');
       nList.innerHTML = p.notes.length ? '' : '<p class="text-xs text-slate-500 italic">Not bulunmuyor.</p>';
       p.notes.forEach((n, i) => {
-        nList.innerHTML += `<div class="bg-slate-800 p-2.5 rounded-lg border border-slate-700 text-xs"><div class="flex justify-between text-slate-400 text-[10px] mb-1"><span class="font-bold text-cyan-300">${n.cat}</span><span>${n.time}</span></div><p class="text-slate-200 whitespace-pre-wrap">${n.content}</p></div>`;
+        nList.innerHTML += `
+          <div class="bg-slate-800 p-2.5 rounded-lg border border-slate-700 text-xs">
+            <div class="flex justify-between items-center text-slate-400 text-[10px] mb-1">
+              <span class="font-bold text-cyan-300">${n.cat} • ${n.time}</span>
+              <div class="flex items-center gap-2">
+                <button onclick="openNoteModal(${i})" class="text-slate-400 hover:text-cyan-400"><i class="fa-solid fa-pen text-[11px]"></i></button>
+                <button onclick="deleteNote(${i})" class="text-slate-500 hover:text-rose-400"><i class="fa-regular fa-trash-can text-[11px]"></i></button>
+              </div>
+            </div>
+            <p class="text-slate-200 whitespace-pre-wrap">${n.content}</p>
+          </div>`;
       });
 
+      // 2. İlaçlar
       const mList = document.getElementById('meds-list');
       mList.innerHTML = p.meds.length ? '' : '<p class="text-xs text-slate-500 italic">İlaç yok.</p>';
-      p.meds.forEach(m => {
-        mList.innerHTML += `<div class="bg-slate-800 p-2 rounded border border-slate-700 text-xs flex justify-between"><div><span class="font-bold text-purple-300">${m.name}</span> <span class="text-slate-400 text-[10px]">(${m.dose})</span></div><span class="text-[10px] text-emerald-400">Aktif</span></div>`;
+      p.meds.forEach((m, i) => {
+        mList.innerHTML += `
+          <div class="bg-slate-800 p-2.5 rounded-lg border border-slate-700 text-xs flex justify-between items-center">
+            <div>
+              <span class="font-bold text-purple-300">${m.name}</span>
+              <span class="text-slate-400 text-[10px] ml-1">(${m.dose} • ${m.hours})</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <button onclick="openMedModal(${i})" class="text-slate-400 hover:text-cyan-400"><i class="fa-solid fa-pen text-[11px]"></i></button>
+              <button onclick="deleteMed(${i})" class="text-slate-500 hover:text-rose-400"><i class="fa-regular fa-trash-can text-[11px]"></i></button>
+            </div>
+          </div>`;
       });
 
+      // 3. Tetkikler
       const lList = document.getElementById('labs-list');
       lList.innerHTML = p.labs.length ? '' : '<p class="text-xs text-slate-500 italic">Tetkik yok.</p>';
-      p.labs.forEach(l => {
-        lList.innerHTML += `<div class="bg-slate-800 p-2 rounded border border-slate-700 text-xs"><div class="font-bold text-rose-300">${l.type} <span class="text-slate-400 font-normal text-[10px]">(${l.time})</span></div><div class="font-mono text-slate-300 mt-1">${l.results}</div></div>`;
+      p.labs.forEach((l, i) => {
+        lList.innerHTML += `
+          <div class="bg-slate-800 p-2.5 rounded-lg border border-slate-700 text-xs">
+            <div class="flex justify-between items-center text-[10px] mb-1">
+              <span class="font-bold text-rose-300">${l.type} <span class="text-slate-400 font-normal">(${l.time})</span></span>
+              <div class="flex items-center gap-2">
+                <button onclick="openLabModal(${i})" class="text-slate-400 hover:text-cyan-400"><i class="fa-solid fa-pen text-[11px]"></i></button>
+                <button onclick="deleteLab(${i})" class="text-slate-500 hover:text-rose-400"><i class="fa-regular fa-trash-can text-[11px]"></i></button>
+              </div>
+            </div>
+            <div class="font-mono text-slate-300">${l.results}</div>
+          </div>`;
       });
 
+      // 4. Vitaller
       renderVitalsSection(p);
 
+      // 5. Solunum
       const ventCard = document.getElementById('latest-vent-card');
       const v = (p.vents && p.vents[0]) || null;
       if (v) {
-        ventCard.innerHTML = `<div class="font-bold text-sky-300">${v.type} (${v.mode})</div><div class="grid grid-cols-3 gap-2 text-center font-mono mt-2"><div class="bg-slate-900 p-1.5 rounded">FiO2: %${v.fio2 || '-'}</div><div class="bg-slate-900 p-1.5 rounded">PEEP: ${v.peep || '-'}</div><div class="bg-slate-900 p-1.5 rounded">Vt: ${v.vt || '-'}</div></div>`;
+        ventCard.innerHTML = `
+          <div class="flex justify-between items-center border-b border-slate-700 pb-1">
+            <span class="font-bold text-sky-300">${v.type} (${v.mode})</span>
+            <button onclick="openVentModal(0)" class="text-xs text-cyan-400 hover:text-cyan-300 flex items-center gap-1 font-sans">
+              <i class="fa-solid fa-pen text-[10px]"></i> Düzenle
+            </button>
+          </div>
+          <div class="grid grid-cols-3 gap-2 text-center font-mono mt-2">
+            <div class="bg-slate-900 p-1.5 rounded">FiO2: %${v.fio2 || '-'}</div>
+            <div class="bg-slate-900 p-1.5 rounded">PEEP: ${v.peep || '-'}</div>
+            <div class="bg-slate-900 p-1.5 rounded">Vt: ${v.vt || '-'}</div>
+          </div>`;
       } else {
         ventCard.innerHTML = '<p class="text-xs text-slate-500 italic">Solunum parametresi yok.</p>';
       }
 
+      const vList = document.getElementById('vent-list');
+      vList.innerHTML = '';
+      (p.vents || []).slice(1).forEach((item, i) => {
+        const realIdx = i + 1;
+        vList.innerHTML += `
+          <div class="bg-slate-800 p-2 rounded border border-slate-700 text-xs flex justify-between items-center font-mono text-slate-300">
+            <div>${item.mode} • FiO2: %${item.fio2} • PEEP: ${item.peep} (${item.time})</div>
+            <div class="flex items-center gap-2">
+              <button onclick="openVentModal(${realIdx})" class="text-slate-400 hover:text-cyan-400"><i class="fa-solid fa-pen text-[10px]"></i></button>
+              <button onclick="deleteVent(${realIdx})" class="text-slate-500 hover:text-rose-400"><i class="fa-regular fa-trash-can text-[10px]"></i></button>
+            </div>
+          </div>`;
+      });
+
+      // 6. Nütrisyon
       const nutrCard = document.getElementById('latest-nutr-card');
       const n = (p.nutritions && p.nutritions[0]) || null;
       if (n) {
-        nutrCard.innerHTML = `<div class="font-bold text-amber-300">${n.route}</div><div class="text-slate-300 mt-1 font-mono">Hız: ${n.rate || 0} mL/s • GRV: ${n.grv || 0} mL</div>`;
+        nutrCard.innerHTML = `
+          <div class="flex justify-between items-center border-b border-slate-700 pb-1">
+            <span class="font-bold text-amber-300">${n.route}</span>
+            <button onclick="openNutritionModal(0)" class="text-xs text-cyan-400 hover:text-cyan-300 flex items-center gap-1 font-sans">
+              <i class="fa-solid fa-pen text-[10px]"></i> Düzenle
+            </button>
+          </div>
+          <div class="text-slate-300 mt-1 font-mono">Hız: ${n.rate || 0} mL/s • GRV: ${n.grv || 0} mL</div>`;
       } else {
         nutrCard.innerHTML = '<p class="text-xs text-slate-500 italic">Nütrisyon kaydı yok.</p>';
       }
+
+      const nHistory = document.getElementById('nutr-list');
+      nHistory.innerHTML = '';
+      (p.nutritions || []).slice(1).forEach((item, i) => {
+        const realIdx = i + 1;
+        nHistory.innerHTML += `
+          <div class="bg-slate-800 p-2 rounded border border-slate-700 text-xs flex justify-between items-center font-mono text-slate-300">
+            <div>${item.route} • ${item.rate} mL/s (${item.time})</div>
+            <div class="flex items-center gap-2">
+              <button onclick="openNutritionModal(${realIdx})" class="text-slate-400 hover:text-cyan-400"><i class="fa-solid fa-pen text-[10px]"></i></button>
+              <button onclick="deleteNutrition(${realIdx})" class="text-slate-500 hover:text-rose-400"><i class="fa-regular fa-trash-can text-[10px]"></i></button>
+            </div>
+          </div>`;
+      });
     }
 
     function renderVitalsSection(p) {
@@ -812,7 +1452,12 @@ Sadece ve sadece aşağıdaki JSON formatında saf bir JSON çıktısı üret, m
       if (vitals.length > 0) {
         const v = vitals[0];
         lvCard.innerHTML = `
-          <div class="flex justify-between items-center border-b border-slate-700 pb-1"><span class="font-semibold text-slate-300">Son Ölçüm (${v.time})</span><span class="text-[10px] text-emerald-400">Aktif</span></div>
+          <div class="flex justify-between items-center border-b border-slate-700 pb-1">
+            <span class="font-semibold text-slate-300">Son Ölçüm (${v.time})</span>
+            <button onclick="openVitalModal(0)" class="text-xs text-cyan-400 hover:text-cyan-300 flex items-center gap-1 font-sans">
+              <i class="fa-solid fa-pen text-[10px]"></i> Düzenle
+            </button>
+          </div>
           <div class="grid grid-cols-4 gap-2 pt-1 font-mono text-center">
             <div class="bg-slate-900/60 p-1 rounded"><div class="text-[10px] text-slate-500">TA</div><div class="font-bold text-cyan-400">${v.bp || '-'}</div></div>
             <div class="bg-slate-900/60 p-1 rounded"><div class="text-[10px] text-slate-500">KTA</div><div class="font-bold text-emerald-400">${v.hr || '-'}</div></div>
@@ -822,6 +1467,20 @@ Sadece ve sadece aşağıdaki JSON formatında saf bir JSON çıktısı üret, m
       } else {
         lvCard.innerHTML = '<p class="text-xs text-slate-500 italic">Vital yok.</p>';
       }
+
+      const vList = document.getElementById('vitals-list');
+      vList.innerHTML = '';
+      vitals.slice(1).forEach((item, i) => {
+        const realIdx = i + 1;
+        vList.innerHTML += `
+          <div class="bg-slate-800 p-2 rounded border border-slate-700 text-xs flex justify-between items-center font-mono text-slate-300">
+            <div>${item.bp || '-'} • ${item.hr || '-'} bpm • %${item.spo2 || '-'} (${item.time})</div>
+            <div class="flex items-center gap-2">
+              <button onclick="openVitalModal(${realIdx})" class="text-slate-400 hover:text-cyan-400"><i class="fa-solid fa-pen text-[10px]"></i></button>
+              <button onclick="deleteVital(${realIdx})" class="text-slate-500 hover:text-rose-400"><i class="fa-regular fa-trash-can text-[10px]"></i></button>
+            </div>
+          </div>`;
+      });
 
       updateVitalsChart(vitals);
     }
@@ -874,7 +1533,7 @@ Sadece ve sadece aşağıdaki JSON formatında saf bir JSON çıktısı üret, m
         if (p) {
           document.getElementById('inp-p-name').value = p.name || '';
           document.getElementById('inp-p-bed').value = p.bed || '';
-          document.getElementById('inp-p-day').value = p.day || '';
+          document.getElementById('inp-p-admission-date').value = p.admissionDate || estimateAdmissionDateFromDay(p.day);
           document.getElementById('inp-p-weight').value = p.weight || '';
           document.getElementById('inp-p-age').value = p.age || '';
           document.getElementById('inp-p-diag').value = p.diag || '';
@@ -883,7 +1542,7 @@ Sadece ve sadece aşağıdaki JSON formatında saf bir JSON çıktısı üret, m
       } else {
         document.getElementById('inp-p-name').value = '';
         document.getElementById('inp-p-bed').value = '';
-        document.getElementById('inp-p-day').value = '1. Gün';
+        document.getElementById('inp-p-admission-date').value = getTodayDateStr();
         document.getElementById('inp-p-weight').value = '';
         document.getElementById('inp-p-age').value = '';
         document.getElementById('inp-p-diag').value = '';
@@ -896,19 +1555,26 @@ Sadece ve sadece aşağıdaki JSON formatında saf bir JSON çıktısı üret, m
       const name = document.getElementById('inp-p-name').value.trim();
       const bed = document.getElementById('inp-p-bed').value.trim();
       const diag = document.getElementById('inp-p-diag').value.trim();
+      const admissionDate = document.getElementById('inp-p-admission-date').value || getTodayDateStr();
+      const calculatedDay = getICUDayString(admissionDate);
+
       if (!name || !bed || !diag) { alert('Lütfen Ad, Yatak ve Tanı alanlarını doldurun.'); return; }
 
       if (currentPatientId) {
         const p = getCurrentPatient();
         if (p) {
-          p.name = name; p.bed = bed; p.day = document.getElementById('inp-p-day').value;
+          p.name = name; p.bed = bed;
+          p.admissionDate = admissionDate;
+          p.day = calculatedDay;
           p.weight = parseFloat(document.getElementById('inp-p-weight').value) || null;
           p.age = parseInt(document.getElementById('inp-p-age').value) || null;
           p.diag = diag; p.allergy = document.getElementById('inp-p-allergy').value;
         }
       } else {
         patients.unshift({
-          id: 'p_' + Date.now(), name, bed, day: document.getElementById('inp-p-day').value,
+          id: 'p_' + Date.now(), name, bed,
+          admissionDate: admissionDate,
+          day: calculatedDay,
           weight: parseFloat(document.getElementById('inp-p-weight').value) || null,
           age: parseInt(document.getElementById('inp-p-age').value) || null,
           diag, allergy: document.getElementById('inp-p-allergy').value,
@@ -929,88 +1595,13 @@ Sadece ve sadece aşağıdaki JSON formatında saf bir JSON çıktısı üret, m
       showPatientList();
     }
 
-    function saveNote() {
-      const p = getCurrentPatient();
-      const c = document.getElementById('note-content').value.trim();
-      if (!p || !c) return;
-      p.notes.unshift({ id: Date.now(), time: getTimeStr(), cat: document.getElementById('note-cat').value, content: c });
-      saveToStorage();
-      document.getElementById('note-content').value = '';
-      closeModal('modal-note');
-      renderPatientDetail();
-    }
-
-    function saveMed() {
-      const p = getCurrentPatient();
-      const n = document.getElementById('med-name').value.trim();
-      if (!p || !n) return;
-      p.meds.push({ id: Date.now(), name: n, dose: document.getElementById('med-dose').value || 'Standart', hours: document.getElementById('med-hours').value || 'Günde 1', given: true });
-      saveToStorage();
-      document.getElementById('med-name').value = '';
-      closeModal('modal-med');
-      renderPatientDetail();
-    }
-
-    function saveLab() {
-      const p = getCurrentPatient();
-      const r = document.getElementById('lab-results').value.trim();
-      if (!p || !r) return;
-      p.labs.unshift({ id: Date.now(), time: getTimeStr(), type: document.getElementById('lab-type').value || 'Tetkik', results: r });
-      saveToStorage();
-      document.getElementById('lab-results').value = '';
-      closeModal('modal-lab');
-      renderPatientDetail();
-    }
-
-    function saveVital() {
-      const p = getCurrentPatient();
-      if (!p) return;
-      p.vitals.unshift({
-        id: Date.now(), time: getTimeStr(),
-        bp: document.getElementById('vit-bp').value,
-        hr: document.getElementById('vit-hr').value,
-        spo2: document.getElementById('vit-spo2').value,
-        urine: document.getElementById('vit-urine').value
-      });
-      saveToStorage();
-      closeModal('modal-vital');
-      renderPatientDetail();
-    }
-
-    function saveVent() {
-      const p = getCurrentPatient();
-      if (!p) return;
-      p.vents.unshift({
-        id: Date.now(), time: getTimeStr(),
-        type: 'İnvaziv MV', mode: document.getElementById('inp-vent-mode').value || 'SIMV',
-        fio2: document.getElementById('inp-vent-fio2').value,
-        peep: document.getElementById('inp-vent-peep').value,
-        vt: document.getElementById('inp-vent-vt').value
-      });
-      saveToStorage();
-      closeModal('modal-vent');
-      renderPatientDetail();
-    }
-
-    function saveNutrition() {
-      const p = getCurrentPatient();
-      if (!p) return;
-      p.nutritions.unshift({
-        id: Date.now(), time: getTimeStr(),
-        route: document.getElementById('inp-nutr-route').value,
-        rate: document.getElementById('inp-nutr-rate').value,
-        grv: document.getElementById('inp-nutr-grv').value
-      });
-      saveToStorage();
-      closeModal('modal-nutrition');
-      renderPatientDetail();
-    }
-
     function copyHandoffSummary() {
       const p = getCurrentPatient();
       if (!p) return;
       const lv = p.vitals[0] || {};
-      let txt = `🏥 *YBÜ DEVİR BİLGİSİ*\n*Hasta:* ${p.name} (${p.bed})\n*Tanı:* ${p.diag} - ${p.day}\n\n`;
+      const dynamicDay = getICUDayString(p.admissionDate, p.day);
+
+      let txt = `🏥 *YBÜ DEVİR BİLGİSİ*\n*Hasta:* ${p.name} (${p.bed})\n*Tanı:* ${p.diag} - ${dynamicDay}\n\n`;
       txt += `📊 *Vitaller (${lv.time || '-'}):* TA: ${lv.bp || '-'} | KTA: ${lv.hr || '-'} | SpO2: %${lv.spo2 || '-'}\n\n`;
       txt += `💊 *İlaçlar:*\n` + p.meds.map(m => `• ${m.name} (${m.dose})`).join('\n') + `\n\n`;
       txt += `📋 *Notlar:*\n` + p.notes.slice(0, 2).map(n => `• [${n.time}]: ${n.content}`).join('\n');
@@ -1024,13 +1615,14 @@ Sadece ve sadece aşağıdaki JSON formatında saf bir JSON çıktısı üret, m
     }
 
     function exportCSVData() {
-      let csv = "Hasta;Yatak;Tani;Gun;TA;Nabiz;SpO2\n";
+      let csv = "Hasta;Yatak;Tani;Yatis_Tarihi;Gun;TA;Nabiz;SpO2\n";
       patients.forEach(p => {
         const lv = p.vitals[0] || {};
-        csv += `"${p.name}";"${p.bed}";"${p.diag}";"${p.day}";"${lv.bp || ''}";"${lv.hr || ''}";"${lv.spo2 || ''}"\n`;
+        const dynamicDay = getICUDayString(p.admissionDate, p.day);
+        csv += `"${p.name}";"${p.bed}";"${p.diag}";"${p.admissionDate || ''}";"${dynamicDay}";"${lv.bp || ''}";"${lv.hr || ''}";"${lv.spo2 || ''}"\n`;
       });
       const blob = new Blob(["\uFEFF" + csv], { type: 'text/csv;charset=utf-8;' });
-      const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = `ybu_liste.csv`; a.click();
+      const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `ybu_liste.csv`; a.click();
     }
 
     function importJSONBackup(e) {
