@@ -11,22 +11,36 @@
   <meta name="theme-color" content="#0f172a">
   <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/2966/2966327.png">
 
+  <!-- Tailwind CSS, FontAwesome & Chart.js CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
   <style>
-    body { -webkit-tap-highlight-color: transparent; user-select: none; }
-    input, textarea, select { user-select: auto; }
-    .safe-top { padding-top: calc(env(safe-area-inset-top, 44px) + 8px); }
-    .safe-bottom { padding-bottom: calc(env(safe-area-inset-bottom, 20px) + 6px); }
+    body {
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+    input, textarea, select {
+      user-select: auto;
+    }
+    /* Dinamik Ada & iOS Durum Çubuğu Güvenli Alanı */
+    .safe-top {
+      padding-top: calc(env(safe-area-inset-top, 48px) + 16px);
+    }
+    .safe-bottom {
+      padding-bottom: calc(env(safe-area-inset-bottom, 20px) + 8px);
+    }
     .custom-scroll::-webkit-scrollbar { display: none; }
   </style>
 </head>
 <body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col font-sans antialiased">
 
-  <!-- 1. EKRAN: HASTA LİSTESİ -->
+  <!-- ======================================================== -->
+  <!-- 1. EKRAN: HASTA LİSTESİ (ANA PANEL)                      -->
+  <!-- ======================================================== -->
   <div id="view-patient-list" class="flex-1 flex flex-col min-h-screen">
+    
     <header class="sticky top-0 z-30 bg-slate-800/95 backdrop-blur border-b border-slate-700 px-4 pb-3 shadow safe-top">
       <div class="max-w-lg mx-auto w-full space-y-3">
         <div class="flex items-center justify-between">
@@ -37,18 +51,17 @@
             <div>
               <h1 class="text-sm font-bold text-white tracking-wide flex items-center gap-1.5">
                 Yoğun Bakım Ünitesi
-                <span class="text-[9px] bg-cyan-950 text-cyan-300 px-1.5 py-0.2 rounded border border-cyan-800 font-mono">AI VISION</span>
+                <span class="text-[9px] bg-cyan-950 text-cyan-300 px-1.5 py-0.2 rounded border border-cyan-800 font-mono">VISION AI</span>
               </h1>
               <p class="text-[11px] text-slate-400" id="stat-patient-count">0 Aktif Hasta</p>
             </div>
           </div>
 
           <div class="flex items-center gap-1.5">
-            <!-- Kamera / Form Tara Butonu -->
-            <button onclick="openScanModal(null)" title="Kağıt Formu Tara" class="bg-indigo-600 active:bg-indigo-700 text-white text-xs px-2.5 py-2 rounded-lg font-semibold shadow flex items-center gap-1.5 transition">
+            <button onclick="openScanModal(null)" title="Formu Tara / Çözümle" class="bg-indigo-600 active:bg-indigo-700 text-white text-xs px-2.5 py-2 rounded-lg font-semibold shadow flex items-center gap-1.5 transition">
               <i class="fa-solid fa-camera"></i> Form Tara
             </button>
-            <button onclick="openBackupModal()" title="Ayarlar ve Yedekleme" class="bg-slate-700 active:bg-slate-600 text-slate-200 text-xs p-2 rounded-lg transition">
+            <button onclick="openBackupModal()" title="Yedekleme ve Ayarlar" class="bg-slate-700 active:bg-slate-600 text-slate-200 text-xs p-2 rounded-lg transition">
               <i class="fa-solid fa-gear"></i>
             </button>
             <button onclick="openPatientModal(null)" class="bg-cyan-600 active:bg-cyan-700 text-white text-xs font-semibold px-2.5 py-2 rounded-lg shadow flex items-center gap-1.5 transition">
@@ -57,9 +70,10 @@
           </div>
         </div>
 
+        <!-- Arama Çubuğu -->
         <div class="relative">
           <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-slate-400 text-xs"></i>
-          <input type="text" id="patient-search-inp" oninput="filterPatients()" placeholder="Hasta adı, yatak veya tanı ara..." class="w-full bg-slate-900/90 border border-slate-700 rounded-lg pl-8 pr-3 py-1.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500">
+          <input type="text" id="patient-search-inp" oninput="filterPatients()" placeholder="Hasta adı, yatak no veya tanı ile ara..." class="w-full bg-slate-900/90 border border-slate-700 rounded-lg pl-8 pr-3 py-1.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500">
         </div>
       </div>
     </header>
@@ -69,10 +83,14 @@
     </main>
   </div>
 
-  <!-- 2. EKRAN: HASTA DETAY & TAKİP EKRANI -->
+  <!-- ======================================================== -->
+  <!-- 2. EKRAN: SEÇİLİ HASTA DETAY & TAKİP EKRANI             -->
+  <!-- ======================================================== -->
   <div id="view-patient-detail" class="flex-1 flex flex-col min-h-screen hidden">
+    
     <header class="sticky top-0 z-30 bg-slate-800/95 backdrop-blur border-b border-slate-700 px-4 pb-2.5 shadow safe-top">
       <div class="max-w-lg mx-auto w-full">
+        
         <div class="flex items-center justify-between gap-1.5">
           <button onclick="backToPatientList()" class="text-slate-300 active:text-white text-xs flex items-center gap-1 bg-slate-700 active:bg-slate-600 px-2.5 py-1.5 rounded-lg font-medium">
             <i class="fa-solid fa-chevron-left"></i> Hastalar
@@ -82,11 +100,11 @@
             <button onclick="openScanModal(currentPatientId)" title="Bu Hastanın Formunu Tara" class="bg-indigo-600 active:bg-indigo-700 text-white text-xs px-2.5 py-1.5 rounded-lg flex items-center gap-1 font-medium shadow">
               <i class="fa-solid fa-camera"></i> Form Tara
             </button>
-            <button onclick="copyHandoffSummary()" title="Devir Özeti" class="bg-emerald-600 active:bg-emerald-700 text-white text-xs px-2.5 py-1.5 rounded-lg flex items-center gap-1 font-medium shadow">
+            <button onclick="copyHandoffSummary()" title="Devir Özeti Kopyala" class="bg-emerald-600 active:bg-emerald-700 text-white text-xs px-2.5 py-1.5 rounded-lg flex items-center gap-1 font-medium shadow">
               <i class="fa-solid fa-share-nodes"></i> Devir
             </button>
             <button onclick="openPatientModal(currentPatientId)" class="bg-slate-700 active:bg-slate-600 text-cyan-300 text-xs px-2 py-1.5 rounded-lg flex items-center gap-1">
-              <i class="fa-solid fa-user-pen"></i>
+              <i class="fa-solid fa-user-pen"></i> Düzenle
             </button>
             <button onclick="deleteCurrentPatient()" class="bg-rose-900/60 active:bg-rose-800 text-rose-300 text-xs p-1.5 rounded-lg">
               <i class="fa-regular fa-trash-can"></i>
@@ -94,25 +112,27 @@
           </div>
         </div>
 
+        <!-- Hasta Bilgi Başlığı -->
         <div class="mt-2.5 pt-2 border-t border-slate-700/60 flex items-center justify-between">
           <div>
             <div class="flex items-center gap-2">
               <h2 class="text-base font-bold text-white tracking-wide" id="disp-patient-name">Hasta Adı</h2>
               <span class="text-[10px] bg-cyan-900/80 text-cyan-300 font-mono px-2 py-0.5 rounded border border-cyan-700" id="disp-patient-bed">Yatak --</span>
             </div>
-            <p class="text-[11px] text-slate-400 mt-0.5" id="disp-patient-diag">Tanı</p>
+            <p class="text-[11px] text-slate-400 mt-0.5" id="disp-patient-diag">Tanı / Durum</p>
           </div>
           <div class="text-right">
             <span class="text-[10px] bg-amber-950/80 text-amber-300 px-2 py-0.5 rounded border border-amber-800 font-medium" id="disp-patient-day">1. Gün</span>
             <div class="text-[10px] text-slate-400 font-mono mt-0.5" id="disp-patient-weight">-- kg</div>
           </div>
         </div>
+
       </div>
     </header>
 
-    <!-- İçerik Sekmeleri -->
     <main class="flex-1 overflow-y-auto px-3.5 py-3 pb-28 space-y-4 max-w-lg mx-auto w-full">
-      <!-- Notlar -->
+
+      <!-- 1. Sekme: Notlar -->
       <section id="tab-notes" class="space-y-3">
         <div class="flex justify-between items-center">
           <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
@@ -125,7 +145,7 @@
         <div id="notes-list" class="space-y-2.5"></div>
       </section>
 
-      <!-- İlaçlar -->
+      <!-- 2. Sekme: İlaçlar -->
       <section id="tab-meds" class="space-y-3 hidden">
         <div class="flex justify-between items-center">
           <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
@@ -138,20 +158,20 @@
         <div id="meds-list" class="space-y-2"></div>
       </section>
 
-      <!-- Tetkikler -->
+      <!-- 3. Sekme: Tetkikler -->
       <section id="tab-labs" class="space-y-3 hidden">
         <div class="flex justify-between items-center">
           <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
             <i class="fa-solid fa-vial-virus text-rose-400"></i> Tetkik & Kan Gazı
           </h3>
           <button onclick="openModal('modal-lab')" class="text-xs bg-rose-600 active:bg-rose-700 text-white font-medium px-2.5 py-1 rounded-md flex items-center gap-1">
-            <i class="fa-solid fa-plus"></i> Sonuç Ekle
+            <i class="fa-solid fa-plus"></i> Tetkik Ekle
           </button>
         </div>
         <div id="labs-list" class="space-y-2.5"></div>
       </section>
 
-      <!-- Vitaller & Grafikler -->
+      <!-- 4. Sekme: Vitaller & Grafikler -->
       <section id="tab-vitals" class="space-y-3 hidden">
         <div class="flex justify-between items-center">
           <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
@@ -164,14 +184,14 @@
         <div id="latest-vital-card" class="bg-slate-800 border border-slate-700 rounded-xl p-3 text-xs space-y-2 shadow-sm"></div>
         <div class="bg-slate-800 border border-slate-700 rounded-xl p-3 shadow-sm space-y-2">
           <span class="text-xs font-bold text-slate-300 flex items-center gap-1">
-            <i class="fa-solid fa-chart-line text-cyan-400"></i> Hemodinamik Trend
+            <i class="fa-solid fa-chart-line text-cyan-400"></i> Hemodinamik Trend Grafiği
           </span>
           <div class="relative h-44 w-full"><canvas id="vitalsTrendChart"></canvas></div>
         </div>
         <div id="vitals-list" class="space-y-2 text-xs"></div>
       </section>
 
-      <!-- Solunum -->
+      <!-- 5. Sekme: Solunum -->
       <section id="tab-vent" class="space-y-3 hidden">
         <div class="flex justify-between items-center">
           <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
@@ -185,7 +205,7 @@
         <div id="vent-list" class="space-y-2 text-xs"></div>
       </section>
 
-      <!-- Nütrisyon -->
+      <!-- 6. Sekme: Nütrisyon -->
       <section id="tab-nutrition" class="space-y-3 hidden">
         <div class="flex justify-between items-center">
           <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
@@ -232,56 +252,58 @@
     <div class="bg-slate-800 border-t sm:border border-slate-700 rounded-t-2xl sm:rounded-xl max-w-md w-full p-4 space-y-3.5 text-xs max-h-[90vh] overflow-y-auto">
       <div class="flex justify-between items-center pb-2 border-b border-slate-700">
         <span class="font-bold text-white text-sm flex items-center gap-1.5">
-          <i class="fa-solid fa-camera text-indigo-400"></i> Form Fotoğrafı ile Otomatik Aktarma
+          <i class="fa-solid fa-camera text-indigo-400"></i> Form Fotoğrafı Çözümleme
         </span>
         <button onclick="closeModal('modal-scan')" class="text-slate-400 text-lg">&times;</button>
       </div>
 
       <p class="text-slate-300 text-[11px] leading-relaxed">
-        Yatak başındaki <b>YB.FR.04</b> takip çizelgesinin fotoğrafını çekin veya galeriden yükleyin. Yapay zeka tüm el yazılarını, saatlik vitalleri ve ventilatör ayarlarını dijital verilere dönüştürecektir.
+        Fotoğrafı doğrudan kameradan çekebilir veya galeriden seçebilirsiniz. Görsel otomatik olarak sıkıştırılarak yapay zeka ile çözümlenecektir.
       </p>
 
-      <!-- Fotoğraf Yükleme / Çekme Butonları -->
-      <div class="border-2 border-dashed border-slate-600 rounded-xl p-5 text-center bg-slate-900/50 space-y-3">
-        <i class="fa-solid fa-file-medical text-3xl text-indigo-400"></i>
-        <div class="text-[11px] text-slate-300">Formun fotoğrafını doğrudan kameradan çekin veya dosyadan seçin:</div>
-        <input type="file" id="camera-file-inp" accept="image/*" capture="environment" onchange="previewScanImage(event)" class="w-full text-xs text-slate-400 file:mr-2 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-indigo-600 file:text-white file:font-semibold">
+      <!-- Fotoğraf Seçme Alanı (capture kaldırıldı: hem Galeri hem Kamera aktif) -->
+      <div class="border-2 border-dashed border-slate-600 rounded-xl p-5 text-center bg-slate-900/50 space-y-2.5">
+        <i class="fa-solid fa-images text-3xl text-indigo-400"></i>
+        <div class="text-[11px] text-slate-300 font-medium">Fotoğraf Çek veya Galeriden Seç:</div>
+        <input type="file" id="camera-file-inp" accept="image/*" onchange="handleImageSelection(event)" class="w-full text-xs text-slate-400 file:mr-2 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-indigo-600 file:text-white file:font-semibold cursor-pointer">
       </div>
 
       <!-- Önizleme ve İlerleme Durumu -->
       <div id="scan-preview-box" class="hidden space-y-2">
-        <img id="scan-preview-img" class="w-full max-h-48 object-cover rounded-lg border border-slate-700">
-        <div id="scan-status" class="text-center font-semibold text-xs text-indigo-400 py-1"></div>
+        <img id="scan-preview-img" class="w-full max-h-44 object-cover rounded-lg border border-slate-700">
+        <div id="scan-status" class="text-center font-semibold text-xs py-1"></div>
       </div>
 
-      <!-- Analiz Butonu -->
+      <!-- Çözümleme Butonu -->
       <button onclick="startImageAnalysis()" id="btn-start-scan" class="w-full py-2.5 bg-indigo-600 active:bg-indigo-700 rounded-lg text-white font-bold flex items-center justify-center gap-2 shadow">
-        <i class="fa-solid fa-wand-magic-sparkles"></i> Fotoğrafı Çözümle ve Kaydet
+        <i class="fa-solid fa-wand-magic-sparkles"></i> Formu Çözümle ve Kaydet
       </button>
 
-      <!-- Gemini API Anahtarı Ayarı -->
-      <div class="pt-2 border-t border-slate-700 text-[10px] text-slate-400">
-        <details>
-          <summary class="cursor-pointer text-slate-300 font-semibold mb-1">🔑 Gemini API Anahtarı Ayarı (Ücretsiz)</summary>
-          <p class="mt-1 leading-normal">Google AI Studio'dan (<a href="https://aistudio.google.com" target="_blank" class="text-cyan-400 underline">aistudio.google.com</a>) alacağınız ücretsiz API anahtarınızı buraya kaydedebilirsiniz:</p>
-          <input type="password" id="gemini-api-key" placeholder="AIzaSy..." class="w-full bg-slate-900 border border-slate-700 rounded p-1.5 text-white mt-1">
-          <button onclick="saveApiKey()" class="mt-1 px-3 py-1 bg-slate-700 rounded text-slate-200">Anahtarı Kaydet</button>
-        </details>
+      <!-- Gemini API Anahtarı Bölümü (Açık ve Kolay Girişli) -->
+      <div class="pt-2 border-t border-slate-700 text-[10px] space-y-1.5">
+        <div class="flex justify-between items-center text-slate-300 font-semibold">
+          <span>🔑 Gemini API Anahtarı:</span>
+          <span id="api-key-status" class="text-emerald-400 font-mono"></span>
+        </div>
+        <div class="flex gap-1.5">
+          <input type="text" id="gemini-api-key" placeholder="AIzaSy... kodunu buraya yapıştırın" class="flex-1 bg-slate-900 border border-slate-700 rounded px-2 py-1.5 text-xs text-white">
+          <button onclick="saveApiKey()" class="px-3 py-1.5 bg-slate-700 active:bg-slate-600 text-slate-200 font-bold rounded">Kaydet</button>
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- DİĞER MODALLER VE VERİ YEDEKLEME -->
+  <!-- YEDEKLEME VE AYARLAR MODALI -->
   <div id="modal-backup" class="fixed inset-0 bg-black/70 z-50 flex items-end sm:items-center justify-center hidden p-0 sm:p-4">
     <div class="bg-slate-800 border-t sm:border border-slate-700 rounded-t-2xl sm:rounded-xl max-w-md w-full p-4 space-y-3.5 text-xs">
       <div class="flex justify-between items-center pb-2 border-b border-slate-700">
-        <span class="font-bold text-white text-sm">Veri Yedekleme & Excel</span>
+        <span class="font-bold text-white text-sm">Veri Yedekleme & Dışa Aktarma</span>
         <button onclick="closeModal('modal-backup')" class="text-slate-400 text-lg">&times;</button>
       </div>
       <button onclick="exportJSONBackup()" class="w-full py-2 bg-cyan-600 rounded text-white font-bold">Tam JSON Yedeği İndir</button>
       <button onclick="exportCSVData()" class="w-full py-2 bg-emerald-700 rounded text-white font-bold">Excel/CSV İndir</button>
       <div class="pt-2 border-t border-slate-700">
-        <label class="block text-slate-400 mb-1">Yedekten Yükle:</label>
+        <label class="block text-slate-400 mb-1">Yedekten Geri Yükle:</label>
         <input type="file" accept=".json" onchange="importJSONBackup(event)" class="w-full text-xs text-slate-400">
       </div>
     </div>
@@ -327,22 +349,49 @@
     </div>
   </div>
 
+  <div id="modal-lab" class="fixed inset-0 bg-black/70 z-50 flex items-end sm:items-center justify-center hidden p-0 sm:p-4">
+    <div class="bg-slate-800 border-t sm:border border-slate-700 rounded-t-2xl sm:rounded-xl max-w-md w-full p-4 space-y-3 text-xs">
+      <div class="flex justify-between items-center pb-2 border-b border-slate-700"><span class="font-bold text-white text-sm">Tetkik Ekle</span><button onclick="closeModal('modal-lab')" class="text-slate-400 text-lg">&times;</button></div>
+      <div><label class="text-slate-400 block mb-1">Tür</label><input type="text" id="lab-type" placeholder="AKG, Biyokimya..." class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white"></div>
+      <div><label class="text-slate-400 block mb-1">Sonuçlar</label><textarea id="lab-results" rows="3" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white"></textarea></div>
+      <button onclick="saveLab()" class="w-full py-2.5 bg-rose-600 rounded text-white font-bold">Kaydet</button>
+    </div>
+  </div>
+
   <div id="modal-vital" class="fixed inset-0 bg-black/70 z-50 flex items-end sm:items-center justify-center hidden p-0 sm:p-4">
     <div class="bg-slate-800 border-t sm:border border-slate-700 rounded-t-2xl sm:rounded-xl max-w-md w-full p-4 space-y-3 text-xs">
       <div class="flex justify-between items-center pb-2 border-b border-slate-700"><span class="font-bold text-white text-sm">Vital Kaydı</span><button onclick="closeModal('modal-vital')" class="text-slate-400 text-lg">&times;</button></div>
-      <div class="grid grid-cols-2 gap-2"><div><label class="text-slate-400 block mb-1">TA</label><input type="text" id="vit-bp" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white"></div><div><label class="text-slate-400 block mb-1">KTA</label><input type="number" id="vit-hr" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white"></div></div>
-      <div class="grid grid-cols-2 gap-2"><div><label class="text-slate-400 block mb-1">SpO2</label><input type="number" id="vit-spo2" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white"></div><div><label class="text-slate-400 block mb-1">İdrar</label><input type="number" id="vit-urine" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white"></div></div>
+      <div class="grid grid-cols-2 gap-2"><div><label class="text-slate-400 block mb-1">TA</label><input type="text" id="vit-bp" placeholder="120/70" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white"></div><div><label class="text-slate-400 block mb-1">KTA</label><input type="number" id="vit-hr" placeholder="84" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white"></div></div>
+      <div class="grid grid-cols-2 gap-2"><div><label class="text-slate-400 block mb-1">SpO2</label><input type="number" id="vit-spo2" placeholder="96" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white"></div><div><label class="text-slate-400 block mb-1">İdrar (mL)</label><input type="number" id="vit-urine" placeholder="80" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white"></div></div>
       <button onclick="saveVital()" class="w-full py-2.5 bg-emerald-600 rounded text-white font-bold">Kaydet</button>
+    </div>
+  </div>
+
+  <div id="modal-vent" class="fixed inset-0 bg-black/70 z-50 flex items-end sm:items-center justify-center hidden p-0 sm:p-4">
+    <div class="bg-slate-800 border-t sm:border border-slate-700 rounded-t-2xl sm:rounded-xl max-w-md w-full p-4 space-y-3 text-xs">
+      <div class="flex justify-between items-center pb-2 border-b border-slate-700"><span class="font-bold text-white text-sm">Solunum Ayarı</span><button onclick="closeModal('modal-vent')" class="text-slate-400 text-lg">&times;</button></div>
+      <div class="grid grid-cols-2 gap-2"><div><label class="text-slate-400 block mb-1">Mod</label><input type="text" id="inp-vent-mode" placeholder="SIMV, PCV" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white"></div><div><label class="text-slate-400 block mb-1">FiO2 (%)</label><input type="number" id="inp-vent-fio2" placeholder="40" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white"></div></div>
+      <div class="grid grid-cols-2 gap-2"><div><label class="text-slate-400 block mb-1">PEEP</label><input type="number" id="inp-vent-peep" placeholder="6" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white"></div><div><label class="text-slate-400 block mb-1">Vt (mL)</label><input type="number" id="inp-vent-vt" placeholder="450" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white"></div></div>
+      <button onclick="saveVent()" class="w-full py-2.5 bg-sky-600 rounded text-white font-bold">Kaydet</button>
+    </div>
+  </div>
+
+  <div id="modal-nutrition" class="fixed inset-0 bg-black/70 z-50 flex items-end sm:items-center justify-center hidden p-0 sm:p-4">
+    <div class="bg-slate-800 border-t sm:border border-slate-700 rounded-t-2xl sm:rounded-xl max-w-md w-full p-4 space-y-3 text-xs">
+      <div class="flex justify-between items-center pb-2 border-b border-slate-700"><span class="font-bold text-white text-sm">Nütrisyon Kaydı</span><button onclick="closeModal('modal-nutrition')" class="text-slate-400 text-lg">&times;</button></div>
+      <div><label class="text-slate-400 block mb-1">Yol</label><select id="inp-nutr-route" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white"><option value="Enteral (NGS)">Enteral (NGS)</option><option value="Santral TPN">Santral TPN</option><option value="Oral Diyet">Oral Diyet</option><option value="NPO">Aç / NPO</option></select></div>
+      <div class="grid grid-cols-2 gap-2"><div><label class="text-slate-400 block mb-1">Hız (mL/s)</label><input type="number" id="inp-nutr-rate" placeholder="60" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white"></div><div><label class="text-slate-400 block mb-1">Rezidü (GRV)</label><input type="number" id="inp-nutr-grv" placeholder="20" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white"></div></div>
+      <button onclick="saveNutrition()" class="w-full py-2.5 bg-amber-600 rounded text-white font-bold">Kaydet</button>
     </div>
   </div>
 
   <!-- JAVASCRIPT ÇEKİRDEK & VISION MOTORU -->
   <script>
-    const STORAGE_KEY = 'icu_vision_db';
+    const STORAGE_KEY = 'icu_vision_db_v4';
     let patients = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
     let currentPatientId = null;
     let scanningPatientId = null;
-    let scannedBase64Image = null;
+    let compressedBase64Image = null;
     let vitalsChartInstance = null;
 
     function saveToStorage() { localStorage.setItem(STORAGE_KEY, JSON.stringify(patients)); }
@@ -352,61 +401,131 @@
     function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
     function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
 
-    function saveApiKey() {
-      const key = document.getElementById('gemini-api-key').value.trim();
-      if (key) { localStorage.setItem('gemini_api_key', key); alert('API anahtarı kaydedildi!'); }
+    // API Anahtarı Yönetimi
+    function checkApiKeyStatus() {
+      const key = localStorage.getItem('gemini_api_key');
+      const st = document.getElementById('api-key-status');
+      const inp = document.getElementById('gemini-api-key');
+      if (key && key.trim().length > 10) {
+        st.innerText = "Kayıtlı ✓";
+        st.className = "text-emerald-400 font-mono";
+        if (inp) inp.value = key;
+      } else {
+        st.innerText = "Eksik ✗";
+        st.className = "text-rose-400 font-mono";
+      }
     }
 
-    // Kamera / Tarama Modalını Aç
+    function saveApiKey() {
+      const key = document.getElementById('gemini-api-key').value.trim();
+      if (key) {
+        localStorage.setItem('gemini_api_key', key);
+        checkApiKeyStatus();
+        alert('✅ API anahtarı başarıyla cihaza kaydedildi!');
+      } else {
+        alert('Lütfen geçerli bir anahtar girin.');
+      }
+    }
+
+    // Modal Açılışı
     function openScanModal(patientId) {
       scanningPatientId = patientId;
+      compressedBase64Image = null;
       document.getElementById('camera-file-inp').value = '';
       document.getElementById('scan-preview-box').classList.add('hidden');
       document.getElementById('scan-status').innerText = '';
-      const savedKey = localStorage.getItem('gemini_api_key');
-      if (savedKey) document.getElementById('gemini-api-key').value = savedKey;
+      checkApiKeyStatus();
       openModal('modal-scan');
     }
 
-    function previewScanImage(event) {
+    // İstemci Taraflı Görsel Sıkıştırma (Canvas Optimizer)
+    function handleImageSelection(event) {
       const file = event.target.files[0];
       if (!file) return;
+
+      const statusDiv = document.getElementById('scan-status');
+      statusDiv.className = "text-center font-semibold text-xs text-sky-400 py-1";
+      statusDiv.innerHTML = '<i class="fa-solid fa-compress fa-spin"></i> Fotoğraf optimize ediliyor...';
+      document.getElementById('scan-preview-box').classList.remove('hidden');
+
       const reader = new FileReader();
       reader.onload = function(e) {
-        scannedBase64Image = e.target.result.split(',')[1];
-        document.getElementById('scan-preview-img').src = e.target.result;
-        document.getElementById('scan-preview-box').classList.remove('hidden');
+        const img = new Image();
+        img.onload = function() {
+          // Maksimum 1400px boyutuna küçültme (AI okuma hassasiyeti için ideal)
+          let maxWidth = 1400;
+          let maxHeight = 1400;
+          let width = img.width;
+          let height = img.height;
+
+          if (width > height) {
+            if (width > maxWidth) {
+              height = Math.round((height * maxWidth) / width);
+              width = maxWidth;
+            }
+          } else {
+            if (height > maxHeight) {
+              width = Math.round((width * maxHeight) / height);
+              height = maxHeight;
+            }
+          }
+
+          const canvas = document.createElement('canvas');
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, width, height);
+
+          // JPEG %80 Kalite - 20 MB'lık fotoğrafı ~350 KB'a indirir
+          const dataUrl = canvas.toDataURL('image/jpeg', 0.80);
+          compressedBase64Image = dataUrl.split(',')[1];
+
+          document.getElementById('scan-preview-img').src = dataUrl;
+          statusDiv.className = "text-center font-semibold text-xs text-emerald-400 py-1";
+          statusDiv.innerText = `Fotoğraf hazırlandı (${Math.round(compressedBase64Image.length * 0.75 / 1024)} KB) ✓`;
+        };
+        img.src = e.target.result;
       };
       reader.readAsDataURL(file);
     }
 
-    // GEMINI VISION API İLE GÖRSELİ ÇÖZÜMLEME
+    // GEMINI VISION API ÇÖZÜMLEME
     async function startImageAnalysis() {
-      if (!scannedBase64Image) { alert('Lütfen önce bir fotoğraf çekin veya seçin.'); return; }
-      const apiKey = document.getElementById('gemini-api-key').value.trim() || localStorage.getItem('gemini_api_key');
-      
-      const statusDiv = document.getElementById('scan-status');
-      statusDiv.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Form yapay zeka ile taranıyor, lütfen bekleyin...';
-      document.getElementById('btn-start-scan').disabled = true;
+      if (!compressedBase64Image) {
+        alert('Lütfen önce bir form fotoğrafı çekin veya galeriden seçin.');
+        return;
+      }
 
-      const promptText = `Sen yoğun bakım uzmanı bir yapay zekasın. Eklenen görsel Manisa Celal Bayar Üniversitesi YB.FR.04 Anestezi Yoğun Bakım Hasta İzlem Formudur.
-Görseldeki el yazılarını, saatlik akış tablosunu, ilaçları ve gözlem notlarını incele. 
-Sadece aşağıdaki JSON şablonunda geçerli bir JSON çıktısı ver (başka hiçbir metin ekleme):
+      const apiKey = (document.getElementById('gemini-api-key').value || localStorage.getItem('gemini_api_key') || '').trim();
+      if (!apiKey || apiKey.length < 10) {
+        alert('Lütfen alttaki kutucuğa geçerli bir Gemini API anahtarı yapıştırıp "Kaydet"e basın.');
+        return;
+      }
+
+      const statusDiv = document.getElementById('scan-status');
+      const scanBtn = document.getElementById('btn-start-scan');
+      statusDiv.className = "text-center font-semibold text-xs text-indigo-400 py-1";
+      statusDiv.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Form yapay zeka ile taranıyor, lütfen bekleyin...';
+      scanBtn.disabled = true;
+
+      const promptText = `Sen anestezi ve yoğun bakım uzmanı bir hekimsin. Eklenen görsel Manisa Celal Bayar Üniversitesi YB.FR.04 Anestezi Yoğun Bakım Hasta İzlem Formudur.
+Görseldeki el yazılarını, vital bulguları, ventilatör ayarlarını, ilaçları ve gözlem notlarını dikkatlice oku.
+Sadece ve sadece aşağıdaki JSON formatında saf bir JSON çıktısı üret, markdown veya açıklama yazma:
 {
-  "name": "Hastanın Adı Soyadı veya Baş Harfleri (varsa)",
-  "bed": "Yatak numarası (örn: Yatak 04)",
-  "day": "Kaçıncı gün (örn: 3. Gün)",
-  "diag": "Tanı (örn: Septik Şok, ARDS)",
+  "name": "Hastanın adı soyadı veya baş harfleri",
+  "bed": "Yatak no (örn: Yatak 04)",
+  "day": "YBÜ günü (örn: 3. Gün)",
+  "diag": "Klinik tanı",
   "weight": 70,
   "allergy": "Alerji durumu",
-  "latestVitals": { "bp": "110/65", "hr": 88, "spo2": 95, "urine": 100 },
+  "latestVitals": { "bp": "110/65", "hr": 88, "spo2": 95, "urine": 80 },
   "vent": { "type": "İnvaziv MV (ETT)", "mode": "SIMV", "fio2": 45, "peep": 8, "vt": 450 },
-  "meds": ["Meropenem 3x1", "Clexane", "Noradrenalin"],
-  "doctorNote": "Hekim gözlem ve durum özeti"
+  "meds": ["Meropenem", "Clexane", "Noradrenalin"],
+  "doctorNote": "Hekim gözlem notu veya form özeti"
 }`;
 
       try {
-        let apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
         
         const response = await fetch(apiUrl, {
           method: 'POST',
@@ -415,66 +534,74 @@ Sadece aşağıdaki JSON şablonunda geçerli bir JSON çıktısı ver (başka h
             contents: [{
               parts: [
                 { text: promptText },
-                { inline_data: { mime_type: "image/jpeg", data: scannedBase64Image } }
+                { inline_data: { mime_type: "image/jpeg", data: compressedBase64Image } }
               ]
             }]
           })
         });
 
         const data = await response.json();
-        const rawText = data.candidates[0].content.parts[0].text;
-        const cleanedJSON = rawText.replace(/```json/g, '').replace(/```/g, '').trim();
+
+        if (!response.ok || data.error) {
+          throw new Error(data.error?.message || `Sunucu Hatası (HTTP ${response.status})`);
+        }
+
+        const rawText = data.candidates?.[0]?.content?.parts?.[0]?.text;
+        if (!rawText) throw new Error("Görselden veri okunamadı.");
+
+        const cleanedJSON = rawText.replace(/```json/gi, '').replace(/```/gi, '').trim();
         const parsed = JSON.parse(cleanedJSON);
 
-        // Verileri Hastaya İşle
-        applyParsedDataToPatient(parsed);
-        statusDiv.innerHTML = '✅ Form başarıyla dijitalleştirildi ve kaydedildi!';
-        setTimeout(() => { closeModal('modal-scan'); }, 1200);
+        applyParsedData(parsed);
+
+        statusDiv.className = "text-center font-bold text-xs text-emerald-400 py-1";
+        statusDiv.innerText = "✅ Form başarıyla dijitalleştirildi ve kaydedildi!";
+        setTimeout(() => { closeModal('modal-scan'); }, 1400);
 
       } catch (err) {
-        statusDiv.innerHTML = '❌ Analiz sırasında hata oluştu. Lütfen geçerli bir Gemini API anahtarı girdiğinizden emin olun.';
-        console.error(err);
+        statusDiv.className = "text-center font-semibold text-xs text-rose-400 py-1";
+        statusDiv.innerText = `❌ Hata: ${err.message}`;
+        console.error("Tarama Hatası:", err);
       } finally {
-        document.getElementById('btn-start-scan').disabled = false;
+        scanBtn.disabled = false;
       }
     }
 
-    function applyParsedDataToPatient(parsed) {
+    // Çözümlenen Veriyi Hastaya Aktarma
+    function applyParsedData(parsed) {
       let targetPatient = null;
       if (scanningPatientId) {
         targetPatient = patients.find(p => p.id === scanningPatientId);
       }
-      
+
       if (!targetPatient) {
         targetPatient = {
           id: 'p_' + Date.now(),
           name: parsed.name || "Yeni Hasta",
           bed: parsed.bed || "Yatak --",
           day: parsed.day || "1. Gün",
-          diag: parsed.diag || "Tanı Belirtilmedi",
+          diag: parsed.diag || "Yoğun Bakım Takibi",
           weight: parsed.weight || 70,
           allergy: parsed.allergy || "Yok",
           notes: [], meds: [], labs: [], vitals: [], vents: [], nutritions: []
         };
         patients.unshift(targetPatient);
       } else {
-        if (parsed.name) targetPatient.name = parsed.name;
-        if (parsed.bed) targetPatient.bed = parsed.bed;
+        if (parsed.name && parsed.name !== "Yeni Hasta") targetPatient.name = parsed.name;
+        if (parsed.bed && parsed.bed !== "Yatak --") targetPatient.bed = parsed.bed;
         if (parsed.diag) targetPatient.diag = parsed.diag;
       }
 
-      // Vital Ekle
       if (parsed.latestVitals) {
         targetPatient.vitals.unshift({
           id: Date.now(), time: getTimeStr(),
           bp: parsed.latestVitals.bp || "120/70",
           hr: parsed.latestVitals.hr || 80,
-          spo2: parsed.latestVitals.spo2 || 95,
+          spo2: parsed.latestVitals.spo2 || 96,
           urine: parsed.latestVitals.urine || 0
         });
       }
 
-      // Ventilatör Ekle
       if (parsed.vent) {
         targetPatient.vents.unshift({
           id: Date.now(), time: getTimeStr(),
@@ -486,16 +613,20 @@ Sadece aşağıdaki JSON şablonunda geçerli bir JSON çıktısı ver (başka h
         });
       }
 
-      // İlaçlar
       if (parsed.meds && Array.isArray(parsed.meds)) {
         parsed.meds.forEach(m => {
-          targetPatient.meds.push({ id: Date.now() + Math.random(), name: m, dose: "Formdan Okundu", hours: "Aktif", given: true });
+          targetPatient.meds.push({
+            id: Date.now() + Math.random(),
+            name: m, dose: "Aktif Tedavi", hours: "Formdan Okundu", given: true
+          });
         });
       }
 
-      // Hekim Notu
       if (parsed.doctorNote) {
-        targetPatient.notes.unshift({ id: Date.now(), time: getTimeStr(), cat: "Form Analizi", content: parsed.doctorNote });
+        targetPatient.notes.unshift({
+          id: Date.now(), time: getTimeStr(),
+          cat: "Form Analizi", content: parsed.doctorNote
+        });
       }
 
       saveToStorage();
@@ -503,7 +634,7 @@ Sadece aşağıdaki JSON şablonunda geçerli bir JSON çıktısı ver (başka h
       else renderPatientList();
     }
 
-    // Geri Kalan UI ve Render Fonksiyonları (Önceki Sürümle Tam Uyumlu)
+    // Standart Fonksiyonlar
     function showPatientList() {
       document.getElementById('view-patient-list').classList.remove('hidden');
       document.getElementById('view-patient-detail').classList.add('hidden');
@@ -519,16 +650,24 @@ Sadece aşağıdaki JSON şablonunda geçerli bir JSON çıktısı ver (başka h
       renderPatientDetail();
     }
 
-    function renderPatientList(filterQuery = "") {
+    function filterPatients() {
+      const q = document.getElementById('patient-search-inp').value.toLowerCase();
+      renderPatientList(q);
+    }
+
+    function renderPatientList(query = "") {
       const container = document.getElementById('patients-cards-container');
-      document.getElementById('stat-patient-count').innerText = `${patients.length} Aktif Hasta`;
-      if (patients.length === 0) {
-        container.innerHTML = '<div class="text-center py-12 text-slate-500"><i class="fa-solid fa-camera text-4xl mb-2"></i><p>Henüz hasta yok. Yukarıdaki "Form Tara" ile ilk hastayı ekleyin.</p></div>';
+      const filtered = patients.filter(p => !query || p.name.toLowerCase().includes(query) || p.bed.toLowerCase().includes(query) || p.diag.toLowerCase().includes(query));
+      document.getElementById('stat-patient-count').innerText = `${filtered.length} Aktif Hasta`;
+
+      if (filtered.length === 0) {
+        container.innerHTML = '<div class="text-center py-12 text-slate-500"><i class="fa-solid fa-camera text-4xl mb-2 text-slate-600"></i><p>Kayıtlı hasta yok. Yukarıdaki "Form Tara" butonuyla kağıt formun fotoğrafını yükleyerek başlayabilirsiniz.</p></div>';
         return;
       }
+
       container.innerHTML = '';
-      patients.forEach(p => {
-        const lv = p.vitals[0] || {};
+      filtered.forEach(p => {
+        const lv = (p.vitals && p.vitals[0]) || {};
         container.innerHTML += `
           <div onclick="openPatientDetail('${p.id}')" class="bg-slate-800 border border-slate-700 hover:border-cyan-500 rounded-xl p-3.5 shadow cursor-pointer">
             <div class="flex justify-between items-center">
@@ -537,7 +676,7 @@ Sadece aşağıdaki JSON şablonunda geçerli bir JSON çıktısı ver (başka h
               <span class="text-[10px] text-slate-400">${p.day || '1. Gün'}</span>
             </div>
             <p class="text-xs text-slate-400 mt-1 line-clamp-1">${p.diag}</p>
-            ${lv.bp ? `<div class="mt-2 text-[10px] font-mono text-slate-300 flex justify-between bg-slate-900/60 p-1.5 rounded"><span>TA: ${lv.bp}</span><span>KTA: ${lv.hr}</span><span>SpO2: %${lv.spo2}</span></div>` : ''}
+            ${lv.bp ? `<div class="mt-2 text-[10px] font-mono text-slate-300 flex justify-between bg-slate-900/60 p-1.5 rounded"><span>TA: ${lv.bp}</span><span>KTA: ${lv.hr}</span><span>SpO2: \%${lv.spo2}</span></div>` : ''}
           </div>`;
       });
     }
@@ -545,6 +684,7 @@ Sadece aşağıdaki JSON şablonunda geçerli bir JSON çıktısı ver (başka h
     function renderPatientDetail() {
       const p = getCurrentPatient();
       if (!p) return;
+
       document.getElementById('disp-patient-name').innerText = p.name;
       document.getElementById('disp-patient-bed').innerText = p.bed;
       document.getElementById('disp-patient-diag').innerText = p.diag;
@@ -552,24 +692,285 @@ Sadece aşağıdaki JSON şablonunda geçerli bir JSON çıktısı ver (başka h
       document.getElementById('disp-patient-weight').innerText = `${p.weight || '--'} kg`;
 
       const nList = document.getElementById('notes-list');
-      nList.innerHTML = p.notes.length ? '' : '<p class="text-xs text-slate-500">Not bulunmuyor.</p>';
-      p.notes.forEach(n => {
-        nList.innerHTML += `<div class="bg-slate-800 p-2.5 rounded-lg border border-slate-700 text-xs"><div class="flex justify-between text-slate-400 text-[10px] mb-1"><span>${n.cat}</span><span>${n.time}</span></div><p>${n.content}</p></div>`;
+      nList.innerHTML = p.notes.length ? '' : '<p class="text-xs text-slate-500 italic">Not bulunmuyor.</p>';
+      p.notes.forEach((n, i) => {
+        nList.innerHTML += `<div class="bg-slate-800 p-2.5 rounded-lg border border-slate-700 text-xs"><div class="flex justify-between text-slate-400 text-[10px] mb-1"><span class="font-bold text-cyan-300">${n.cat}</span><span>${n.time}</span></div><p class="text-slate-200 whitespace-pre-wrap">${n.content}</p></div>`;
+      });
+
+      const mList = document.getElementById('meds-list');
+      mList.innerHTML = p.meds.length ? '' : '<p class="text-xs text-slate-500 italic">İlaç yok.</p>';
+      p.meds.forEach(m => {
+        mList.innerHTML += `<div class="bg-slate-800 p-2 rounded border border-slate-700 text-xs flex justify-between"><div><span class="font-bold text-purple-300">${m.name}</span> <span class="text-slate-400 text-[10px]">(${m.dose})</span></div><span class="text-[10px] text-emerald-400">Aktif</span></div>`;
+      });
+
+      const lList = document.getElementById('labs-list');
+      lList.innerHTML = p.labs.length ? '' : '<p class="text-xs text-slate-500 italic">Tetkik yok.</p>';
+      p.labs.forEach(l => {
+        lList.innerHTML += `<div class="bg-slate-800 p-2 rounded border border-slate-700 text-xs"><div class="font-bold text-rose-300">${l.type} <span class="text-slate-400 font-normal text-[10px]">(${l.time})</span></div><div class="font-mono text-slate-300 mt-1">${l.results}</div></div>`;
+      });
+
+      renderVitalsSection(p);
+
+      const ventCard = document.getElementById('latest-vent-card');
+      const v = (p.vents && p.vents[0]) || null;
+      if (v) {
+        ventCard.innerHTML = `<div class="font-bold text-sky-300">${v.type} (${v.mode})</div><div class="grid grid-cols-3 gap-2 text-center font-mono mt-2"><div class="bg-slate-900 p-1.5 rounded">FiO2: %${v.fio2 || '-'}</div><div class="bg-slate-900 p-1.5 rounded">PEEP: ${v.peep || '-'}</div><div class="bg-slate-900 p-1.5 rounded">Vt: ${v.vt || '-'}</div></div>`;
+      } else {
+        ventCard.innerHTML = '<p class="text-xs text-slate-500 italic">Solunum parametresi yok.</p>';
+      }
+
+      const nutrCard = document.getElementById('latest-nutr-card');
+      const n = (p.nutritions && p.nutritions[0]) || null;
+      if (n) {
+        nutrCard.innerHTML = `<div class="font-bold text-amber-300">${n.route}</div><div class="text-slate-300 mt-1 font-mono">Hız: ${n.rate || 0} mL/s • GRV: ${n.grv || 0} mL</div>`;
+      } else {
+        nutrCard.innerHTML = '<p class="text-xs text-slate-500 italic">Nütrisyon kaydı yok.</p>';
+      }
+    }
+
+    function renderVitalsSection(p) {
+      const lvCard = document.getElementById('latest-vital-card');
+      const vitals = p.vitals || [];
+      if (vitals.length > 0) {
+        const v = vitals[0];
+        lvCard.innerHTML = `
+          <div class="flex justify-between items-center border-b border-slate-700 pb-1"><span class="font-semibold text-slate-300">Son Ölçüm (${v.time})</span><span class="text-[10px] text-emerald-400">Aktif</span></div>
+          <div class="grid grid-cols-4 gap-2 pt-1 font-mono text-center">
+            <div class="bg-slate-900/60 p-1 rounded"><div class="text-[10px] text-slate-500">TA</div><div class="font-bold text-cyan-400">${v.bp || '-'}</div></div>
+            <div class="bg-slate-900/60 p-1 rounded"><div class="text-[10px] text-slate-500">KTA</div><div class="font-bold text-emerald-400">${v.hr || '-'}</div></div>
+            <div class="bg-slate-900/60 p-1 rounded"><div class="text-[10px] text-slate-500">SpO2</div><div class="font-bold text-sky-400">%${v.spo2 || '-'}</div></div>
+            <div class="bg-slate-900/60 p-1 rounded"><div class="text-[10px] text-slate-500">İdrar</div><div class="font-bold text-blue-400">${v.urine || 0}</div></div>
+          </div>`;
+      } else {
+        lvCard.innerHTML = '<p class="text-xs text-slate-500 italic">Vital yok.</p>';
+      }
+
+      updateVitalsChart(vitals);
+    }
+
+    function updateVitalsChart(vitals) {
+      const ctx = document.getElementById('vitalsTrendChart');
+      if (!ctx) return;
+      if (vitalsChartInstance) vitalsChartInstance.destroy();
+
+      const rev = [...vitals].reverse();
+      const labels = rev.map(v => v.time || '');
+      const hrData = rev.map(v => v.hr || null);
+      const spo2Data = rev.map(v => v.spo2 || null);
+
+      vitalsChartInstance = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: [
+            { label: 'KTA (/dk)', data: hrData, borderColor: '#10b981', tension: 0.3, borderWidth: 2 },
+            { label: 'SpO2 (%)', data: spo2Data, borderColor: '#38bdf8', tension: 0.3, borderWidth: 2 }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { labels: { color: '#94a3b8', font: { size: 9 } } } },
+          scales: {
+            x: { ticks: { color: '#94a3b8', font: { size: 9 } }, grid: { color: 'rgba(51,65,85,0.3)' } },
+            y: { ticks: { color: '#94a3b8', font: { size: 9 } }, grid: { color: 'rgba(51,65,85,0.3)' } }
+          }
+        }
       });
     }
 
     function switchTab(tab) {
       ['notes', 'meds', 'labs', 'vitals', 'vent', 'nutrition'].forEach(t => {
         document.getElementById(`tab-${t}`).classList.add('hidden');
-        document.getElementById(`btn-tab-${t}`).classList.remove('text-cyan-400');
+        document.getElementById(`btn-tab-${t}`).classList.remove('text-cyan-400', 'bg-slate-700/50');
         document.getElementById(`btn-tab-${t}`).classList.add('text-slate-400');
       });
       document.getElementById(`tab-${tab}`).classList.remove('hidden');
-      document.getElementById(`btn-tab-${tab}`).classList.add('text-cyan-400');
+      document.getElementById(`btn-tab-${tab}`).classList.add('text-cyan-400', 'bg-slate-700/50');
       document.getElementById(`btn-tab-${tab}`).classList.remove('text-slate-400');
     }
 
+    function openPatientModal(pid) {
+      if (pid) {
+        const p = patients.find(i => i.id === pid);
+        if (p) {
+          document.getElementById('inp-p-name').value = p.name || '';
+          document.getElementById('inp-p-bed').value = p.bed || '';
+          document.getElementById('inp-p-day').value = p.day || '';
+          document.getElementById('inp-p-weight').value = p.weight || '';
+          document.getElementById('inp-p-age').value = p.age || '';
+          document.getElementById('inp-p-diag').value = p.diag || '';
+          document.getElementById('inp-p-allergy').value = p.allergy || '';
+        }
+      } else {
+        document.getElementById('inp-p-name').value = '';
+        document.getElementById('inp-p-bed').value = '';
+        document.getElementById('inp-p-day').value = '1. Gün';
+        document.getElementById('inp-p-weight').value = '';
+        document.getElementById('inp-p-age').value = '';
+        document.getElementById('inp-p-diag').value = '';
+        document.getElementById('inp-p-allergy').value = '';
+      }
+      openModal('modal-patient');
+    }
+
+    function savePatient() {
+      const name = document.getElementById('inp-p-name').value.trim();
+      const bed = document.getElementById('inp-p-bed').value.trim();
+      const diag = document.getElementById('inp-p-diag').value.trim();
+      if (!name || !bed || !diag) { alert('Lütfen Ad, Yatak ve Tanı alanlarını doldurun.'); return; }
+
+      if (currentPatientId) {
+        const p = getCurrentPatient();
+        if (p) {
+          p.name = name; p.bed = bed; p.day = document.getElementById('inp-p-day').value;
+          p.weight = parseFloat(document.getElementById('inp-p-weight').value) || null;
+          p.age = parseInt(document.getElementById('inp-p-age').value) || null;
+          p.diag = diag; p.allergy = document.getElementById('inp-p-allergy').value;
+        }
+      } else {
+        patients.unshift({
+          id: 'p_' + Date.now(), name, bed, day: document.getElementById('inp-p-day').value,
+          weight: parseFloat(document.getElementById('inp-p-weight').value) || null,
+          age: parseInt(document.getElementById('inp-p-age').value) || null,
+          diag, allergy: document.getElementById('inp-p-allergy').value,
+          notes: [], meds: [], labs: [], vitals: [], vents: [], nutritions: []
+        });
+      }
+      saveToStorage();
+      closeModal('modal-patient');
+      if (currentPatientId) renderPatientDetail();
+      else renderPatientList();
+    }
+
+    function deleteCurrentPatient() {
+      const p = getCurrentPatient();
+      if (!p || !confirm(`"${p.name}" silinsin mi?`)) return;
+      patients = patients.filter(i => i.id !== currentPatientId);
+      saveToStorage();
+      showPatientList();
+    }
+
+    function saveNote() {
+      const p = getCurrentPatient();
+      const c = document.getElementById('note-content').value.trim();
+      if (!p || !c) return;
+      p.notes.unshift({ id: Date.now(), time: getTimeStr(), cat: document.getElementById('note-cat').value, content: c });
+      saveToStorage();
+      document.getElementById('note-content').value = '';
+      closeModal('modal-note');
+      renderPatientDetail();
+    }
+
+    function saveMed() {
+      const p = getCurrentPatient();
+      const n = document.getElementById('med-name').value.trim();
+      if (!p || !n) return;
+      p.meds.push({ id: Date.now(), name: n, dose: document.getElementById('med-dose').value || 'Standart', hours: document.getElementById('med-hours').value || 'Günde 1', given: true });
+      saveToStorage();
+      document.getElementById('med-name').value = '';
+      closeModal('modal-med');
+      renderPatientDetail();
+    }
+
+    function saveLab() {
+      const p = getCurrentPatient();
+      const r = document.getElementById('lab-results').value.trim();
+      if (!p || !r) return;
+      p.labs.unshift({ id: Date.now(), time: getTimeStr(), type: document.getElementById('lab-type').value || 'Tetkik', results: r });
+      saveToStorage();
+      document.getElementById('lab-results').value = '';
+      closeModal('modal-lab');
+      renderPatientDetail();
+    }
+
+    function saveVital() {
+      const p = getCurrentPatient();
+      if (!p) return;
+      p.vitals.unshift({
+        id: Date.now(), time: getTimeStr(),
+        bp: document.getElementById('vit-bp').value,
+        hr: document.getElementById('vit-hr').value,
+        spo2: document.getElementById('vit-spo2').value,
+        urine: document.getElementById('vit-urine').value
+      });
+      saveToStorage();
+      closeModal('modal-vital');
+      renderPatientDetail();
+    }
+
+    function saveVent() {
+      const p = getCurrentPatient();
+      if (!p) return;
+      p.vents.unshift({
+        id: Date.now(), time: getTimeStr(),
+        type: 'İnvaziv MV', mode: document.getElementById('inp-vent-mode').value || 'SIMV',
+        fio2: document.getElementById('inp-vent-fio2').value,
+        peep: document.getElementById('inp-vent-peep').value,
+        vt: document.getElementById('inp-vent-vt').value
+      });
+      saveToStorage();
+      closeModal('modal-vent');
+      renderPatientDetail();
+    }
+
+    function saveNutrition() {
+      const p = getCurrentPatient();
+      if (!p) return;
+      p.nutritions.unshift({
+        id: Date.now(), time: getTimeStr(),
+        route: document.getElementById('inp-nutr-route').value,
+        rate: document.getElementById('inp-nutr-rate').value,
+        grv: document.getElementById('inp-nutr-grv').value
+      });
+      saveToStorage();
+      closeModal('modal-nutrition');
+      renderPatientDetail();
+    }
+
+    function copyHandoffSummary() {
+      const p = getCurrentPatient();
+      if (!p) return;
+      const lv = p.vitals[0] || {};
+      let txt = `🏥 *YBÜ DEVİR BİLGİSİ*\n*Hasta:* ${p.name} (${p.bed})\n*Tanı:* ${p.diag} - ${p.day}\n\n`;
+      txt += `📊 *Vitaller (${lv.time || '-'}):* TA: ${lv.bp || '-'} | KTA: ${lv.hr || '-'} | SpO2: %${lv.spo2 || '-'}\n\n`;
+      txt += `💊 *İlaçlar:*\n` + p.meds.map(m => `• ${m.name} (${m.dose})`).join('\n') + `\n\n`;
+      txt += `📋 *Notlar:*\n` + p.notes.slice(0, 2).map(n => `• [${n.time}]: ${n.content}`).join('\n');
+      navigator.clipboard.writeText(txt).then(() => alert('✅ Devir özeti kopyalandı!'));
+    }
+
+    function exportJSONBackup() {
+      const str = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(patients, null, 2));
+      const a = document.createElement('a'); a.href = str; a.download = `ybu_yedek_${new Date().toISOString().slice(0,10)}.json`;
+      a.click();
+    }
+
+    function exportCSVData() {
+      let csv = "Hasta;Yatak;Tani;Gun;TA;Nabiz;SpO2\n";
+      patients.forEach(p => {
+        const lv = p.vitals[0] || {};
+        csv += `"${p.name}";"${p.bed}";"${p.diag}";"${p.day}";"${lv.bp || ''}";"${lv.hr || ''}";"${lv.spo2 || ''}"\n`;
+      });
+      const blob = new Blob(["\uFEFF" + csv], { type: 'text/csv;charset=utf-8;' });
+      const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `ybu_liste.csv`; a.click();
+    }
+
+    function importJSONBackup(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      const r = new FileReader();
+      r.onload = function(evt) {
+        try {
+          const d = JSON.parse(evt.target.result);
+          if (Array.isArray(d)) { patients = d; saveToStorage(); alert('✅ Veriler yüklendi!'); closeModal('modal-backup'); renderPatientList(); }
+        } catch(err) { alert('Hatalı dosya.'); }
+      };
+      r.readAsText(file);
+    }
+
+    // İlk Çalıştırma
     showPatientList();
+    checkApiKeyStatus();
   </script>
 </body>
 </html>
