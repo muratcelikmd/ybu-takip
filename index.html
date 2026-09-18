@@ -25,8 +25,8 @@
       user-select: auto;
     }
     /* Dinamik Ada & iOS Durum Çubuğu Güvenli Alanı */
-    .safe-top {
-      padding-top: calc(env(safe-area-inset-top, 48px) + 16px);
+    .ios-island-top {
+      padding-top: calc(env(safe-area-inset-top, 54px) + 20px) !important;
     }
     .safe-bottom {
       padding-bottom: calc(env(safe-area-inset-bottom, 20px) + 8px);
@@ -41,7 +41,7 @@
   <!-- ======================================================== -->
   <div id="view-patient-list" class="flex-1 flex flex-col min-h-screen">
     
-    <header class="sticky top-0 z-30 bg-slate-800/95 backdrop-blur border-b border-slate-700 px-4 pb-3 shadow safe-top">
+    <header class="sticky top-0 z-30 bg-slate-800/95 backdrop-blur border-b border-slate-700 px-4 pb-3 shadow ios-island-top">
       <div class="max-w-lg mx-auto w-full space-y-3">
         <div class="flex items-center justify-between">
           <div class="flex items-center gap-2">
@@ -88,7 +88,7 @@
   <!-- ======================================================== -->
   <div id="view-patient-detail" class="flex-1 flex flex-col min-h-screen hidden">
     
-    <header class="sticky top-0 z-30 bg-slate-800/95 backdrop-blur border-b border-slate-700 px-4 pb-2.5 shadow safe-top">
+    <header class="sticky top-0 z-30 bg-slate-800/95 backdrop-blur border-b border-slate-700 px-4 pb-2.5 shadow ios-island-top">
       <div class="max-w-lg mx-auto w-full">
         
         <div class="flex items-center justify-between gap-1.5">
@@ -246,10 +246,10 @@
   </div>
 
   <!-- ======================================================== -->
-  <!-- KAMERA & AI FORM TARAMA MODALI                           -->
+  <!-- KAMERA & AI FORM TARAMA MODALI (GÜNCELLENDİ)             -->
   <!-- ======================================================== -->
   <div id="modal-scan" class="fixed inset-0 bg-black/75 z-50 flex items-end sm:items-center justify-center hidden p-0 sm:p-4">
-    <div class="bg-slate-800 border-t sm:border border-slate-700 rounded-t-2xl sm:rounded-xl max-w-md w-full p-4 space-y-3.5 text-xs max-h-[90vh] overflow-y-auto">
+    <div class="bg-slate-800 border-t sm:border border-slate-700 rounded-t-3xl sm:rounded-2xl max-w-md w-full p-5 space-y-3.5 text-xs max-h-[82vh] overflow-y-auto">
       <div class="flex justify-between items-center pb-2 border-b border-slate-700">
         <span class="font-bold text-white text-sm flex items-center gap-1.5">
           <i class="fa-solid fa-camera text-indigo-400"></i> Form Fotoğrafı Çözümleme
@@ -258,19 +258,31 @@
       </div>
 
       <p class="text-slate-300 text-[11px] leading-relaxed">
-        Fotoğrafı doğrudan kameradan çekebilir veya galeriden seçebilirsiniz. Görsel otomatik olarak sıkıştırılarak yapay zeka ile çözümlenecektir.
+        Fotoğrafı doğrudan kameradan çekebilir veya galerinizdeki mevcut fotoğraflardan yükleyebilirsiniz.
       </p>
 
-      <!-- Fotoğraf Seçme Alanı (capture kaldırıldı: hem Galeri hem Kamera aktif) -->
-      <div class="border-2 border-dashed border-slate-600 rounded-xl p-5 text-center bg-slate-900/50 space-y-2.5">
-        <i class="fa-solid fa-images text-3xl text-indigo-400"></i>
-        <div class="text-[11px] text-slate-300 font-medium">Fotoğraf Çek veya Galeriden Seç:</div>
-        <input type="file" id="camera-file-inp" accept="image/*" onchange="handleImageSelection(event)" class="w-full text-xs text-slate-400 file:mr-2 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-indigo-600 file:text-white file:font-semibold cursor-pointer">
+      <!-- İKİ AYRI NET SEÇİM BUTONU -->
+      <div class="grid grid-cols-2 gap-2.5">
+        <!-- 1. Kamera Butonu -->
+        <label class="flex flex-col items-center justify-center gap-1.5 bg-slate-900/90 border border-indigo-500/50 hover:border-indigo-400 active:bg-slate-700 p-4 rounded-xl cursor-pointer text-center transition">
+          <i class="fa-solid fa-camera text-2xl text-indigo-400"></i>
+          <span class="font-bold text-white text-[11px]">Kamera ile Çek</span>
+          <span class="text-[9px] text-slate-400">Yeni fotoğraf al</span>
+          <input type="file" accept="image/*" capture="environment" onchange="handleFileSelected(event)" class="hidden">
+        </label>
+
+        <!-- 2. Galeri / Dosya Butonu -->
+        <label class="flex flex-col items-center justify-center gap-1.5 bg-slate-900/90 border border-slate-600 hover:border-slate-400 active:bg-slate-700 p-4 rounded-xl cursor-pointer text-center transition">
+          <i class="fa-solid fa-images text-2xl text-cyan-400"></i>
+          <span class="font-bold text-white text-[11px]">Galeriden Seç</span>
+          <span class="text-[9px] text-slate-400">Mevcut görseli yükle</span>
+          <input type="file" accept="image/*" onchange="handleFileSelected(event)" class="hidden">
+        </label>
       </div>
 
       <!-- Önizleme ve İlerleme Durumu -->
       <div id="scan-preview-box" class="hidden space-y-2">
-        <img id="scan-preview-img" class="w-full max-h-44 object-cover rounded-lg border border-slate-700">
+        <img id="scan-preview-img" class="w-full max-h-40 object-cover rounded-lg border border-slate-700">
         <div id="scan-status" class="text-center font-semibold text-xs py-1"></div>
       </div>
 
@@ -279,14 +291,14 @@
         <i class="fa-solid fa-wand-magic-sparkles"></i> Formu Çözümle ve Kaydet
       </button>
 
-      <!-- Gemini API Anahtarı Bölümü (Açık ve Kolay Girişli) -->
+      <!-- Gemini API Anahtarı Bölümü -->
       <div class="pt-2 border-t border-slate-700 text-[10px] space-y-1.5">
         <div class="flex justify-between items-center text-slate-300 font-semibold">
           <span>🔑 Gemini API Anahtarı:</span>
           <span id="api-key-status" class="text-emerald-400 font-mono"></span>
         </div>
         <div class="flex gap-1.5">
-          <input type="text" id="gemini-api-key" placeholder="AIzaSy... kodunu buraya yapıştırın" class="flex-1 bg-slate-900 border border-slate-700 rounded px-2 py-1.5 text-xs text-white">
+          <input type="text" id="gemini-api-key" placeholder="AQ... veya AIza... anahtarınızı girin" class="flex-1 bg-slate-900 border border-slate-700 rounded px-2 py-1.5 text-xs text-white">
           <button onclick="saveApiKey()" class="px-3 py-1.5 bg-slate-700 active:bg-slate-600 text-slate-200 font-bold rounded">Kaydet</button>
         </div>
       </div>
@@ -387,7 +399,7 @@
 
   <!-- JAVASCRIPT ÇEKİRDEK & VISION MOTORU -->
   <script>
-    const STORAGE_KEY = 'icu_vision_db_v4';
+    const STORAGE_KEY = 'icu_vision_db_v5';
     let patients = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
     let currentPatientId = null;
     let scanningPatientId = null;
@@ -401,7 +413,7 @@
     function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
     function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
 
-    // API Anahtarı Yönetimi
+    // API Anahtarı Durumu Kontrolü
     function checkApiKeyStatus() {
       const key = localStorage.getItem('gemini_api_key');
       const st = document.getElementById('api-key-status');
@@ -431,15 +443,14 @@
     function openScanModal(patientId) {
       scanningPatientId = patientId;
       compressedBase64Image = null;
-      document.getElementById('camera-file-inp').value = '';
       document.getElementById('scan-preview-box').classList.add('hidden');
       document.getElementById('scan-status').innerText = '';
       checkApiKeyStatus();
       openModal('modal-scan');
     }
 
-    // İstemci Taraflı Görsel Sıkıştırma (Canvas Optimizer)
-    function handleImageSelection(event) {
+    // Dosya / Fotoğraf Seçildiğinde Otomatik Sıkıştırma (Canvas)
+    function handleFileSelected(event) {
       const file = event.target.files[0];
       if (!file) return;
 
@@ -452,7 +463,6 @@
       reader.onload = function(e) {
         const img = new Image();
         img.onload = function() {
-          // Maksimum 1400px boyutuna küçültme (AI okuma hassasiyeti için ideal)
           let maxWidth = 1400;
           let maxHeight = 1400;
           let width = img.width;
@@ -476,20 +486,64 @@
           const ctx = canvas.getContext('2d');
           ctx.drawImage(img, 0, 0, width, height);
 
-          // JPEG %80 Kalite - 20 MB'lık fotoğrafı ~350 KB'a indirir
-          const dataUrl = canvas.toDataURL('image/jpeg', 0.80);
+          // Kaliteyi %82'de tutarak dosya boyutunu ~350 KB'a indiriyoruz
+          const dataUrl = canvas.toDataURL('image/jpeg', 0.82);
           compressedBase64Image = dataUrl.split(',')[1];
 
           document.getElementById('scan-preview-img').src = dataUrl;
           statusDiv.className = "text-center font-semibold text-xs text-emerald-400 py-1";
-          statusDiv.innerText = `Fotoğraf hazırlandı (${Math.round(compressedBase64Image.length * 0.75 / 1024)} KB) ✓`;
+          statusDiv.innerText = `Görsel hazırlandı (${Math.round(compressedBase64Image.length * 0.75 / 1024)} KB) ✓`;
+        };
+        img.onerror = function() {
+          compressedBase64Image = e.target.result.split(',')[1];
+          document.getElementById('scan-preview-img').src = e.target.result;
+          statusDiv.className = "text-center font-semibold text-xs text-emerald-400 py-1";
+          statusDiv.innerText = "Görsel yüklendi ✓";
         };
         img.src = e.target.result;
       };
       reader.readAsDataURL(file);
     }
 
-    // GEMINI VISION API ÇÖZÜMLEME
+    // Projeye Uygun Aktif Modeli Dinamik Olarak Tespit Eden Fonksiyon
+    async function getSupportedModelList(apiKey) {
+      try {
+        const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${apiKey}`);
+        if (res.ok) {
+          const data = await res.json();
+          if (data.models && Array.isArray(data.models)) {
+            const valid = data.models
+              .filter(m => m.supportedGenerationMethods && m.supportedGenerationMethods.includes("generateContent"))
+              .map(m => m.name);
+
+            // Tercih sırasına göre flash modellerini öne al
+            const preferred = [
+              valid.find(m => m.includes("2.5-flash")),
+              valid.find(m => m.includes("2.0-flash")),
+              valid.find(m => m.includes("1.5-flash-latest")),
+              valid.find(m => m.includes("1.5-flash-002")),
+              valid.find(m => m.includes("flash")),
+              valid.find(m => m.includes("gemini"))
+            ].filter(Boolean);
+
+            if (preferred.length > 0) return [...new Set([...preferred, ...valid])];
+          }
+        }
+      } catch (e) {
+        console.warn("Dinamik model sorgusu atlandı:", e);
+      }
+      // Yedek modeller
+      return [
+        "models/gemini-2.0-flash",
+        "models/gemini-2.5-flash",
+        "models/gemini-1.5-flash-latest",
+        "models/gemini-1.5-flash-002",
+        "models/gemini-2.0-flash-exp",
+        "models/gemini-1.5-pro"
+      ];
+    }
+
+    // GEMINI VISION API ÇÖZÜMLEME MOTORU
     async function startImageAnalysis() {
       if (!compressedBase64Image) {
         alert('Lütfen önce bir form fotoğrafı çekin veya galeriden seçin.');
@@ -510,7 +564,7 @@
 
       const promptText = `Sen anestezi ve yoğun bakım uzmanı bir hekimsin. Eklenen görsel Manisa Celal Bayar Üniversitesi YB.FR.04 Anestezi Yoğun Bakım Hasta İzlem Formudur.
 Görseldeki el yazılarını, vital bulguları, ventilatör ayarlarını, ilaçları ve gözlem notlarını dikkatlice oku.
-Sadece ve sadece aşağıdaki JSON formatında saf bir JSON çıktısı üret, markdown veya açıklama yazma:
+Sadece ve sadece aşağıdaki JSON formatında saf bir JSON çıktısı üret, markdown veya fazladan açıklama yazma:
 {
   "name": "Hastanın adı soyadı veya baş harfleri",
   "bed": "Yatak no (örn: Yatak 04)",
@@ -525,32 +579,57 @@ Sadece ve sadece aşağıdaki JSON formatında saf bir JSON çıktısı üret, m
 }`;
 
       try {
-        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
-        
-        const response = await fetch(apiUrl, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            contents: [{
-              parts: [
-                { text: promptText },
-                { inline_data: { mime_type: "image/jpeg", data: compressedBase64Image } }
-              ]
-            }]
-          })
-        });
+        // Projeye ait geçerli modelleri al
+        const candidateModels = await getSupportedModelList(apiKey);
+        let parsed = null;
+        let lastError = null;
 
-        const data = await response.json();
+        for (const modelPath of candidateModels) {
+          try {
+            const shortName = modelPath.replace("models/", "");
+            statusDiv.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Model analiz ediyor (${shortName})...`;
 
-        if (!response.ok || data.error) {
-          throw new Error(data.error?.message || `Sunucu Hatası (HTTP ${response.status})`);
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/${modelPath}:generateContent?key=${apiKey}`;
+            const response = await fetch(apiUrl, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                contents: [{
+                  parts: [
+                    { text: promptText },
+                    { inline_data: { mime_type: "image/jpeg", data: compressedBase64Image } }
+                  ]
+                }]
+              })
+            });
+
+            const data = await response.json();
+
+            if (response.ok && data.candidates?.[0]?.content?.parts?.[0]?.text) {
+              const rawText = data.candidates[0].content.parts[0].text;
+              const cleanedJSON = rawText.replace(/```json/gi, '').replace(/```/gi, '').trim();
+              parsed = JSON.parse(cleanedJSON);
+              break; // Başarılı, döngüden çık
+            } else {
+              if (data.error) {
+                lastError = data.error.message;
+                // Eğer 404 (model not found) ise bir sonraki modele geç
+                if (response.status === 404 || data.error.code === 404) {
+                  continue;
+                } else {
+                  throw new Error(data.error.message);
+                }
+              }
+            }
+          } catch (err) {
+            lastError = err.message;
+            if (err.message && err.message.includes("API key")) throw err;
+          }
         }
 
-        const rawText = data.candidates?.[0]?.content?.parts?.[0]?.text;
-        if (!rawText) throw new Error("Görselden veri okunamadı.");
-
-        const cleanedJSON = rawText.replace(/```json/gi, '').replace(/```/gi, '').trim();
-        const parsed = JSON.parse(cleanedJSON);
+        if (!parsed) {
+          throw new Error(lastError || "Uygun Gemini modeline ulaşılamadı.");
+        }
 
         applyParsedData(parsed);
 
@@ -567,7 +646,6 @@ Sadece ve sadece aşağıdaki JSON formatında saf bir JSON çıktısı üret, m
       }
     }
 
-    // Çözümlenen Veriyi Hastaya Aktarma
     function applyParsedData(parsed) {
       let targetPatient = null;
       if (scanningPatientId) {
@@ -661,7 +739,7 @@ Sadece ve sadece aşağıdaki JSON formatında saf bir JSON çıktısı üret, m
       document.getElementById('stat-patient-count').innerText = `${filtered.length} Aktif Hasta`;
 
       if (filtered.length === 0) {
-        container.innerHTML = '<div class="text-center py-12 text-slate-500"><i class="fa-solid fa-camera text-4xl mb-2 text-slate-600"></i><p>Kayıtlı hasta yok. Yukarıdaki "Form Tara" butonuyla kağıt formun fotoğrafını yükleyerek başlayabilirsiniz.</p></div>';
+        container.innerHTML = '<div class="text-center py-12 text-slate-500"><i class="fa-solid fa-camera text-4xl mb-2 text-slate-600"></i><p>Kayıtlı hasta yok. Yukarıdaki "Form Tara" butonuyla form fotoğrafı çekerek başlayabilirsiniz.</p></div>';
         return;
       }
 
@@ -952,7 +1030,7 @@ Sadece ve sadece aşağıdaki JSON formatında saf bir JSON çıktısı üret, m
         csv += `"${p.name}";"${p.bed}";"${p.diag}";"${p.day}";"${lv.bp || ''}";"${lv.hr || ''}";"${lv.spo2 || ''}"\n`;
       });
       const blob = new Blob(["\uFEFF" + csv], { type: 'text/csv;charset=utf-8;' });
-      const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `ybu_liste.csv`; a.click();
+      const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = `ybu_liste.csv`; a.click();
     }
 
     function importJSONBackup(e) {
@@ -968,7 +1046,6 @@ Sadece ve sadece aşağıdaki JSON formatında saf bir JSON çıktısı üret, m
       r.readAsText(file);
     }
 
-    // İlk Çalıştırma
     showPatientList();
     checkApiKeyStatus();
   </script>
