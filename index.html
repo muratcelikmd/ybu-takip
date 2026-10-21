@@ -5,16 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>YBÜ Vizit Takip</title>
   
-  <!-- Mobil PWA Ayarları -->
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="YBÜ Vizit">
   <meta name="theme-color" content="#0F172A">
-  <link rel="manifest" href="manifest.json">
 
-  <!-- Tailwind CSS & Lucide Icons CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 <body class="bg-slate-100 text-slate-800 antialiased select-none pb-12">
 
@@ -25,8 +21,7 @@
       <p id="currentDateText" class="text-xs text-teal-400 font-medium"></p>
     </div>
     <button onclick="openSummaryModal()" class="flex items-center gap-1.5 bg-slate-800 hover:bg-slate-700 text-teal-300 px-3 py-1.5 rounded-lg border border-slate-700 text-xs font-semibold active:scale-95 transition">
-      <i data-lucide="clipboard-list" class="w-4 h-4"></i>
-      Vizit Özeti
+      📋 Vizit Özeti
     </button>
   </header>
 
@@ -40,7 +35,7 @@
     <div class="bg-white w-full max-w-lg rounded-xl shadow-2xl max-h-[90vh] flex flex-col overflow-hidden">
       <div class="p-4 bg-slate-900 text-white flex justify-between items-center">
         <h2 id="modalBedTitle" class="font-bold text-base"></h2>
-        <button onclick="closeEditModal()" class="text-slate-400 hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
+        <button onclick="closeEditModal()" class="text-slate-400 hover:text-white font-bold text-lg px-2">✕</button>
       </div>
 
       <div class="p-4 overflow-y-auto space-y-3.5 text-xs">
@@ -59,3 +54,484 @@
           <label class="block font-semibold mb-1 text-slate-700">Yatış Tanısı</label>
           <input type="text" id="m_diag" class="w-full border rounded-lg p-2 focus:ring-1 focus:ring-slate-900 outline-none">
         </div>
+
+        <div class="grid grid-cols-3 gap-2">
+          <div>
+            <label class="block font-semibold mb-1 text-slate-700">Tansiyon (TA)</label>
+            <input type="text" id="m_bp" class="w-full border rounded-lg p-2 outline-none">
+          </div>
+          <div>
+            <label class="block font-semibold mb-1 text-slate-700">Nabız (bpm)</label>
+            <input type="number" id="m_hr" class="w-full border rounded-lg p-2 outline-none">
+          </div>
+          <div>
+            <label class="block font-semibold mb-1 text-slate-700">SOFA Skoru</label>
+            <input type="number" id="m_sofa" class="w-full border rounded-lg p-2 outline-none">
+          </div>
+        </div>
+
+        <div>
+          <label class="block font-semibold mb-1 text-slate-700">Solunum Desteği</label>
+          <input type="text" id="m_resp" placeholder="Örn: İMV (PEEP:8 FiO2:%50)" class="w-full border rounded-lg p-2 outline-none">
+        </div>
+
+        <!-- AKG -->
+        <div class="p-2.5 bg-slate-50 border rounded-lg space-y-1.5">
+          <span class="font-bold text-slate-800">Arteryel Kan Gazı (AKG) & SpO2</span>
+          <div class="grid grid-cols-5 gap-1.5">
+            <div><span class="text-[10px] text-slate-500">pH</span><input type="number" step="0.01" id="m_ph" class="w-full border rounded p-1"></div>
+            <div><span class="text-[10px] text-slate-500">SpO2%</span><input type="number" id="m_spo2" class="w-full border rounded p-1"></div>
+            <div><span class="text-[10px] text-slate-500">pO2</span><input type="number" id="m_po2" class="w-full border rounded p-1"></div>
+            <div><span class="text-[10px] text-slate-500">pCO2</span><input type="number" id="m_pco2" class="w-full border rounded p-1"></div>
+            <div><span class="text-[10px] text-slate-500">Laktat</span><input type="number" step="0.1" id="m_lac" class="w-full border rounded p-1"></div>
+          </div>
+        </div>
+
+        <!-- Beslenme -->
+        <div class="p-2.5 bg-orange-50/60 border border-orange-200 rounded-lg space-y-1.5">
+          <span class="font-bold text-orange-950">Beslenme & Nütrisyon</span>
+          <select id="m_nutRoute" class="w-full border rounded p-1.5 bg-white text-xs">
+            <option value="Oral">Oral</option>
+            <option value="Enteral (NG / OG / PEG)">Enteral (NG / OG / PEG)</option>
+            <option value="Total Parenteral (TPN)">Total Parenteral (TPN)</option>
+            <option value="Oral Stop / Açık Değil">Oral Stop / Açık Değil</option>
+          </select>
+          <input type="text" id="m_nutDetail" placeholder="Ürün, hız (örn: Novasource GI 65 ml/saat)" class="w-full border rounded p-1.5 bg-white">
+        </div>
+
+        <!-- İnfüzyonlar -->
+        <div class="p-2.5 bg-red-50/50 border border-red-200 rounded-lg space-y-2">
+          <div class="flex justify-between items-center">
+            <span class="font-bold text-red-950">Aktif İnfüzyonlar (+ / -)</span>
+            <span id="infusionCount" class="text-slate-500">0 aktif</span>
+          </div>
+          <div id="modalInfusionsList" class="space-y-1.5"></div>
+          <div class="flex gap-1.5 pt-1">
+            <input type="text" id="newInfName" placeholder="İlaç (örn: Noradrenalin)" class="flex-1 border rounded p-1 bg-white text-xs">
+            <input type="number" step="0.05" id="newInfDose" value="0.1" class="w-16 border rounded p-1 bg-white text-xs">
+            <input type="text" id="newInfUnit" value="mcg/kg/dk" class="w-20 border rounded p-1 bg-white text-xs">
+            <button onclick="addInfusion()" class="bg-red-600 text-white px-2.5 rounded font-bold hover:bg-red-700">+</button>
+          </div>
+        </div>
+
+        <!-- Antibiyotikler -->
+        <div class="p-2.5 bg-teal-50/50 border border-teal-200 rounded-lg space-y-2">
+          <span class="font-bold text-teal-950">Antibiyotik Tedavisi</span>
+          <div id="modalAbxList" class="space-y-1"></div>
+          <div class="flex gap-1.5 pt-1">
+            <input type="text" id="newAbxText" placeholder="Örn: Meropenem 3x1g (G:1)" class="flex-1 border rounded p-1 bg-white text-xs">
+            <button onclick="addAntibiotic()" class="bg-teal-700 text-white px-2.5 rounded font-bold hover:bg-teal-800">+</button>
+          </div>
+        </div>
+
+        <!-- Diğer İlaçlar -->
+        <div class="p-2.5 bg-indigo-50/50 border border-indigo-200 rounded-lg space-y-2">
+          <span class="font-bold text-indigo-950">Diğer İlaçlar / Rutin Tedaviler</span>
+          <div id="modalOtherList" class="space-y-1"></div>
+          <div class="flex gap-1.5 pt-1">
+            <input type="text" id="newOtherText" placeholder="Örn: Pantoprazol 1x40mg IV" class="flex-1 border rounded p-1 bg-white text-xs">
+            <button onclick="addOtherMed()" class="bg-indigo-700 text-white px-2.5 rounded font-bold hover:bg-indigo-800">+</button>
+          </div>
+        </div>
+
+        <!-- Günlük Plan -->
+        <div>
+          <label class="block font-semibold mb-1 text-slate-700">Günlük Vizit Planı & Hedefler</label>
+          <textarea id="m_plan" rows="3" class="w-full border rounded-lg p-2 outline-none focus:ring-1 focus:ring-slate-900"></textarea>
+        </div>
+      </div>
+
+      <div class="p-3 bg-slate-50 border-t flex justify-end gap-2">
+        <button onclick="closeEditModal()" class="px-3.5 py-1.5 text-xs text-slate-600 font-semibold rounded hover:bg-slate-200">İptal</button>
+        <button onclick="savePatientModal()" class="px-4 py-1.5 text-xs bg-slate-900 text-white font-semibold rounded-lg hover:bg-slate-800 shadow">Kaydet</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Vizit Özeti Modalı -->
+  <div id="summaryModal" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-3 backdrop-blur-sm">
+    <div class="bg-white w-full max-w-2xl rounded-xl shadow-2xl max-h-[90vh] flex flex-col overflow-hidden">
+      <div class="p-3.5 bg-slate-900 text-white flex justify-between items-center">
+        <div class="flex items-center gap-2">
+          <span class="text-base">📋</span>
+          <h2 class="font-bold text-sm">16 Yatak Vizit & Nöbet Teslim Özeti</h2>
+        </div>
+        <button onclick="closeSummaryModal()" class="text-slate-400 hover:text-white font-bold text-lg px-2">✕</button>
+      </div>
+      <div id="summaryContent" class="p-3.5 overflow-y-auto space-y-2.5 text-xs flex-1"></div>
+      <div class="p-3 bg-slate-50 border-t flex justify-between items-center">
+        <button onclick="copySummaryToClipboard()" class="text-xs bg-slate-200 hover:bg-slate-300 font-semibold px-3 py-1.5 rounded flex items-center gap-1.5 text-slate-800">
+          📄 Metni Kopyala
+        </button>
+        <button onclick="closeSummaryModal()" class="px-4 py-1.5 text-xs bg-slate-900 text-white font-semibold rounded-lg hover:bg-slate-800">Kapat</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let beds = JSON.parse(localStorage.getItem('icu_beds_data') || 'null');
+
+    if (!beds || !Array.isArray(beds) || beds.length !== 16) {
+      beds = Array.from({ length: 16 }, (_, i) => ({
+        bedNumber: i + 1,
+        nameInitials: "Boş Yatak",
+        hospitalizationDay: 1,
+        lastActiveDate: new Date().toISOString().split('T')[0],
+        diagnosis: "Tanı girilmedi",
+        bloodPressure: "120/80",
+        heartRate: 75,
+        respiratorySupport: "Oda Havası",
+        sofaScore: 0,
+        dailyPlan: "Rutin izlem",
+        nutritionRoute: "Oral",
+        nutritionDetail: "Rutin diyet",
+        infusions: [],
+        antibiotics: [],
+        otherMedications: [],
+        pH: 7.40,
+        spo2: 98,
+        po2: 90,
+        pco2: 40,
+        lactate: 1.0
+      }));
+
+      beds[0] = {
+        ...beds[0],
+        nameInitials: "A.Y. (64y)",
+        hospitalizationDay: 5,
+        diagnosis: "Septik Şok / Pnömoni",
+        bloodPressure: "90/50",
+        heartRate: 115,
+        respiratorySupport: "İMV (PEEP:10 FiO2:%60)",
+        sofaScore: 10,
+        nutritionRoute: "Enteral (NG / OG / PEG)",
+        nutritionDetail: "Novasource GI 65 ml/saat",
+        dailyPlan: "Kültür kontrolü, vazoaktif weaning, laktat kontrolü",
+        infusions: [
+          { name: "Noradrenalin", dose: 0.25, unit: "mcg/kg/dk", step: 0.05 },
+          { name: "Vazopressin", dose: 0.03, unit: "U/dk", step: 0.01 }
+        ],
+        antibiotics: ["Meropenem 3x1g (G:3)", "Teikoplanin 1x400mg (G:2)"],
+        otherMedications: ["Enoksaparin 1x0.4 ml SC", "Pantoprazol 1x40 mg IV"],
+        pH: 7.24, spo2: 91, po2: 72, pco2: 54, lactate: 4.2
+      };
+      saveToStorage();
+    }
+
+    function saveToStorage() {
+      localStorage.setItem('icu_beds_data', JSON.stringify(beds));
+    }
+
+    function checkCalendarUpdate() {
+      const today = new Date().toISOString().split('T')[0];
+      const dateEl = document.getElementById('currentDateText');
+      if (dateEl) {
+        dateEl.innerText = new Date().toLocaleDateString('tr-TR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+      }
+
+      let changed = false;
+      beds.forEach(p => {
+        if (p.nameInitials !== "Boş Yatak" && p.nameInitials.trim() !== "") {
+          if (p.lastActiveDate && p.lastActiveDate !== today) {
+            const diffDays = Math.floor((new Date(today) - new Date(p.lastActiveDate)) / (1000 * 60 * 60 * 24));
+            if (diffDays > 0) {
+              p.hospitalizationDay += diffDays;
+              p.antibiotics = p.antibiotics.map(abx => {
+                return abx.replace(/\(G:\s*(\d+)\)/gi, (_, d) => `(G:${parseInt(d) + diffDays})`);
+              });
+              p.lastActiveDate = today;
+              changed = true;
+            }
+          }
+        }
+      });
+      if (changed) {
+        saveToStorage();
+        renderBeds();
+      }
+    }
+
+    function renderBeds() {
+      const container = document.getElementById('bedsGrid');
+      if (!container) return;
+      container.innerHTML = '';
+
+      beds.forEach((p, idx) => {
+        const isEmpty = p.nameInitials === "Boş Yatak" || !p.nameInitials.trim();
+        const isCritical = p.sofaScore >= 6 || (p.infusions && p.infusions.length > 0);
+        const criticalABG = p.pH < 7.30 || p.lactate >= 2.0 || p.spo2 < 90;
+
+        const card = document.createElement('div');
+        card.className = `bg-white rounded-lg p-2.5 shadow-sm border transition active:scale-[0.98] cursor-pointer flex flex-col justify-between ${isCritical ? 'border-red-400 ring-1 ring-red-400' : 'border-slate-200'}`;
+        card.onclick = () => openEditModal(idx);
+
+        card.innerHTML = `
+          <div>
+            <div class="flex justify-between items-center mb-1">
+              <span class="font-extrabold text-xs text-slate-900">Yatak #${p.bedNumber}</span>
+              <div class="flex gap-1">
+                ${!isEmpty ? `<span class="bg-blue-100 text-blue-900 font-bold px-1.5 py-0.5 rounded text-[10px]">G:${p.hospitalizationDay}</span>` : ''}
+                <span class="${isCritical ? 'bg-red-100 text-red-900' : 'bg-slate-100 text-slate-800'} font-bold px-1.5 py-0.5 rounded text-[10px]">SOFA:${p.sofaScore}</span>
+              </div>
+            </div>
+
+            <div class="font-semibold text-slate-600 text-[11px] truncate">${p.nameInitials}</div>
+            <div class="text-slate-700 text-[10px] truncate mb-1.5">${p.diagnosis}</div>
+
+            <div class="text-[10px] text-slate-600 border-t pt-1 space-y-0.5">
+              <div>TA: <span class="font-medium text-slate-900">${p.bloodPressure}</span> | Nbz: <span class="font-medium text-slate-900">${p.heartRate}</span></div>
+              <div class="truncate">Solunum: <span class="font-medium text-slate-900">${p.respiratorySupport}</span></div>
+            </div>
+
+            <div class="text-[10px] text-orange-950 bg-orange-50/70 rounded px-1.5 py-0.5 mt-1 truncate border border-orange-100">
+              <span class="font-bold">${p.nutritionRoute}:</span> ${p.nutritionDetail}
+            </div>
+
+            <div class="mt-1.5 text-[10px]">
+              <span class="font-bold ${p.infusions.length ? 'text-red-700' : 'text-slate-400'}">İnfüzyon (${p.infusions.length}):</span>
+              ${p.infusions.length === 0 ? '<span class="text-slate-400 italic"> Yok</span>' : `
+                <div class="space-y-0.5 mt-0.5">
+                  ${p.infusions.slice(0, 2).map(inf => `<div class="truncate text-red-950 font-semibold">• ${inf.name}: ${inf.dose} ${inf.unit}</div>`).join('')}
+                  ${p.infusions.length > 2 ? `<div class="text-slate-400 text-[9px]">+${p.infusions.length - 2} daha...</div>` : ''}
+                </div>
+              `}
+            </div>
+
+            <div class="mt-1.5 text-[10px]">
+              <span class="font-bold ${p.antibiotics.length ? 'text-teal-700' : 'text-slate-400'}">Antibiyotik (${p.antibiotics.length}):</span>
+              ${p.antibiotics.length === 0 ? '<span class="text-slate-400 italic"> Yok</span>' : `
+                <div class="space-y-0.5 mt-0.5">
+                  ${p.antibiotics.slice(0, 2).map(abx => `<div class="truncate text-teal-950 font-medium">• ${abx}</div>`).join('')}
+                  ${p.antibiotics.length > 2 ? `<div class="text-slate-400 text-[9px]">+${p.antibiotics.length - 2} daha...</div>` : ''}
+                </div>
+              `}
+            </div>
+          </div>
+
+          <div class="mt-2 pt-1.5 border-t flex justify-between items-center text-[9.5px] ${criticalABG ? 'text-red-700 font-bold' : 'text-slate-600'}">
+            <span>pH ${parseFloat(p.pH).toFixed(2)}</span>
+            <span>%${p.spo2}</span>
+            <span>${p.po2}/${p.pco2}</span>
+            <span>Lak:${parseFloat(p.lactate).toFixed(1)}</span>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    let activeBedIndex = null;
+    let tempInf = [];
+    let tempAbx = [];
+    let tempOther = [];
+
+    function openEditModal(index) {
+      activeBedIndex = index;
+      const p = beds[index];
+
+      document.getElementById('modalBedTitle').innerText = `Yatak #${p.bedNumber} Vizit Detayı`;
+      document.getElementById('m_name').value = p.nameInitials;
+      document.getElementById('m_day').value = p.hospitalizationDay;
+      document.getElementById('m_diag').value = p.diagnosis;
+      document.getElementById('m_bp').value = p.bloodPressure;
+      document.getElementById('m_hr').value = p.heartRate;
+      document.getElementById('m_sofa').value = p.sofaScore;
+      document.getElementById('m_resp').value = p.respiratorySupport;
+
+      document.getElementById('m_ph').value = p.pH;
+      document.getElementById('m_spo2').value = p.spo2;
+      document.getElementById('m_po2').value = p.po2;
+      document.getElementById('m_pco2').value = p.pco2;
+      document.getElementById('m_lac').value = p.lactate;
+
+      document.getElementById('m_nutRoute').value = p.nutritionRoute;
+      document.getElementById('m_nutDetail').value = p.nutritionDetail;
+      document.getElementById('m_plan').value = p.dailyPlan;
+
+      tempInf = JSON.parse(JSON.stringify(p.infusions || []));
+      tempAbx = [...(p.antibiotics || [])];
+      tempOther = [...(p.otherMedications || [])];
+
+      renderModalLists();
+      document.getElementById('editModal').classList.remove('hidden');
+    }
+
+    function closeEditModal() {
+      document.getElementById('editModal').classList.add('hidden');
+    }
+
+    function renderModalLists() {
+      const infContainer = document.getElementById('modalInfusionsList');
+      document.getElementById('infusionCount').innerText = `${tempInf.length} aktif`;
+      infContainer.innerHTML = '';
+      tempInf.forEach((inf, i) => {
+        const row = document.createElement('div');
+        row.className = "flex items-center justify-between bg-white border border-red-200 p-1.5 rounded text-xs";
+        row.innerHTML = `
+          <span class="font-semibold text-slate-800">${inf.name}: <span class="text-red-700">${inf.dose}</span> ${inf.unit}</span>
+          <div class="flex items-center gap-1">
+            <button onclick="adjustDose(${i}, -1)" class="w-6 h-6 rounded bg-slate-100 border text-slate-700 font-bold">-</button>
+            <button onclick="adjustDose(${i}, 1)" class="w-6 h-6 rounded bg-slate-100 border text-slate-700 font-bold">+</button>
+            <button onclick="removeInfusion(${i})" class="w-6 h-6 rounded bg-red-100 text-red-700 ml-1 font-bold">✕</button>
+          </div>
+        `;
+        infContainer.appendChild(row);
+      });
+
+      const abxContainer = document.getElementById('modalAbxList');
+      abxContainer.innerHTML = '';
+      tempAbx.forEach((abx, i) => {
+        const row = document.createElement('div');
+        row.className = "flex items-center justify-between bg-white border border-teal-200 p-1 rounded text-xs";
+        row.innerHTML = `
+          <span class="text-teal-950 font-medium">${abx}</span>
+          <button onclick="tempAbx.splice(${i}, 1); renderModalLists();" class="text-red-600 font-bold px-1.5">✕</button>
+        `;
+        abxContainer.appendChild(row);
+      });
+
+      const otherContainer = document.getElementById('modalOtherList');
+      otherContainer.innerHTML = '';
+      tempOther.forEach((med, i) => {
+        const row = document.createElement('div');
+        row.className = "flex items-center justify-between bg-white border border-indigo-200 p-1 rounded text-xs";
+        row.innerHTML = `
+          <span class="text-indigo-950 font-medium">${med}</span>
+          <button onclick="tempOther.splice(${i}, 1); renderModalLists();" class="text-red-600 font-bold px-1.5">✕</button>
+        `;
+        otherContainer.appendChild(row);
+      });
+    }
+
+    function adjustDose(i, dir) {
+      const step = tempInf[i].step || 0.05;
+      let newDose = tempInf[i].dose + (dir * step);
+      if (newDose < 0) newDose = 0;
+      tempInf[i].dose = parseFloat(newDose.toFixed(2));
+      renderModalLists();
+    }
+
+    function removeInfusion(i) {
+      tempInf.splice(i, 1);
+      renderModalLists();
+    }
+
+    function addInfusion() {
+      const name = document.getElementById('newInfName').value.trim();
+      const dose = parseFloat(document.getElementById('newInfDose').value) || 0.1;
+      const unit = document.getElementById('newInfUnit').value.trim() || "mcg/kg/dk";
+      if (name) {
+        tempInf.push({ name, dose, unit, step: dose >= 1 ? 1 : 0.05 });
+        document.getElementById('newInfName').value = '';
+        renderModalLists();
+      }
+    }
+
+    function addAntibiotic() {
+      const text = document.getElementById('newAbxText').value.trim();
+      if (text) {
+        tempAbx.push(text);
+        document.getElementById('newAbxText').value = '';
+        renderModalLists();
+      }
+    }
+
+    function addOtherMed() {
+      const text = document.getElementById('newOtherText').value.trim();
+      if (text) {
+        tempOther.push(text);
+        document.getElementById('newOtherText').value = '';
+        renderModalLists();
+      }
+    }
+
+    function savePatientModal() {
+      const p = beds[activeBedIndex];
+      p.nameInitials = document.getElementById('m_name').value || "Boş Yatak";
+      p.hospitalizationDay = parseInt(document.getElementById('m_day').value) || 1;
+      p.diagnosis = document.getElementById('m_diag').value || "Tanı girilmedi";
+      p.bloodPressure = document.getElementById('m_bp').value || "-";
+      p.heartRate = parseInt(document.getElementById('m_hr').value) || 0;
+      p.sofaScore = parseInt(document.getElementById('m_sofa').value) || 0;
+      p.respiratorySupport = document.getElementById('m_resp').value || "Oda Havası";
+
+      p.pH = parseFloat(document.getElementById('m_ph').value) || 7.40;
+      p.spo2 = parseInt(document.getElementById('m_spo2').value) || 98;
+      p.po2 = parseInt(document.getElementById('m_po2').value) || 90;
+      p.pco2 = parseInt(document.getElementById('m_pco2').value) || 40;
+      p.lactate = parseFloat(document.getElementById('m_lac').value) || 1.0;
+
+      p.nutritionRoute = document.getElementById('m_nutRoute').value;
+      p.nutritionDetail = document.getElementById('m_nutDetail').value;
+      p.dailyPlan = document.getElementById('m_plan').value;
+
+      p.infusions = tempInf;
+      p.antibiotics = tempAbx;
+      p.otherMedications = tempOther;
+      p.lastActiveDate = new Date().toISOString().split('T')[0];
+
+      saveToStorage();
+      closeEditModal();
+      renderBeds();
+    }
+
+    function openSummaryModal() {
+      const container = document.getElementById('summaryContent');
+      container.innerHTML = '';
+      const occupied = beds.filter(p => p.nameInitials !== "Boş Yatak" && p.nameInitials.trim());
+
+      if (occupied.length === 0) {
+        container.innerHTML = '<div class="text-center text-slate-400 py-8">Kayıtlı hasta bulunmuyor.</div>';
+      } else {
+        occupied.forEach(p => {
+          const item = document.createElement('div');
+          item.className = "bg-slate-50 border rounded-lg p-2.5 space-y-1";
+          item.innerHTML = `
+            <div class="flex justify-between font-bold text-slate-900 border-b pb-1">
+              <span>Yatak #${p.bedNumber} - ${p.nameInitials} (G: ${p.hospitalizationDay})</span>
+              <span class="text-xs ${p.sofaScore >= 6 ? 'text-red-700' : 'text-slate-600'}">SOFA: ${p.sofaScore} | ${p.respiratorySupport}</span>
+            </div>
+            <div class="text-slate-600">Tanı: <span class="text-slate-900 font-medium">${p.diagnosis}</span></div>
+            <div>Beslenme: <span class="font-medium text-orange-950">${p.nutritionRoute} (${p.nutritionDetail})</span></div>
+            ${p.infusions.length ? `<div>İnfüzyon: <span class="text-red-800 font-medium">${p.infusions.map(i => i.name + ': ' + i.dose + ' ' + i.unit).join(', ')}</span></div>` : ''}
+            ${p.antibiotics.length ? `<div>Antibiyotik: <span class="text-teal-800 font-medium">${p.antibiotics.join(', ')}</span></div>` : ''}
+            <div class="bg-white p-1.5 rounded border text-slate-800 mt-1">
+              <span class="font-bold text-teal-800">Plan:</span> ${p.dailyPlan}
+            </div>
+          `;
+          container.appendChild(item);
+        });
+      }
+
+      document.getElementById('summaryModal').classList.remove('hidden');
+    }
+
+    function closeSummaryModal() {
+      document.getElementById('summaryModal').classList.add('hidden');
+    }
+
+    function copySummaryToClipboard() {
+      const occupied = beds.filter(p => p.nameInitials !== "Boş Yatak" && p.nameInitials.trim());
+      let text = `--- YOĞUN BAKIM VİZİT ÖZETİ (${new Date().toLocaleDateString('tr-TR')}) ---\n\n`;
+      occupied.forEach(p => {
+        text += `Yatak #${p.bedNumber} - ${p.nameInitials} (G:${p.hospitalizationDay}) [SOFA: ${p.sofaScore}]\n`;
+        text += `Tanı: ${p.diagnosis} | Solunum: ${p.respiratorySupport}\n`;
+        text += `Beslenme: ${p.nutritionRoute} (${p.nutritionDetail})\n`;
+        if (p.infusions.length) text += `İnfüzyon: ${p.infusions.map(i => i.name + ' ' + i.dose + i.unit).join(', ')}\n`;
+        if (p.antibiotics.length) text += `Antibiyotik: ${p.antibiotics.join(', ')}\n`;
+        text += `Plan: ${p.dailyPlan}\n\n`;
+      });
+
+      navigator.clipboard.writeText(text).then(() => {
+        alert("Vizit özeti panoya kopyalandı!");
+      });
+    }
+
+    // Doğrudan garantili çalıştırma
+    window.onload = function() {
+      checkCalendarUpdate();
+      renderBeds();
+      setInterval(checkCalendarUpdate, 60000);
+    };
+  </script>
+</body>
+</html>
