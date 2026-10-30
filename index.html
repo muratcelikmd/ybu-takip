@@ -1445,6 +1445,133 @@
     </div>
   </div>
 
+  <!-- KLİNİK VİZİT & NÖBET DEVİR RAPORU (YAZDIRMA) MODALI -->
+  <div id="print-report-modal" class="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-2 sm:p-4 hidden no-print" onclick="if(event.target.id==='print-report-modal') closePrintReportModal()">
+    <div class="bg-white border border-slate-200 rounded-2xl w-full max-w-4xl max-h-[95vh] shadow-2xl flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-150 text-slate-800" onclick="event.stopPropagation()">
+      
+      <!-- Modal Header with Print & Export Actions -->
+      <div class="p-4 bg-slate-50 border-b border-slate-200 flex flex-wrap items-center justify-between gap-3 shrink-0">
+        <div>
+          <h3 class="text-base font-bold text-slate-900 flex items-center gap-2">
+            <svg class="w-5 h-5 text-cyan-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
+            Klinik Vizit & Nöbet Devir Raporu
+          </h3>
+          <p class="text-xs text-slate-500 mt-0.5">Yazdırmak veya PDF olarak kaydetmek için aşağıdaki butonları kullanabilirsiniz.</p>
+        </div>
+
+        <div class="flex items-center gap-2 flex-wrap">
+          <button id="btn-do-print-direct" type="button" onclick="handleDirectPrint()" class="px-3.5 py-1.5 rounded-lg bg-cyan-600 hover:bg-cyan-700 text-white text-xs font-bold flex items-center gap-1.5 shadow-xs transition-colors">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
+            Yazdır / PDF Kaydet
+          </button>
+          <button id="btn-do-print-newwindow" type="button" onclick="printReportInNewWindow()" class="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 text-xs font-semibold flex items-center gap-1 transition-colors" title="Ayrı sekmede temiz yazdırma sayfası açar">
+            <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+            Ayrı Pencerede Aç
+          </button>
+          <button id="btn-copy-handover-from-print" type="button" onclick="copyWhatsAppFromModal()" class="px-3 py-1.5 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 text-xs font-semibold flex items-center gap-1 transition-colors" title="WhatsApp için metin kopyalar">
+            <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"/></svg>
+            WhatsApp Metni
+          </button>
+          <button id="btn-close-print-modal" type="button" onclick="closePrintReportModal()" class="p-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-800 border border-slate-200 transition-colors">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Report Scrollable View -->
+      <div class="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4 custom-scrollbar bg-slate-50/50">
+        <div id="print-report-content" class="bg-white p-4 sm:p-6 rounded-xl border border-slate-200 shadow-xs space-y-5">
+          <!-- Dynamically populated report content -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- VERİLERİ PAYLAŞMA & YEDEKLEME MODALI -->
+  <div id="share-data-modal" class="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4 hidden no-print" onclick="if(event.target.id==='share-data-modal') closeShareModal()">
+    <div class="bg-white border border-slate-200 rounded-2xl w-full max-w-xl shadow-2xl p-5 space-y-4 animate-in fade-in zoom-in-95 duration-150 text-slate-800" onclick="event.stopPropagation()">
+      
+      <div class="flex items-center justify-between pb-3 border-b border-slate-200">
+        <div>
+          <h3 class="text-base font-bold text-slate-900 flex items-center gap-2">
+            <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/></svg>
+            Klinik Verileri Paylaş & Yedekle
+          </h3>
+          <p class="text-xs text-slate-500 mt-0.5">Çalışma arkadaşlarınızla bilgi paylaşımı ve yedekleme seçenekleri</p>
+        </div>
+        <button id="btn-close-share-modal" type="button" onclick="closeShareModal()" class="p-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-800 border border-slate-200 transition-colors" title="Kapat">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+
+      <div class="space-y-3">
+        <!-- Option 1: WhatsApp İle Gönder & Paylaş -->
+        <div class="bg-emerald-50/50 border border-emerald-200 p-3.5 rounded-xl space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-emerald-900 flex items-center gap-1.5">
+              <span>💬</span> 1. WhatsApp ile Nöbet Devri
+            </span>
+            <span class="text-[10px] text-emerald-700 font-semibold bg-emerald-100 px-2 py-0.5 rounded">En Pratik</span>
+          </div>
+          <p class="text-xs text-emerald-800 leading-relaxed">
+            Yatan hastaların tanı, vital, ventilatör, infüzyon, antibiyotik ve görev özetini doğrudan WhatsApp'a gönderin veya metin olarak kopyalayın.
+          </p>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
+            <button id="btn-share-send-whatsapp" type="button" onclick="shareViaWhatsApp()" class="py-2 px-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-bold flex items-center justify-center gap-1.5 transition-colors shadow-xs">
+              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.771-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86s.274.072.376-.043c.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.045.072.045.419-.099.824zm-3.423-14.416c-6.627 0-12 5.373-12 12 0 2.153.568 4.174 1.564 5.918l-1.636 5.979 6.136-1.609c1.687.92 3.612 1.444 5.664 1.444 6.627 0 12-5.373 12-12s-5.373-12-12-12z"/></svg>
+              WhatsApp'ta Gönder
+            </button>
+            <button id="btn-share-copy-whatsapp" type="button" onclick="copyWhatsAppFromModal()" class="py-2 px-3 bg-white hover:bg-emerald-50 text-emerald-800 border border-emerald-300 rounded-lg text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors shadow-xs">
+              <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"/></svg>
+              Metni Panoya Kopyala
+            </button>
+          </div>
+        </div>
+
+        <!-- Option 2: JSON Veri Dosyası İndir (Dışa Aktar) -->
+        <div class="bg-indigo-50/50 border border-indigo-200 p-3.5 rounded-xl space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-indigo-900 flex items-center gap-1.5">
+              <span>📥</span> 2. Verileri Dosya Olarak İndir (Dışa Aktar)
+            </span>
+            <span class="text-[10px] text-indigo-700 font-semibold bg-indigo-100 px-2 py-0.5 rounded">Tam Yedek</span>
+          </div>
+          <p class="text-xs text-indigo-800 leading-relaxed">
+            Tüm 16 yatağın kayıtlı verilerini tek bir dosya (<code class="font-mono bg-indigo-100 px-1 rounded">.json</code>) olarak telefonunuza veya bilgisayarınıza indirin.
+          </p>
+          <button id="btn-share-export-json" type="button" onclick="exportDataAsJSON()" class="w-full py-2 px-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-xs font-bold flex items-center justify-center gap-1.5 transition-colors shadow-xs">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+            Veri Dosyasını İndir (.json)
+          </button>
+        </div>
+
+        <!-- Option 3: JSON Veri Dosyası Yükle (İçe Aktar) -->
+        <div class="bg-slate-50 border border-slate-200 p-3.5 rounded-xl space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-slate-900 flex items-center gap-1.5">
+              <span>📤</span> 3. Arkadaşınızın Gönderdiği Veriyi Yükle (İçe Aktar)
+            </span>
+          </div>
+          <p class="text-xs text-slate-600 leading-relaxed">
+            Çalışma arkadaşınızın indirdiği <code class="font-mono bg-slate-200 px-1 rounded">.json</code> dosyasını seçerek tüm hasta bilgilerini kendi ekranınıza yükleyin.
+          </p>
+          <input type="file" id="share-file-input" accept=".json" class="hidden" onchange="if(this.files && this.files[0]) importDataFromJSON(this.files[0])">
+          <button id="btn-share-trigger-import" type="button" onclick="document.getElementById('share-file-input').click()" class="w-full py-2 px-3 bg-slate-800 hover:bg-slate-900 text-white rounded-lg text-xs font-bold flex items-center justify-center gap-1.5 transition-colors shadow-xs">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l4-4m0 0l4 4m-4-4v12"/></svg>
+            JSON Veri Dosyası Seç & Yükle
+          </button>
+        </div>
+      </div>
+
+      <div class="pt-2 border-t border-slate-200 flex justify-end">
+        <button id="btn-done-share-modal" type="button" onclick="closeShareModal()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-semibold transition-colors border border-slate-200">
+          Kapat
+        </button>
+      </div>
+
+    </div>
+  </div>
+
   <!-- TOAST NOTIFICATION CONTAINER -->
   <div id="toast-container" class="fixed bottom-4 right-4 z-50 flex flex-col gap-2 pointer-events-none no-print"></div>
 
@@ -2900,6 +3027,53 @@
       }, 500);
     }
 
+
+    // Expose sharing and print functions on window for inline onclick handlers
+    window.openShareModal = openShareModal;
+    window.closeShareModal = closeShareModal;
+    window.openPrintReportModal = openPrintReportModal;
+    window.closePrintReportModal = closePrintReportModal;
+    window.shareViaWhatsApp = function() {
+      const text = generateWhatsAppReportText();
+      const url = 'https://api.whatsapp.com/send?text=' + encodeURIComponent(text);
+      window.open(url, '_blank');
+      showToast('WhatsApp açılıyor...', 'info');
+    };
+    window.copyWhatsAppFromModal = function() {
+      const text = generateWhatsAppReportText();
+      copyToClipboard(text, 'Nöbet devir metni kopyalandı! WhatsApp grubuna yapıştırabilirsiniz.');
+    };
+    window.handleDirectPrint = function() {
+      try {
+        window.print();
+      } catch (e) {
+        printReportInNewWindow();
+      }
+    };
+    window.printReportInNewWindow = printReportInNewWindow;
+    window.exportDataAsJSON = function() {
+      try {
+        const jsonString = JSON.stringify(beds, null, 2);
+        const blob = new Blob([jsonString], { type: "application/json;charset=utf-8" });
+        const url = URL.createObjectURL(blob);
+        const dlAnchor = document.createElement('a');
+        const now = new Date();
+        const dateStr = `${now.getFullYear()}-${(now.getMonth()+1).toString().padStart(2,'0')}-${now.getDate().toString().padStart(2,'0')}`;
+        dlAnchor.href = url;
+        dlAnchor.download = `ybu_hastalar_${dateStr}.json`;
+        document.body.appendChild(dlAnchor);
+        dlAnchor.click();
+        setTimeout(() => {
+          document.body.removeChild(dlAnchor);
+          URL.revokeObjectURL(url);
+        }, 500);
+        showToast('Klinik veriler JSON dosyası olarak indirildi.', 'success');
+      } catch (err) {
+        showToast('İndirme hatası: ' + err.message, 'error');
+      }
+    };
+    window.importDataFromJSON = importDataFromJSON;
+
     // --- PAYLAŞMA & YEDEKLEME (JSON EXPORT / IMPORT / WHATSAPP) ---
     function openShareModal() {
       document.getElementById('share-data-modal').classList.remove('hidden');
@@ -3822,126 +3996,5 @@
       document.getElementById('btn-reset-demo').addEventListener('click', resetDemoData);
     });
   </script>
-  <!-- KLİNİK VİZİT & NÖBET DEVİR RAPORU (YAZDIRMA) MODALI -->
-  <div id="print-report-modal" class="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-2 sm:p-4 hidden no-print">
-    <div class="bg-white border border-slate-200 rounded-2xl w-full max-w-4xl max-h-[95vh] shadow-2xl flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-150 text-slate-800">
-      
-      <!-- Modal Header with Print & Export Actions -->
-      <div class="p-4 bg-slate-50 border-b border-slate-200 flex flex-wrap items-center justify-between gap-3 shrink-0">
-        <div>
-          <h3 class="text-base font-bold text-slate-900 flex items-center gap-2">
-            <svg class="w-5 h-5 text-cyan-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
-            Klinik Vizit & Nöbet Devir Raporu
-          </h3>
-          <p class="text-xs text-slate-500 mt-0.5">Yazdırmak veya PDF olarak kaydetmek için aşağıdaki butonları kullanabilirsiniz.</p>
-        </div>
-
-        <div class="flex items-center gap-2 flex-wrap">
-          <button id="btn-do-print-direct" class="px-3.5 py-1.5 rounded-lg bg-cyan-600 hover:bg-cyan-700 text-white text-xs font-bold flex items-center gap-1.5 shadow-xs transition-colors">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
-            Yazdır / PDF Kaydet
-          </button>
-          <button id="btn-do-print-newwindow" class="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 text-xs font-semibold flex items-center gap-1 transition-colors" title="Ayrı sekmede temiz yazdırma sayfası açar">
-            <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
-            Ayrı Pencerede Aç
-          </button>
-          <button id="btn-copy-handover-from-print" class="px-3 py-1.5 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 text-xs font-semibold flex items-center gap-1 transition-colors" title="WhatsApp için metin kopyalar">
-            <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"/></svg>
-            WhatsApp Devir Metni
-          </button>
-          <button id="btn-close-print-modal" class="p-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-800 border border-slate-200 transition-colors">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
-          </button>
-        </div>
-      </div>
-
-      <!-- Report Scrollable View (This is what prints!) -->
-      <div class="flex-1 overflow-y-auto p-6 space-y-4 custom-scrollbar bg-slate-50/50">
-        <div id="print-report-content" class="bg-white p-6 rounded-xl border border-slate-200 shadow-xs space-y-5">
-          <!-- Dynamically populated report content -->
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- VERİLERİ PAYLAŞMA & YEDEKLEME MODALI -->
-  <div id="share-data-modal" class="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4 hidden no-print">
-    <div class="bg-white border border-slate-200 rounded-2xl w-full max-w-xl shadow-2xl p-5 space-y-4 animate-in fade-in zoom-in-95 duration-150 text-slate-800">
-      
-      <div class="flex items-center justify-between pb-3 border-b border-slate-200">
-        <div>
-          <h3 class="text-base font-bold text-slate-900 flex items-center gap-2">
-            <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/></svg>
-            Klinik Verileri Paylaş & Yedekle
-          </h3>
-          <p class="text-xs text-slate-500 mt-0.5">Çalışma arkadaşlarınızla bilgi paylaşımı ve yedekleme seçenekleri</p>
-        </div>
-        <button id="btn-close-share-modal" class="p-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-800 border border-slate-200 transition-colors">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
-        </button>
-      </div>
-
-      <div class="space-y-3">
-        <!-- Option 1: WhatsApp Nöbet Devir Metni -->
-        <div class="bg-emerald-50/50 border border-emerald-200 p-3.5 rounded-xl space-y-2">
-          <div class="flex items-center justify-between">
-            <span class="text-xs font-bold text-emerald-900 flex items-center gap-1.5">
-              <span>💬</span> 1. WhatsApp / Nöbet Devir Metni Kopyala
-            </span>
-            <span class="text-[10px] text-emerald-700 font-semibold bg-emerald-100 px-2 py-0.5 rounded">En Pratik</span>
-          </div>
-          <p class="text-xs text-emerald-800 leading-relaxed">
-            Yatan tüm hastaların tanı, vital, ventilatör, infüzyon, antibiyotik ve görev özetini tek tıkla kopyalayın, servis WhatsApp veya mesaj grubuna yapıştırın.
-          </p>
-          <button id="btn-share-copy-whatsapp" class="w-full py-2 px-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-bold flex items-center justify-center gap-1.5 transition-colors shadow-xs">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"/></svg>
-            Nöbet Devir Metnini Kopyala
-          </button>
-        </div>
-
-        <!-- Option 2: JSON Veri Dosyası İndir (Dışa Aktar) -->
-        <div class="bg-indigo-50/50 border border-indigo-200 p-3.5 rounded-xl space-y-2">
-          <div class="flex items-center justify-between">
-            <span class="text-xs font-bold text-indigo-900 flex items-center gap-1.5">
-              <span>📥</span> 2. Verileri Dosya Olarak İndir (Dışa Aktar)
-            </span>
-            <span class="text-[10px] text-indigo-700 font-semibold bg-indigo-100 px-2 py-0.5 rounded">Tam Yedek</span>
-          </div>
-          <p class="text-xs text-indigo-800 leading-relaxed">
-            Tüm 16 yatağın kayıtlı verilerini tek bir dosya (<code class="font-mono bg-indigo-100 px-1 rounded">.json</code>) olarak bilgisayarınıza/telefonunuza indirin. Bu dosyayı çalışma arkadaşınıza gönderebilirsiniz.
-          </p>
-          <button id="btn-share-export-json" class="w-full py-2 px-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-xs font-bold flex items-center justify-center gap-1.5 transition-colors shadow-xs">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
-            Veri Dosyasını İndir (.json)
-          </button>
-        </div>
-
-        <!-- Option 3: JSON Veri Dosyası Yükle (İçe Aktar) -->
-        <div class="bg-slate-50 border border-slate-200 p-3.5 rounded-xl space-y-2">
-          <div class="flex items-center justify-between">
-            <span class="text-xs font-bold text-slate-900 flex items-center gap-1.5">
-              <span>📤</span> 3. Arkadaşınızın Gönderdiği Veriyi Yükle (İçe Aktar)
-            </span>
-          </div>
-          <p class="text-xs text-slate-600 leading-relaxed">
-            Çalışma arkadaşınızın indirdiği <code class="font-mono bg-slate-200 px-1 rounded">.json</code> dosyasını seçerek tüm hasta bilgilerini kendi ekranınıza yükleyin.
-          </p>
-          <input type="file" id="share-file-input" accept=".json" class="hidden">
-          <button id="btn-share-trigger-import" class="w-full py-2 px-3 bg-slate-800 hover:bg-slate-900 text-white rounded-lg text-xs font-bold flex items-center justify-center gap-1.5 transition-colors shadow-xs">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l4-4m0 0l4 4m-4-4v12"/></svg>
-            JSON Veri Dosyası Seç & Yükle
-          </button>
-        </div>
-      </div>
-
-      <div class="pt-2 border-t border-slate-200 flex justify-end">
-        <button id="btn-done-share-modal" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-semibold transition-colors border border-slate-200">
-          Kapat
-        </button>
-      </div>
-
-    </div>
-  </div>
-
 </body>
 </html>
