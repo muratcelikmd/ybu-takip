@@ -3,75 +3,168 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Vizit Defteri · v27</title>
-
-  <!-- PWA & iOS Safari (Dynamic Island Uyumlu) -->
-  <link rel="manifest" href="./manifest.json">
+  <title>Vizit Defteri · v27 (Çevrimdışı Tek Dosya)</title>
+  
   <meta name="theme-color" content="#0f172a">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Vizit Defteri">
-  <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='112' fill='%230f172a'/%3E%3Cpath d='M96 272h88l40-112 56 192 48-128 32 48h56' fill='none' stroke='%2338bdf8' stroke-width='36' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
 
-  <link rel="stylesheet" href="./styles.css">
+  <style>
+    /* === TEMEL RESET VE STİLLER === */
+    :root {
+      --bg-main: #0f172a;
+      --bg-card: #1e293b;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --accent: #38bdf8;
+      --border: #334155;
+      --safe-top: env(safe-area-inset-top, 0px);
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
+    }
 
-  <!-- GitHub Pages & Çevrimdışı Ortam Algılayıcı -->
-  <script>
-    (function () {
-      const isStaticHost =
-        location.hostname.endsWith('github.io') ||
-        location.protocol === 'file:' ||
-        localStorage.getItem('vizit_force_local') === '1';
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+    body { background-color: var(--bg-main); color: var(--text-main); min-height: 100vh; padding-top: var(--safe-top); padding-bottom: var(--safe-bottom); display: flex; flex-direction: column; }
+    
+    header.app-header {
+      background-color: var(--bg-card);
+      border-bottom: 1px solid var(--border);
+      padding: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .brand { font-weight: 700; font-size: 1.1rem; color: var(--accent); }
+    .sync-badge { font-size: 0.75rem; padding: 0.25rem 0.5rem; border-radius: 999px; background: rgba(56, 189, 248, 0.15); color: var(--accent); border: 1px solid var(--accent); }
 
-      window.__VIZIT_STATIC_PWA__ = isStaticHost;
+    main.app-content { flex: 1; padding: 1rem; max-width: 1200px; width: 100%; margin: 0 auto; }
+    
+    .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1rem; margin-top: 1rem; }
+    .bed-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 0.75rem; padding: 1rem; cursor: pointer; transition: transform 0.1s; }
+    .bed-card:active { transform: scale(0.98); }
+    .bed-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; font-weight: bold; color: var(--accent); }
+    .bed-body { font-size: 0.85rem; color: var(--text-muted); line-height: 1.4; }
 
-      if (isStaticHost) {
-        const nativeFetch = window.fetch.bind(window);
-        window.fetch = async function (input, init) {
-          const url = typeof input === 'string' ? input : (input && input.url) || '';
-          if (url.includes('/api/')) {
-            const now = Date.now();
-            const body = {
-              ok: true,
-              status: 'ok',
-              localOnly: true,
-              mode: 'github-pages-pwa',
-              records: [],
-              items: [],
-              photos: [],
-              updatedAt: now,
-              timestamp: now
-            };
-            return new Response(JSON.stringify(body), {
-              status: 200,
-              headers: { 'Content-Type': 'application/json' }
-            });
-          }
-          return nativeFetch(input, init);
-        };
-      }
-
-      if ('serviceWorker' in navigator && location.protocol !== 'file:') {
-        window.addEventListener('load', () => {
-          navigator.serviceWorker.register('./sw.js', { scope: './' }).catch(() => {});
-        });
-      }
-    })();
-  </script>
+    .btn { background: var(--accent); color: var(--bg-main); border: none; padding: 0.5rem 1rem; border-radius: 0.5rem; font-weight: 600; cursor: pointer; margin-top: 1rem; }
+    .btn:active { opacity: 0.8; }
+  </style>
 </head>
 <body>
-  <!-- Uygulama Kapsayıcısı -->
   <div id="app">
     <header class="app-header">
       <div class="brand">Vizit Defteri · v27</div>
-      <div id="sync-badge" class="sync-badge local">Yerel PWA</div>
+      <div id="sync-badge" class="sync-badge">Yerel Mod (PWA)</div>
     </header>
-    <main class="app-content">
-      <div class="loading-state">YBÜ hasta izlem modülleri yükleniyor...</div>
+    <main class="app-content" id="main-content">
+      <div style="text-align: center; margin-top: 3rem;">
+        <h2>YBÜ 16 Yatak Takip Sistemi</h2>
+        <p style="color: var(--text-muted); margin-top: 0.5rem;">Veriler cihazınızda güvenle saklanmaktadır.</p>
+        <button class="btn" onclick="initApp()">Sistemi Başlat</button>
+      </div>
     </main>
   </div>
 
-  <!-- Ana Giriş Modülü -->
-  <script type="module" src="./js/app.js"></script>
+  <script>
+    // === YBÜ HASTA İZLEM MİMARİSİ (TEK DOSYA ÇEVRİMİDİŞİ MOTOR) ===
+    const STORAGE_KEY = 'vizit_defteri_v27_data';
+
+    function getInitialData() {
+      const beds = [];
+      for (let i = 1; i <= 16; i++) {
+        beds.push({
+          bedId: i,
+          patientName: i === 1 ? 'Örnek Hasta (Yatak ' + i + ')' : '',
+          diagnosis: i === 1 ? 'Septik Şok / ARDS' : '',
+          gcs: i === 1 ? 'E3 V4 M5 (12)' : '',
+          sofa: i === 1 ? '8' : '',
+          ventilator: i === 1 ? 'SIMV+PS (FiO2: 0.40, PEEP: 8)' : '',
+          note: i === 1 ? 'IV hidrasyon ve antibiyotik tedavisi sürüyor.' : ''
+        });
+      }
+      return beds;
+    }
+
+    function loadBeds() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (raw) return JSON.parse(raw);
+      } catch (e) {}
+      const initial = getInitialData();
+      saveBeds(initial);
+      return initial;
+    }
+
+    function saveBeds(beds) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(beds));
+    }
+
+    function initApp() {
+      const beds = loadBeds();
+      renderDashboard(beds);
+    }
+
+    function renderDashboard(beds) {
+      const container = document.getElementById('main-content');
+      let html = `<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                    <h3>Yatak Durum Paneli (16 Yatak)</h3>
+                    <button class="btn" style="margin:0; padding:0.25rem 0.75rem; font-size:0.8rem;" onclick="resetData()">Verileri Sıfırla</button>
+                  </div>
+                  <div class="dashboard-grid">`;
+
+      beds.forEach(bed => {
+        html += `
+          <div class="bed-card" onclick="editBed(${bed.bedId})">
+            <div class="bed-header">
+              <span>Yatak ${bed.bedId}</span>
+              <span style="font-size:0.75rem; color: ${bed.patientName ? '#38bdf8' : '#64748b'}">${bed.patientName ? 'Dolu' : 'Boş'}</span>
+            </div>
+            <div class="bed-body">
+              <strong>${bed.patientName || 'Boş Yatak'}</strong><br>
+              ${bed.diagnosis ? 'Tanı: ' + bed.diagnosis + '<br>' : ''}
+              ${bed.gcs ? 'GKS: ' + bed.gcs : ''}
+            </div>
+          </div>
+        `;
+      });
+
+      html += `</div>`;
+      container.innerHTML = html;
+    }
+
+    function editBed(bedId) {
+      const beds = loadBeds();
+      const bed = beds.find(b => b.bedId === bedId);
+      if (!bed) return;
+
+      const newName = prompt(`Yatak ${bedId} - Hasta Adı Soyadı:`, bed.patientName);
+      if (newName === null) return;
+      const newDiag = prompt(`Yatak ${bedId} - Tanı / Klinik Durum:`, bed.diagnosis);
+      if (newDiag === null) return;
+      const newGcs = prompt(`Yatak ${bedId} - GKS Skoru:`, bed.gcs);
+      if (newGcs === null) return;
+
+      bed.patientName = newName;
+      bed.diagnosis = newDiag;
+      bed.gcs = newGcs;
+
+      saveBeds(beds);
+      renderDashboard(beds);
+    }
+
+    function resetData() {
+      if (confirm('Tüm yatak verileri sıfırlansın mı?')) {
+        localStorage.removeItem(STORAGE_KEY);
+        initApp();
+      }
+    }
+
+    // Otomatik başlatma
+    window.addEventListener('DOMContentLoaded', () => {
+      initApp();
+    });
+  </script>
 </body>
 </html>
